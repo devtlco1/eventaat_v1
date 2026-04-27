@@ -46,6 +46,15 @@ deep UI work.
 - **API:** unchanged; **only** `GET /health` (see [`api-reference.md`](./api-reference.md)).
 - **Web / other dashboards:** unchanged placeholders (not part of 1B).
 
+### API Docs Foundation — OpenAPI / Swagger (done in repo)
+
+- **Goal:** ship **documentation infrastructure** before business APIs so every later backend step can
+  keep **`/docs`** and **`/openapi.json`** in sync.
+- **Implementation:** `@nestjs/swagger` in `apps/api` (`DocumentBuilder` metadata, `HealthController`
+  decorators + `HealthResponseDto`, `setupOpenApiDocs` in `openapi.setup.ts`). **No** new business routes.
+- **Maintenance rule:** any route add/change/remove must update **both** OpenAPI decorators and
+  [`api-reference.md`](./api-reference.md) in the same work item (stated in that file).
+
 ### Phase 1C / 1D — (planned) Staff dashboards in depth
 
 Detailed **tables**, filters, and interactions for **restaurant / admin / call center** (Phase 1C/1D in
@@ -112,8 +121,8 @@ waitlist, paid promos, better reports, separate restaurant app, loyalty, new cit
 
 ---
 
-**Current code status:** **Phases 1A and 1B** are implemented: shared mock contract, web dashboard
-routes/shell, and a **full customer mobile UI prototype** on the same data (see root
-[`README.md`](../README.md) and [`mock-data-contract.md`](./mock-data-contract.md)). **Phase 1C** (restaurant
-/staff mock dashboards in depth) is **not** implemented. Real backend, auth, and business APIs are
-**out of scope** until the blueprint phases that introduce them.
+**Current code status:** **Phases 1A and 1B** are implemented, plus the **API Docs Foundation** (Swagger UI
+at `/docs`, OpenAPI JSON at `/openapi.json`, health endpoint documented). The **functional** API surface
+is still **`GET /health` only**; see [`api-reference.md`](./api-reference.md) for the documentation
+maintenance rule. **Phase 1C** (restaurant / staff mock dashboards in depth) is **not** implemented. Real
+backend, auth, and business APIs are **out of scope** until the blueprint phases that introduce them.

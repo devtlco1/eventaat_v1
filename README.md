@@ -83,6 +83,12 @@ If pnpm’s workspace `PATH` handling works in your environment, you can also us
 
 **Health check:** with the API running, `GET /health` returns JSON `{ "status": "ok", "app": "eventaat", ... }`.
 
+**OpenAPI (Swagger):** the NestJS app exposes **Swagger UI** at **`/docs`** and the raw spec at **`/openapi.json`**
+(see `apps/api/src/openapi.setup.ts`). The document title is **eventaat API**, version **0.1.0**.  
+Local URLs (default port 3000): `http://127.0.0.1:3000/docs` · `http://127.0.0.1:3000/openapi.json`  
+**Maintenance:** whenever a route is added, changed, or removed, update Nest **Swagger decorators** and
+[`docs/api-reference.md`](./docs/api-reference.md) in the same change (see that file for the project rule).
+
 ## Quality commands
 
 ```bash
@@ -106,10 +112,11 @@ pnpm -r run build
   details, create **pending** reservation in local state only, confirmation, grouped **My
   reservations** with details and a mock lifecycle timeline, Profile, and Support. **No** real auth,
   OTP, or API calls.
-- **API:** Unchanged: **`GET /health` only** (no new business routes; Phase 1B does not add endpoints). **Prisma** still has no domain
+- **API:** **Functional** routes remain **`GET /health` only** (no business resources). **Swagger/OpenAPI** is
+  available at `/docs` and `/openapi.json` (API docs foundation; see [`docs/api-reference.md`](./docs/api-reference.md)). **Prisma** still has no domain
   tables. **No** real OTP, WhatsApp, or payments.
 - **Documentation:** `docs/` includes `mock-data-contract.md` and updated implementation plan / API
-  / roles / reservation notes.
+  / roles / reservation notes, plus the OpenAPI/Swagger maintenance rule in `docs/api-reference.md`.
 
 ## Next planned phase (not implemented)
 
