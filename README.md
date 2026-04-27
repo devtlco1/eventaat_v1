@@ -98,7 +98,7 @@ pnpm -r run build
 
 (Adjust per package; mobile may require Expo dependencies resolved after the first `pnpm install`.)
 
-## Current implementation status (Phases 1A–1C + web UI recovery for listed areas)
+## Current implementation status (Phases 1A–1E: mock prototype + API docs foundation)
 
 - **Shared (`@eventaat/shared`):** `UserRole`, all lifecycle `*Status` values (reservation, restaurant, table,
   complaint, subscription), entity interfaces, Arabic label maps, **seating / occasion** labels for
@@ -120,11 +120,11 @@ pnpm -r run build
 - **API:** **Functional** routes remain **`GET /health` only** (no business resources). **Swagger/OpenAPI** is
   available at `/docs` and `/openapi.json` (API docs foundation; see [`docs/api-reference.md`](./docs/api-reference.md)). **Prisma** still has no domain
   tables. **No** real OTP, WhatsApp, or payments.
-- **Documentation:** `docs/` includes `mock-data-contract.md` and updated implementation plan / API
-  / roles / reservation notes, plus the OpenAPI/Swagger maintenance rule in `docs/api-reference.md`.
+- **Documentation:** `docs/` includes `mock-data-contract.md`, **[`docs/mock-e2e-scenarios.md`](./docs/mock-e2e-scenarios.md)**
+  (Phase 1E checklist), and updated implementation plan / API / roles / reservation notes, plus the
+  OpenAPI/Swagger maintenance rule in `docs/api-reference.md`.
 
 ## Next planned phase (not implemented)
 
-**Phase 1E (suggested)** — **Mock end-to-end scenario** testing and polish across flows (per blueprint
-readiness), without adding business APIs until Phase 2+. See
-[`docs/implementation-plan.md`](./docs/implementation-plan.md).
+**Phase 2** — Accounts, **WhatsApp OTP**, roles, and permissions foundation (per blueprint). **Not**
+implemented in the current mock-only repo state beyond UI prototypes.

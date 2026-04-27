@@ -3,6 +3,8 @@ import { ComplaintStatus } from '../constants/complaint-status';
 
 const Rv = 'r_visible';
 const Rdis = 'r_disabled';
+const Razz = 'r_azz';
+const Rhar = 'r_har';
 
 export const mockComplaints: Complaint[] = [
   {
@@ -110,6 +112,33 @@ export const mockComplaints: Complaint[] = [
     restaurantId: Rv,
     category: 'reservation',
     priority: 'urgent',
+    party: 'restaurant',
+    assignedToUserId: 'u_cc1',
+  },
+  {
+    id: 'cmp_9',
+    status: ComplaintStatus.waiting_restaurant,
+    reservationId: 'res_azz_p',
+    openedByUserId: 'u_c1',
+    subject: 'تأخر الرد على طلب جديد (فرع الأعظمية)',
+    createdAt: '2026-04-27T11:00:00.000Z',
+    updatedAt: '2026-04-27T14:00:00.000Z',
+    restaurantId: Razz,
+    category: 'reservation',
+    priority: 'high',
+    party: 'restaurant',
+  },
+  {
+    id: 'cmp_10',
+    status: ComplaintStatus.in_review,
+    reservationId: null,
+    openedByUserId: 'u_c2',
+    subject: 'استفسار عن فترة التجربة والفاتورة (الحارثية)',
+    createdAt: '2026-04-26T09:00:00.000Z',
+    updatedAt: '2026-04-27T08:00:00.000Z',
+    restaurantId: Rhar,
+    category: 'billing',
+    priority: 'normal',
     party: 'restaurant',
     assignedToUserId: 'u_cc1',
   },

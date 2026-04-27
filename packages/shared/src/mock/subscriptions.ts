@@ -62,6 +62,26 @@ export const mockSubscriptions: Subscription[] = [
     lastFollowUpAt: '2025-12-20',
     nextActionAr: 'أرشفة',
   },
+  {
+    id: 'sub_azz_trial',
+    restaurantId: 'r_azz',
+    status: SubscriptionStatus.trial_active,
+    monthlyAmountIqd: 100_000,
+    periodEnd: '2026-06-01',
+    trialEndsOn: '2026-08-01',
+    lastFollowUpAt: '2026-04-26',
+    nextActionAr: 'استكمال الصور قبل النشر',
+  },
+  {
+    id: 'sub_har_due',
+    restaurantId: 'r_har',
+    status: SubscriptionStatus.payment_due,
+    monthlyAmountIqd: 100_000,
+    periodEnd: '2026-04-30',
+    trialEndsOn: '2026-03-01',
+    lastFollowUpAt: '2026-04-27',
+    nextActionAr: 'تأكيد تحويل الاشتراك',
+  },
 ];
 
 export const getSubscriptionByRestaurantId = (restaurantId: string) =>

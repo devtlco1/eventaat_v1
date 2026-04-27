@@ -5,8 +5,9 @@ import {
   adminReservationKpis,
   getAdminReservationTableRows,
   getRestaurantById,
+  getReservationCommunicationLog,
 } from '@eventaat/shared';
-import { mockBranches, ReservationStatus } from '@eventaat/shared';
+import { mockBranches, ReservationStatus, getUserById } from '@eventaat/shared';
 import { RESERVATION_STATUS_LABELS_AR, MOCK_DEMO_TODAY } from '@eventaat/shared';
 import { PageHeader } from '@/components/ui/PageHeader';
 import { MetricGrid, MetricCard } from '@/components/dashboard/MetricCard';
@@ -22,6 +23,7 @@ import { Timeline } from '@/components/ui/Timeline';
 import { ConfirmDialog } from '@/components/ui/ConfirmDialog';
 import { formatIqTime } from '@/lib/timeFormat';
 import { followupLabelAr } from '@/lib/followupAr';
+import { RowActionMenu } from '@/components/ui/RowActionMenu';
 
 const ALL = '__all';
 
@@ -77,6 +79,9 @@ export function AdminReservationsView() {
   }, [all, st, d, resId, br, fu, q]);
 
   const row = open ? all.find((x) => x.id === open) : null;
+  const rowUser = row ? getUserById(row.customerId) : null;
+  const resLog = row ? getReservationCommunicationLog(row.id) : [];
+  const brRow = row ? mockBranches.find((b) => b.id === row.branchId) : undefined;
 
   const stOpts = [ALL, ...Object.values(ReservationStatus)] as string[];
 
@@ -185,34 +190,26 @@ export function AdminReservationsView() {
                     )}
                   </td>
                   <td>
-                    <div style={{ display: 'flex', flexWrap: 'wrap', gap: 4, justifyContent: 'flex-end' }}>
+                    <div
+                      className="rowAct"
+                      style={{
+                        display: 'flex',
+                        flexWrap: 'wrap',
+                        gap: 6,
+                        justifyContent: 'flex-end',
+                        alignItems: 'center',
+                      }}
+                    >
                       <ActionButton type="button" sm variant="primary" onClick={() => setOpen(r.id)}>
                         عرض
                       </ActionButton>
-                      <ActionButton
-                        type="button"
-                        sm
-                        variant="secondary"
-                        onClick={() => setMsg('إحالة للكول سنتر (نموذج).')}
-                      >
-                        كول سنتر
-                      </ActionButton>
-                      <ActionButton
-                        type="button"
-                        sm
-                        variant="secondary"
-                        onClick={() => setMsg('تسجيل شكوى (نموذج).')}
-                      >
-                        شكوى
-                      </ActionButton>
-                      <ActionButton
-                        type="button"
-                        sm
-                        variant="secondary"
-                        onClick={() => setMsg('تسجيل ملاحظة (نموذج).')}
-                      >
-                        ملاحظة
-                      </ActionButton>
+                      <RowActionMenu
+                        items={[
+                          { id: 'cc', label: 'تحويل للكول سنتر', onSelect: () => setMsg('إحالة للكول سنتر (نموذج).') },
+                          { id: 'cp', label: 'فتح شكوى', onSelect: () => setMsg('تسجيل شكوى (نموذج).') },
+                          { id: 'nt', label: 'إضافة ملاحظة', onSelect: () => setMsg('تسجيل ملاحظة (نموذج).') },
+                        ]}
+                      />
                     </div>
                   </td>
                 </tr>
@@ -233,20 +230,40 @@ export function AdminReservationsView() {
       >
         {row && (
           <>
+            <h3 style={{ fontSize: '0.8rem', margin: '0 0 0.4rem', color: '#64748b' }}>ملخص</h3>
+            <p style={{ margin: '0 0 0.5rem', fontSize: 13, fontWeight: 800, lineHeight: 1.35 }}>{row.refCode}</p>
             <div>
-              <DlItem k="الزبون" v={row.customerName} />
               <DlItem k="الحالة" v={RESERVATION_STATUS_LABELS_AR[row.status]} />
+              <DlItem k="الزبون" v={row.customerName} />
+              <DlItem k="هاتف (عيّنة)" v={rowUser?.phone ?? '—'} />
+              <DlItem k="المطعم" v={row.restaurantName} />
+              <DlItem k="الفرع" v={row.branchName} />
+              {brRow?.defaultHoursAr && <DlItem k="أوقات الفرع (نموذج)" v={brRow.defaultHoursAr} />}
+              <DlItem k="الموعد" v={formatIqTime(row.scheduledAt)} />
               <DlItem k="العدد" v={String(row.partySize)} />
+              {row.note && <DlItem k="ملاحظة" v={row.note} />}
+              {row.callCenterNoteAr && <DlItem k="متابعة" v={row.callCenterNoteAr} />}
+              <DlItem k="مؤشر المتابعة" v={followupLabelAr(row.followup)} />
             </div>
-            <h3 style={{ fontSize: '0.9rem', margin: '0.6rem 0' }}>مسار الحجز (نموذجي)</h3>
+            <h3 style={{ fontSize: '0.85rem', margin: '0.6rem 0 0.35rem' }}>سجل التواصل (نموذجي)</h3>
+            <Timeline
+              items={resLog.map((e) => ({ at: e.at, text: e.textAr, key: e.at }))}
+              formatTime={(s) => formatIqTime(s)}
+            />
+            <h3 style={{ fontSize: '0.85rem', margin: '0.5rem 0' }}>مسار إضافي</h3>
             <Timeline
               items={[
                 { at: row.createdAt, text: 'تسجيل الطلب', key: 'a' },
-                { at: row.scheduledAt, text: 'الموعد المقترح', key: 'b' },
-                { at: new Date().toISOString(), text: 'آخر تعديل (عرضي فقط)', key: 'c' },
+                { at: row.scheduledAt, text: 'الموعد المدخل', key: 'b' },
               ]}
               formatTime={(s) => formatIqTime(s)}
             />
+            <h3 style={{ fontSize: '0.8rem', margin: '0.5rem 0 0.2rem', color: '#0f172a' }}>الخطوة المقترحة</h3>
+            <p style={{ fontSize: 12, fontWeight: 800, lineHeight: 1.4, color: '#475569', margin: 0 }}>
+              {row.needsAdminFollowup
+                ? 'مراجعة سريعة مع المطعم ثم تثبيت الحالة في المتابعة.'
+                : 'متابعة روتينية حسب الجدول التشغيلي (نموذج).'}
+            </p>
           </>
         )}
       </DetailDrawer>

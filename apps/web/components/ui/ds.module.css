@@ -259,3 +259,93 @@
   color: #0f1419;
   line-height: 1.4;
 }
+
+/* Row action menu (tables) */
+.rowMenu {
+  position: relative;
+  display: inline-block;
+  z-index: 1;
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  vertical-align: middle;
+}
+.rowMenu > summary {
+  list-style: none;
+  font-size: 0.72rem;
+  font-weight: 800;
+  color: #0f172a;
+  padding: 0.28rem 0.5rem;
+  background: #f1f5f9;
+  border: 1px solid #d1d5db;
+  border-radius: 8px;
+  cursor: pointer;
+  line-height: 1.1;
+  user-select: none;
+  white-space: nowrap;
+  display: inline-flex;
+  align-items: center;
+  margin: 0;
+  box-sizing: border-box;
+  justify-content: center;
+}
+.rowMenu > summary::-webkit-details-marker {
+  display: none;
+}
+.rowMenu > summary:hover {
+  background: #e2e8f0;
+  border-color: #cbd5e1;
+}
+.rowMenu[open] > summary {
+  background: #fff;
+  border-color: #94a3b8;
+}
+.rowMenuListEnd,
+.rowMenuListStart {
+  position: absolute;
+  z-index: 30;
+  top: calc(100% + 4px);
+  min-width: 10.5rem;
+  background: #fff;
+  border: 1px solid #e2e8f0;
+  border-radius: 8px;
+  box-shadow: 0 8px 20px rgba(15, 20, 25, 0.12);
+  display: flex;
+  flex-direction: column;
+  padding: 0.2rem 0;
+}
+.rowMenuListEnd {
+  right: 0;
+  left: auto;
+}
+[dir="rtl"] .rowMenuListEnd {
+  right: 0;
+  left: auto;
+}
+.rowMenuListStart {
+  left: 0;
+  right: auto;
+}
+[dir="rtl"] .rowMenuListStart {
+  right: 0;
+  left: auto;
+}
+.rowMenuItem {
+  text-align: right;
+  width: 100%;
+  background: #fff;
+  color: #0f172a;
+  border: 0;
+  font: inherit;
+  font-size: 0.78rem;
+  font-weight: 800;
+  line-height: 1.2;
+  padding: 0.4rem 0.65rem;
+  cursor: pointer;
+}
+.rowMenuItem:hover {
+  background: #f8fafc;
+}
+[dir="rtl"] .rowMenuItem {
+  text-align: right;
+}

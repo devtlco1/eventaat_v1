@@ -26,6 +26,7 @@ import { DetailDrawer, DlItem } from '@/components/dashboard/DetailDrawer';
 import { StatusBadge, MutedPill } from '@/components/dashboard/StatusBadge';
 import { EmptyState } from '@/components/ui/EmptyState';
 import { ConfirmDialog } from '@/components/ui/ConfirmDialog';
+import { RowActionMenu } from '@/components/ui/RowActionMenu';
 import { formatIqTime, formatIqDate } from '@/lib/timeFormat';
 import { RestaurantStatus } from '@eventaat/shared';
 
@@ -155,27 +156,18 @@ export function AdminRestaurantsView() {
                       <StatusBadge kind="ok">{row.qualityScore.toFixed(1)}</StatusBadge>
                     </td>
                     <td>
-                      <div style={{ display: 'flex', flexWrap: 'wrap', gap: 4, justifyContent: 'flex-end' }}>
+                      <div style={{ display: 'flex', flexWrap: 'wrap', gap: 6, justifyContent: 'flex-end', alignItems: 'center' }}>
                         <ActionButton type="button" sm variant="primary" onClick={() => setOpenId(row.id)}>
-                          عرض التفاصيل
+                          عرض
                         </ActionButton>
-                        <ActionButton type="button" sm variant="secondary" onClick={() => onProto('تسجيل تفعيل (نموذج).')}>
-                          تفعيل
-                        </ActionButton>
-                        <ActionButton type="button" sm variant="secondary" onClick={() => onProto('طلب تعديلات (نموذج).')}>
-                          تعديلات
-                        </ActionButton>
-                        <ActionButton
-                          type="button"
-                          sm
-                          variant="secondary"
-                          onClick={() => onProto('تعطيل الحجوزات (نموذج).')}
-                        >
-                          تعطيل الحجوزات
-                        </ActionButton>
-                        <ActionButton type="button" sm variant="secondary" onClick={() => onProto('تعليق (نموذج).')}>
-                          تعليق
-                        </ActionButton>
+                        <RowActionMenu
+                          items={[
+                            { id: 'a1', label: 'تفعيل', onSelect: () => onProto('تسجيل تفعيل (نموذج).') },
+                            { id: 'a2', label: 'طلب تعديلات', onSelect: () => onProto('طلب تعديلات (نموذج).') },
+                            { id: 'a3', label: 'تعطيل الحجوزات', onSelect: () => onProto('تعطيل الحجوزات (نموذج).') },
+                            { id: 'a4', label: 'تعليق', onSelect: () => onProto('تعليق (نموذج).') },
+                          ]}
+                        />
                       </div>
                     </td>
                   </tr>
@@ -247,6 +239,10 @@ export function AdminRestaurantsView() {
             )}
             <h3 style={{ fontSize: '0.9rem', margin: '0.75rem 0 0.3rem' }}>ملاحظات داخلية</h3>
             <p style={{ color: '#475569', lineHeight: 1.4 }}>{mockRestaurantInternalNotes[openId!] ?? '—'}</p>
+            <h3 style={{ fontSize: '0.8rem', margin: '0.6rem 0 0.25rem' }}>الخطوة المقترحة</h3>
+            <p style={{ color: '#475569', lineHeight: 1.4, fontSize: 12, fontWeight: 800, margin: 0 }}>
+              مراجعة بيانات المطعم واشتراكه ثم تثبيت المسار في إدارة التشغيل (نموذج).
+            </p>
           </>
         )}
       </DetailDrawer>

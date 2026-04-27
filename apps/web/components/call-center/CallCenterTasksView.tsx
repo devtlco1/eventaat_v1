@@ -1,7 +1,7 @@
 'use client';
 
 import { useMemo, useState } from 'react';
-import { callCenterTaskQueue, mockUsers } from '@eventaat/shared';
+import { callCenterTaskQueue, mockUsers, getReservationById, getRestaurantById } from '@eventaat/shared';
 import { CALL_CENTER_TASK_PRIORITY_LABELS_AR, CALL_CENTER_TASK_TYPE_LABELS_AR } from '@eventaat/shared';
 import { PageHeader } from '@/components/ui/PageHeader';
 import { PageToolbar } from '@/components/ui/PageToolbar';
@@ -15,6 +15,7 @@ import { Timeline } from '@/components/ui/Timeline';
 import { getTaskCommunicationLog } from '@eventaat/shared';
 import { formatIqTime } from '@/lib/timeFormat';
 import { ConfirmDialog } from '@/components/ui/ConfirmDialog';
+import { RowActionMenu } from '@/components/ui/RowActionMenu';
 
 const ALL = '__all';
 
@@ -47,6 +48,8 @@ export function CallCenterTasksView() {
 
   const row = open ? all.find((t) => t.id === open) : null;
   const log = open ? getTaskCommunicationLog(open) : [];
+  const linkRes = row?.reservationId ? getReservationById(row.reservationId) : null;
+  const linkRest = linkRes ? getRestaurantById(linkRes.restaurantId) : null;
 
   const assignees = [ALL, ...new Set(all.map((t) => t.assigneeUserId).filter(Boolean) as string[])];
 
@@ -149,58 +152,21 @@ export function CallCenterTasksView() {
                       <MutedPill>{statusAr[t.status]}</MutedPill>
                     </td>
                     <td>
-                      <div style={{ display: 'flex', flexWrap: 'wrap', gap: 4, justifyContent: 'flex-end' }}>
+                      <div style={{ display: 'flex', flexWrap: 'wrap', gap: 6, justifyContent: 'flex-end', alignItems: 'center' }}>
                         <ActionButton type="button" sm variant="primary" onClick={() => setOpen(t.id)}>
-                          تفاصيل
+                          عرض
                         </ActionButton>
-                        <ActionButton
-                          type="button"
-                          sm
-                          variant="secondary"
-                          onClick={() => setMsg('بدء (نموذج).')}
-                        >
-                          متابعة
-                        </ActionButton>
-                        <ActionButton
-                          type="button"
-                          sm
-                          variant="secondary"
-                          onClick={() => setMsg('ملاحظة (نموذج).')}
-                        >
-                          ملاحظة
-                        </ActionButton>
-                        <ActionButton
-                          type="button"
-                          sm
-                          variant="secondary"
-                          onClick={() => setMsg('تم (نموذج).')}
-                        >
-                          تم
-                        </ActionButton>
-                        <ActionButton
-                          type="button"
-                          sm
-                          variant="secondary"
-                          onClick={() => setMsg('لا رد (نموذج).')}
-                        >
-                          بلا رد
-                        </ActionButton>
-                        <ActionButton
-                          type="button"
-                          sm
-                          variant="secondary"
-                          onClick={() => setMsg('تصعيد (نموذج).')}
-                        >
-                          تصعيد
-                        </ActionButton>
-                        <ActionButton
-                          type="button"
-                          sm
-                          variant="secondary"
-                          onClick={() => setMsg('إغلاق (نموذج).')}
-                        >
-                          إغلاق
-                        </ActionButton>
+                        <RowActionMenu
+                          label="إجراءات"
+                          items={[
+                            { id: '1', label: 'بدء المتابعة', onSelect: () => setMsg('بدء (نموذج).') },
+                            { id: '2', label: 'إضافة ملاحظة', onSelect: () => setMsg('ملاحظة (نموذج).') },
+                            { id: '3', label: 'تم التواصل', onSelect: () => setMsg('تم (نموذج).') },
+                            { id: '4', label: 'لم يتم الرد', onSelect: () => setMsg('لا رد (نموذج).') },
+                            { id: '5', label: 'تصعيد', onSelect: () => setMsg('تصعيد (نموذج).') },
+                            { id: '6', label: 'إغلاق المهمة', onSelect: () => setMsg('إغلاق (نموذج).') },
+                          ]}
+                        />
                       </div>
                     </td>
                   </tr>
@@ -228,12 +194,26 @@ export function CallCenterTasksView() {
                 k="النوع"
                 v={row.taskType ? CALL_CENTER_TASK_TYPE_LABELS_AR[row.taskType] : '—'}
               />
+              {row.priority && (
+                <DlItem k="الأولوية" v={CALL_CENTER_TASK_PRIORITY_LABELS_AR[row.priority]} />
+              )}
+              {row.dueAt && <DlItem k="الموعد المستهدف" v={formatIqTime(row.dueAt)} />}
+              {linkRes && linkRest && (
+                <>
+                  <DlItem k="رقم حجز مرتبط" v={linkRes.refCode} />
+                  <DlItem k="مطعم" v={linkRest.name} />
+                </>
+              )}
             </div>
             <h3 style={{ fontSize: '0.9rem', margin: '0.5rem 0' }}>سجل التواصل (نموذجي)</h3>
             <Timeline
               items={log.map((e) => ({ at: e.at, text: e.textAr, key: e.at }))}
               formatTime={(s) => formatIqTime(s)}
             />
+            <h3 style={{ fontSize: '0.8rem', margin: '0.5rem 0 0.2rem' }}>الخطوة المقترحة</h3>
+            <p style={{ fontSize: 12, fontWeight: 800, lineHeight: 1.4, color: '#475569', margin: 0 }}>
+              {row.status === 'pending' ? 'بدء الاتصال وتوثيق النتيجة (نموذج).' : 'متابعة حسب السجل (نموذج).'}
+            </p>
           </>
         )}
       </DetailDrawer>

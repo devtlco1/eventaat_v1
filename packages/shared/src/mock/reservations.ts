@@ -5,6 +5,12 @@ import { SeatingType } from '../constants/seating-type';
 
 const R = 'r_visible';
 const B = 'b_sh1';
+const B2 = 'b_sh2';
+const B3 = 'b_sh3';
+const R_AZZ = 'r_azz';
+const B_AZZ = 'b_azz1';
+const R_HAR = 'r_har';
+const B_HAR = 'b_har1';
 
 const ref = (n: number) => `EVT-${100200 + n}`;
 
@@ -234,6 +240,106 @@ export const mockReservations: Reservation[] = [
     scheduledAt: '2026-04-05T20:00:00.000Z',
     createdAt: '2026-04-01T10:00:00.000Z',
     note: 'انتهت المهلة دون رد',
+  },
+  {
+    id: 'res_b2_pend',
+    refCode: ref(17),
+    customerId: 'u_c1',
+    restaurantId: R,
+    branchId: B2,
+    tableId: null,
+    status: ReservationStatus.pending,
+    partySize: 3,
+    scheduledAt: '2026-04-29T19:00:00.000Z',
+    createdAt: '2026-04-27T10:00:00.000Z',
+    callCenterNoteAr: 'فرع الجادرية — بانتظار الرد',
+  },
+  {
+    id: 'res_b3_apr',
+    refCode: ref(18),
+    customerId: 'u_c2',
+    restaurantId: R,
+    branchId: B3,
+    tableId: 't12',
+    status: ReservationStatus.approved,
+    partySize: 6,
+    scheduledAt: '2026-04-28T21:00:00.000Z',
+    createdAt: '2026-04-26T09:00:00.000Z',
+  },
+  {
+    id: 'res_b1_late',
+    refCode: ref(19),
+    customerId: 'u_c1',
+    restaurantId: R,
+    branchId: B,
+    tableId: 't1',
+    status: ReservationStatus.customer_on_the_way,
+    partySize: 2,
+    scheduledAt: '2026-04-27T19:00:00.000Z',
+    createdAt: '2026-04-20T10:00:00.000Z',
+    needsAdminFollowupMock: true,
+    callCenterNoteAr: 'متابعة وصول (فرع الكرادة)',
+  },
+  {
+    id: 'res_azz_p',
+    refCode: ref(20),
+    customerId: 'u_c1',
+    restaurantId: R_AZZ,
+    branchId: B_AZZ,
+    tableId: 't15',
+    status: ReservationStatus.pending,
+    partySize: 4,
+    scheduledAt: '2026-04-30T20:00:00.000Z',
+    createdAt: '2026-04-27T11:00:00.000Z',
+  },
+  {
+    id: 'res_har_ok',
+    refCode: ref(21),
+    customerId: 'u_c2',
+    restaurantId: R_HAR,
+    branchId: B_HAR,
+    tableId: 't18',
+    status: ReservationStatus.seated,
+    partySize: 3,
+    scheduledAt: '2026-04-27T20:30:00.000Z',
+    createdAt: '2026-04-27T18:00:00.000Z',
+  },
+  {
+    id: 'res_har_done',
+    refCode: ref(22),
+    customerId: 'u_c1',
+    restaurantId: R_HAR,
+    branchId: B_HAR,
+    tableId: 't17',
+    status: ReservationStatus.completed,
+    partySize: 2,
+    scheduledAt: '2026-04-20T20:00:00.000Z',
+    createdAt: '2026-04-10T10:00:00.000Z',
+  },
+  {
+    id: 'res_b2_alt',
+    refCode: ref(23),
+    customerId: 'u_c2',
+    restaurantId: R,
+    branchId: B2,
+    tableId: null,
+    status: ReservationStatus.alternative_proposed,
+    partySize: 5,
+    scheduledAt: '2026-05-02T19:00:00.000Z',
+    createdAt: '2026-04-27T08:00:00.000Z',
+    note: 'مقترح: ٨ مساءً',
+  },
+  {
+    id: 'res_b3_canc',
+    refCode: ref(24),
+    customerId: 'u_c1',
+    restaurantId: R,
+    branchId: B3,
+    tableId: null,
+    status: ReservationStatus.cancelled_by_customer,
+    partySize: 2,
+    scheduledAt: '2026-05-10T20:00:00.000Z',
+    createdAt: '2026-04-25T10:00:00.000Z',
   },
 ];
 

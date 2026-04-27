@@ -80,11 +80,18 @@ deep UI work.
 - **No** new API routes, **no** backend business logic, **no** Prisma business schema changes.
   **Only** `GET /health` plus **`/docs`** / **`/openapi.json`** (see [`api-reference.md`](./api-reference.md)).
 
-### Phase 1D — (planned) Remaining depth / scenario testing
+### Phase 1E — Mock E2E scenario testing + UI polish (done in repo)
 
-Optional follow-up: end-to-end **mock scenario** testing and polish (see blueprint Phase 1 completion
-criteria). **Admin / call center** UIs are no longer placeholder-only after **UI Recovery + Dashboard Polish**.
-Does **not** add business APIs until a later phase.
+- **Goal:** Validate and polish the **full mock prototype** (customer mobile + restaurant + admin + call
+  center web) for coherence and realistic coverage **before** real backend work.
+- **Docs:** Checklist in [`mock-e2e-scenarios.md`](./mock-e2e-scenarios.md). **Web:** busier tables use
+  a primary **عرض** action plus compact row menus; detail drawers include summary, related entities, timeline
+  or communication log where relevant, and suggested next step; **Arabic-first** nav labels and
+  operational copy (see `apps/web/lib/arStrings.ts` and shell nav). **Shared:** mock data extended only
+  in `packages/shared/src/mock/` (no hardcoded domain arrays in components).
+- **Not in 1E:** business APIs, Prisma business schema, real auth, OTP, WhatsApp send, payments, or billing.
+- **API / DB:** still **`GET /health` only**; **Swagger/OpenAPI** unchanged in purpose
+  ([`api-reference.md`](./api-reference.md)).
 
 ## Phase 2 — Accounts and permissions
 

@@ -111,9 +111,10 @@
 }
 
 .dataTable td {
-  padding: 0.38rem 0.45rem;
+  padding: 0.48rem 0.5rem;
+  min-height: 2.5rem;
   border-bottom: 1px solid #f1f5f9;
-  vertical-align: top;
+  vertical-align: middle;
   color: #0f1419;
 }
 

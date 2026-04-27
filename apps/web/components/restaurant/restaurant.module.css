@@ -354,6 +354,86 @@
   padding: 0.9rem 1rem;
   background: #fff;
 }
+.branchSummaryStrip {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+  gap: 0.65rem;
+  margin-bottom: 1.1rem;
+}
+.branchKpi {
+  background: #f8fafc;
+  border: 1px solid #e2e8f0;
+  border-radius: 10px;
+  padding: 0.65rem 0.8rem;
+}
+.branchKpiValue {
+  font-size: 1.25rem;
+  font-weight: 800;
+  color: #0f172a;
+  line-height: 1.2;
+}
+.branchKpiLabel {
+  font-size: 0.72rem;
+  color: #64748b;
+  margin-top: 0.2rem;
+  line-height: 1.3;
+}
+.branchMetaRow {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem 1rem;
+  font-size: 0.8rem;
+  color: #334155;
+  margin: 0.35rem 0 0.5rem;
+}
+.settingsTabRow {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.4rem;
+  margin-bottom: 0.9rem;
+  border-bottom: 1px solid #e5e7eb;
+  padding-bottom: 0.65rem;
+}
+.settingsTabBtn {
+  border: 1px solid #e5e7eb;
+  background: #fff;
+  border-radius: 8px;
+  padding: 0.35rem 0.65rem;
+  font-size: 0.78rem;
+  font-weight: 800;
+  color: #475569;
+  cursor: pointer;
+  font-family: inherit;
+}
+.settingsTabBtn:hover {
+  background: #f8fafc;
+}
+.settingsTabBtnActive {
+  border-color: #047857;
+  background: #ecfdf5;
+  color: #047857;
+}
+.sToggleRow {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.75rem;
+  padding: 0.5rem 0;
+  border-bottom: 1px solid #f1f5f9;
+  font-size: 0.86rem;
+}
+.sToggleRow:last-child {
+  border-bottom: none;
+}
+.sSelect {
+  padding: 0.35rem 0.5rem;
+  border: 1px solid #d1d5db;
+  border-radius: 8px;
+  font-size: 0.86rem;
+  font-family: inherit;
+  min-width: 7rem;
+}
+
 .sGrid {
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));

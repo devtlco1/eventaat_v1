@@ -1,4 +1,4 @@
-# Mock data contract (Phases 1A–1C + UI Recovery extensions for consumers)
+# Mock data contract (Phases 1A–1C + UI Recovery + Phase 1E extensions for consumers)
 
 Phase **1A** established a **mock-first** data layer in [`packages/shared`](../packages/shared) so
 mobile and web UIs can share the same **shapes** and **sample records** while **no** persistence,
@@ -14,6 +14,10 @@ rows, subscription display fields (`trialEndsOn`, `lastFollowUpAt`, `nextActionA
 helpers (`platform-aggregates`, `communication-logs`, `admin-extras`) for **admin / call center /
 platform** web dashboards. Internal status keys stay English; Arabic labels use existing `*_LABELS_AR`
 maps and web copy files.
+
+**Phase 1E** may add more **illustrative** rows (restaurants, branches, reservations, complaints, tasks,
+subscriptions, communication log keys) in the same `mock/*.ts` files to avoid empty UIs in scenario
+testing. **No** new persistence, **no** API surface change.
 
 ## Location
 

@@ -9,19 +9,19 @@ import styles from './shell.module.css';
 const nav: { href: string; label: string; group: 'hub' | 'restaurant' | 'admin' | 'cc' }[] = [
   { href: '/dashboard', label: 'لوحة البداية', group: 'hub' },
   { href: '/restaurant', label: 'حساب المطعم', group: 'restaurant' },
-  { href: '/restaurant/reservations', label: 'الحجوزات', group: 'restaurant' },
+  { href: '/restaurant/reservations', label: 'إدارة الحجوزات', group: 'restaurant' },
   { href: '/restaurant/tables', label: 'الطاولات', group: 'restaurant' },
   { href: '/restaurant/branches', label: 'الفروع', group: 'restaurant' },
-  { href: '/restaurant/settings', label: 'الإعدادات', group: 'restaurant' },
+  { href: '/restaurant/settings', label: 'إعدادات المطعم', group: 'restaurant' },
   { href: '/admin', label: 'ملخص الإدارة', group: 'admin' },
-  { href: '/admin/restaurants', label: 'مطاعم', group: 'admin' },
-  { href: '/admin/reservations', label: 'حجوزات', group: 'admin' },
-  { href: '/admin/complaints', label: 'شكاوى', group: 'admin' },
-  { href: '/admin/subscriptions', label: 'اشتراكات', group: 'admin' },
+  { href: '/admin/restaurants', label: 'إدارة المطاعم', group: 'admin' },
+  { href: '/admin/reservations', label: 'رصد الحجوزات', group: 'admin' },
+  { href: '/admin/complaints', label: 'الشكاوى', group: 'admin' },
+  { href: '/admin/subscriptions', label: 'الاشتراكات', group: 'admin' },
   { href: '/call-center', label: 'مكتب الاتصال', group: 'cc' },
-  { href: '/call-center/tasks', label: 'مهام', group: 'cc' },
-  { href: '/call-center/reservations', label: 'متابعة حجوزات', group: 'cc' },
-  { href: '/call-center/complaints', label: 'متابعة شكاوى', group: 'cc' },
+  { href: '/call-center/tasks', label: 'مهام المتابعة', group: 'cc' },
+  { href: '/call-center/reservations', label: 'متابعة الحجوزات', group: 'cc' },
+  { href: '/call-center/complaints', label: 'متابعة الشكاوى', group: 'cc' },
 ];
 
 function groupLabel(g: (typeof nav)[0]['group']) {

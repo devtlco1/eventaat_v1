@@ -16,6 +16,7 @@ import { SearchInput } from '@/components/ui/SearchInput';
 import { SelectFilter } from '@/components/ui/SelectFilter';
 import { DataTableFrame, dataTableCl } from '@/components/dashboard/DataTable';
 import { ActionButton } from '@/components/ui/ActionButton';
+import { RowActionMenu } from '@/components/ui/RowActionMenu';
 import { MutedPill, StatusBadge } from '@/components/dashboard/StatusBadge';
 import { EmptyState } from '@/components/ui/EmptyState';
 import { DetailDrawer, DlItem } from '@/components/dashboard/DetailDrawer';
@@ -181,42 +182,19 @@ export function AdminComplaintsView() {
                     {formatIqTime(c.lastUpdated)}
                   </td>
                   <td>
-                    <div style={{ display: 'flex', flexWrap: 'wrap', gap: 4, justifyContent: 'flex-end' }}>
+                    <div style={{ display: 'flex', flexWrap: 'wrap', gap: 6, justifyContent: 'flex-end', alignItems: 'center' }}>
                       <ActionButton type="button" sm variant="primary" onClick={() => setOpen(c.id)}>
                         عرض
                       </ActionButton>
-                      <ActionButton
-                        type="button"
-                        sm
-                        variant="secondary"
-                        onClick={() => setMsg('بانتظار المطعم (نموذج).')}
-                      >
-                        رد المطعم
-                      </ActionButton>
-                      <ActionButton
-                        type="button"
-                        sm
-                        variant="secondary"
-                        onClick={() => setMsg('معلومات (نموذج).')}
-                      >
-                        رد الزبون
-                      </ActionButton>
-                      <ActionButton
-                        type="button"
-                        sm
-                        variant="secondary"
-                        onClick={() => setMsg('تصعيد (نموذج).')}
-                      >
-                        تصعيد
-                      </ActionButton>
-                      <ActionButton
-                        type="button"
-                        sm
-                        variant="secondary"
-                        onClick={() => setMsg('حل/إغلاق (نموذج).')}
-                      >
-                        حل
-                      </ActionButton>
+                      <RowActionMenu
+                        items={[
+                          { id: 'r1', label: 'طلب رد المطعم', onSelect: () => setMsg('بانتظار المطعم (نموذج).') },
+                          { id: 'r2', label: 'طلب معلومات من الزبون', onSelect: () => setMsg('معلومات (نموذج).') },
+                          { id: 'r3', label: 'تصعيد', onSelect: () => setMsg('تصعيد (نموذج).') },
+                          { id: 'r4', label: 'حل الشكوى', onSelect: () => setMsg('حل (نموذج).') },
+                          { id: 'r5', label: 'إغلاق', onSelect: () => setMsg('إغلاق (نموذج).') },
+                        ]}
+                      />
                     </div>
                   </td>
                 </tr>
@@ -237,11 +215,29 @@ export function AdminComplaintsView() {
       >
         {row && (
           <>
-            <p style={{ fontWeight: 800, lineHeight: 1.4 }}>{row.subject}</p>
+            <p style={{ fontWeight: 800, lineHeight: 1.4, margin: '0 0 0.4rem' }}>{row.subject}</p>
             <div style={{ marginTop: 6 }}>
+              <DlItem k="الحالة" v={COMPLAINT_STATUS_LABELS_AR[row.status]} />
+              <DlItem k="النوع" v={row.category ? COMPLAINT_CATEGORY_LABELS_AR[row.category] : '—'} />
+              <DlItem
+                k="الأولوية"
+                v={row.priority ? COMPLAINT_PRIORITY_LABELS_AR[row.priority] : '—'}
+              />
+              {row.party && (
+                <DlItem
+                  k="الطرف الحالي"
+                  v={COMPLAINT_PARTY_LABELS_AR[row.party]}
+                />
+              )}
+              <DlItem k="آخر تحديث" v={formatIqTime(row.lastUpdated)} />
               <DlItem k="الزبون" v={row.customerName} />
               <DlItem k="المطعم" v={row.restaurantName} />
-              {resRef && <DlItem k="رقم مرتبط (حجز)" v={resRef.refCode} />}
+              {resRef && (
+                <>
+                  <DlItem k="رقم مرتبط (حجز)" v={resRef.refCode} />
+                  <DlItem k="موعد الحجز" v={formatIqTime(resRef.scheduledAt)} />
+                </>
+              )}
             </div>
             <h3 style={{ fontSize: '0.9rem', margin: '0.6rem 0' }}>زمني التواصل (نموذجي)</h3>
             <Timeline
@@ -252,6 +248,12 @@ export function AdminComplaintsView() {
               }))}
               formatTime={(s) => formatIqTime(s)}
             />
+            <h3 style={{ fontSize: '0.8rem', margin: '0.5rem 0 0.2rem' }}>الخطوة المقترحة</h3>
+            <p style={{ fontSize: 12, fontWeight: 800, lineHeight: 1.4, color: '#475569', margin: 0 }}>
+              {row.status === 'escalated' || row.priority === 'urgent'
+                ? 'متابعة فورية مع المطعم ثم إثبات الرد في السجل (نموذج).'
+                : 'متابعة حسب أولوية البلاغ وربطه بالحجز إن وُجد (نموذج).'}
+            </p>
           </>
         )}
       </DetailDrawer>

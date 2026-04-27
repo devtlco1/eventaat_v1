@@ -8,6 +8,7 @@ import { PageToolbar } from '@/components/ui/PageToolbar';
 import { SelectFilter } from '@/components/ui/SelectFilter';
 import { DataTableFrame, dataTableCl } from '@/components/dashboard/DataTable';
 import { ActionButton } from '@/components/ui/ActionButton';
+import { RowActionMenu } from '@/components/ui/RowActionMenu';
 import { MutedPill } from '@/components/dashboard/StatusBadge';
 import { EmptyState } from '@/components/ui/EmptyState';
 import { DetailDrawer, DlItem } from '@/components/dashboard/DetailDrawer';
@@ -115,58 +116,21 @@ export function CallCenterComplaintsView() {
                   </td>
                   <td style={{ fontSize: 12, fontWeight: 800 }}>{c.restaurantName}</td>
                   <td>
-                    <div style={{ display: 'flex', flexWrap: 'wrap', gap: 4, justifyContent: 'flex-end' }}>
+                    <div style={{ display: 'flex', flexWrap: 'wrap', gap: 6, justifyContent: 'flex-end', alignItems: 'center' }}>
                       <ActionButton type="button" sm variant="primary" onClick={() => setOpen(c.id)}>
-                        تفاصيل
+                        عرض
                       </ActionButton>
-                      <ActionButton
-                        type="button"
-                        sm
-                        variant="secondary"
-                        onClick={() => setMsg('مكالمة (نموذج).')}
-                      >
-                        زبون
-                      </ActionButton>
-                      <ActionButton
-                        type="button"
-                        sm
-                        variant="secondary"
-                        onClick={() => setMsg('مكالمة (نموذج).')}
-                      >
-                        مطعم
-                      </ActionButton>
-                      <ActionButton
-                        type="button"
-                        sm
-                        variant="secondary"
-                        onClick={() => setMsg('معلومات (نموذج).')}
-                      >
-                        طلب بيانات
-                      </ActionButton>
-                      <ActionButton
-                        type="button"
-                        sm
-                        variant="secondary"
-                        onClick={() => setMsg('ملاحظة (نموذج).')}
-                      >
-                        ملاحظة
-                      </ActionButton>
-                      <ActionButton
-                        type="button"
-                        sm
-                        variant="secondary"
-                        onClick={() => setMsg('تصعيد (نموذج).')}
-                      >
-                        تصعيد
-                      </ActionButton>
-                      <ActionButton
-                        type="button"
-                        sm
-                        variant="secondary"
-                        onClick={() => setMsg('تعليق (نموذج).')}
-                      >
-                        إغلاق
-                      </ActionButton>
+                      <RowActionMenu
+                        label="متابعة"
+                        items={[
+                          { id: '1', label: 'الاتصال بالزبون', onSelect: () => setMsg('مكالمة زبون (نموذج).') },
+                          { id: '2', label: 'الاتصال بالمطعم', onSelect: () => setMsg('مكالمة مطعم (نموذج).') },
+                          { id: '3', label: 'طلب معلومات', onSelect: () => setMsg('معلومات (نموذج).') },
+                          { id: '4', label: 'إضافة ملاحظة', onSelect: () => setMsg('ملاحظة (نموذج).') },
+                          { id: '5', label: 'تصعيد', onSelect: () => setMsg('تصعيد (نموذج).') },
+                          { id: '6', label: 'إغلاق متابعة', onSelect: () => setMsg('تعليق (نموذج).') },
+                        ]}
+                      />
                     </div>
                   </td>
                 </tr>
@@ -189,6 +153,7 @@ export function CallCenterComplaintsView() {
           <>
             <p style={{ fontWeight: 800, lineHeight: 1.4, margin: '0 0 0.4rem' }}>{row.subject}</p>
             <div>
+              <DlItem k="الحالة" v={COMPLAINT_STATUS_LABELS_AR[row.status]} />
               <DlItem k="الزبون" v={row.customerName} />
               <DlItem k="مطعم" v={row.restaurantName} />
               {row.priority && (
@@ -197,13 +162,22 @@ export function CallCenterComplaintsView() {
                   v={COMPLAINT_PRIORITY_LABELS_AR[row.priority]}
                 />
               )}
-              {resv && <DlItem k="حجز" v={resv.refCode} />}
+              {resv && (
+                <>
+                  <DlItem k="رقم مرتبط" v={resv.refCode} />
+                  <DlItem k="موعد الحجز" v={formatIqTime(resv.scheduledAt)} />
+                </>
+              )}
             </div>
             <h3 style={{ fontSize: '0.9rem', margin: '0.6rem 0' }}>سجل (نموذجي)</h3>
             <Timeline
               items={log.map((e) => ({ at: e.at, text: e.textAr, key: e.at }))}
               formatTime={(s) => formatIqTime(s)}
             />
+            <h3 style={{ fontSize: '0.8rem', margin: '0.4rem 0' }}>الخطوة المقترحة</h3>
+            <p style={{ fontSize: 12, fontWeight: 800, lineHeight: 1.4, color: '#475569', margin: 0 }}>
+              توثيق الاتصال وتحديث أولوية الملف حسب الرد (نموذج).
+            </p>
           </>
         )}
       </DetailDrawer>

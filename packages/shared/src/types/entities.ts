@@ -49,6 +49,8 @@ export interface Branch {
   name: string;
   area: string;
   address: string;
+  /** Mock: one-line opening hours for branch cards */
+  defaultHoursAr?: string;
 }
 
 export interface RestaurantTable {
