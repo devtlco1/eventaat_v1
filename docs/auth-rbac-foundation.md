@@ -116,24 +116,38 @@ The blueprint favors **persisted roles, OTP challenge, and session shapes** befo
 | Sub-phase | Scope |
 |----------|--------|
 | **2B** (done) | Auth HTTP: `POST /auth/otp/*`, `GET /auth/me`, `POST /auth/logout`, Swagger + `api-reference.md` (no real WhatsApp). |
+| **2B.1** (done) | Committed Prisma migration `auth_foundation` + e2e against local Postgres; **no** new API routes. |
 | **2C** | **WhatsApp** (and optional SMS) **adapter**; provider interfaces + `providerMessageId`; still no scope creep. |
 | **2D** | **Web and mobile** integration: call APIs, store tokens, Arabic-first RTL. |
 | **2E** | **RBAC guards** (Nest), route protection, and dashboard shells per role/scope. |
 
 ---
 
-## 8. Migrations (when the database is available)
+## 8. Migrations (Phase 2B.1: `auth_foundation` in the repo)
 
-From the repo root with PostgreSQL up (e.g. `docker compose up -d postgres`):
+The first checked-in migration is under:
+
+`apps/api/prisma/migrations/20260427142646_auth_foundation/migration.sql`
+
+(The timestamp prefix is assigned by Prisma; the migration **name** is `auth_foundation`.) It creates
+**enums**, **users**, **user_role_assignments**, **otp_challenges**, **user_sessions**, **audit_logs**, and
+**foundation_schema_marker** as in the current `schema.prisma`.
+
+**New environment / first clone:**
 
 ```bash
 export DATABASE_URL="postgresql://eventaat:eventaat@localhost:5432/eventaat?schema=public"
 cd apps/api
-npx prisma migrate dev --name auth_foundation
+npx prisma migrate deploy
 ```
 
-If a migration is created in another branch/CI, deploy with your normal **migrate deploy** process.
-**Non-destructive** policy: do not run destructive changes without a reviewed migration plan.
+**Local stack:** from the repo root, `docker compose up -d postgres redis` then set `DATABASE_URL` in
+`apps/api/.env`. Manual API checks: [`local-auth-verification.md`](./local-auth-verification.md). Automated
+`jest` e2e (including auth) runs with `DATABASE_URL` and `JWT_ACCESS_SECRET` set; auth tests are **not
+skipped** when the database is reachable.
+
+**CI / production:** use **`prisma migrate deploy`**, not `migrate dev`, in pipelines. **Non-destructive**
+policy: do not run destructive changes without a reviewed plan.
 
 ---
 

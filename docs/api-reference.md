@@ -4,6 +4,11 @@ Base URL: configured per environment; local default is `http://localhost:3000` (
 [`../apps/api/.env.example`](../apps/api/.env.example)). With the default port, you can also use
 `http://127.0.0.1:3000`.
 
+**Phase 2B.1** adds the **`auth_foundation` Prisma migration** (local/CI database apply), **local
+PostgreSQL verification**, and e2e tests that **run the auth suite** when `DATABASE_URL` is set.
+**No** new API endpoints were added. See [`local-auth-verification.md`](./local-auth-verification.md) for
+curl-style checks.
+
 **Phase 2B** implements **auth HTTP** routes: OTP request/verify (with **no** real WhatsApp send),
 session + JWT access token, logout, and **GET /me**. **No** restaurant, reservation, or payment APIs.
 **Swagger/OpenAPI** is updated in the same step. Remaining surface: health + auth. OpenAPI: **`/docs`** and

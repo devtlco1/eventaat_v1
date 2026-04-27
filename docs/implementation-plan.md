@@ -132,6 +132,19 @@ restaurant, call center agent, admin.
   [`auth-rbac-foundation.md`](./auth-rbac-foundation.md)).
 - **Not 2B:** real WhatsApp, RBAC **route** guards, mobile/web client wiring (Phase 2C+).
 
+### Phase 2B.1 — Auth migration + local DB verification (done in repo)
+
+- **Prisma:** committed migration `apps/api/prisma/migrations/*/auth_foundation` (timestamped folder) creates
+  enums and tables for **User**, **UserRoleAssignment**, **OtpChallenge**, **UserSession**, **AuditLog**,
+  plus **FoundationSchemaMarker**. Apply with `npx prisma migrate deploy` (or `migrate dev` in development)
+  when `DATABASE_URL` points at PostgreSQL.
+- **Docker:** `docker compose up -d postgres redis` from the repo root for local services.
+- **E2E:** with `DATABASE_URL` + `JWT_ACCESS_SECRET` (+ `AUTH_DEV_EXPOSE_OTP=true` for `devOtp` assertions), **`npx
+  jest --config ./test/jest-e2e.json` runs the auth e2e suite (not skipped)**. **No** new HTTP routes; **no** auth
+  behavior change beyond any test fixes.
+- **Docs:** [`local-auth-verification.md`](./local-auth-verification.md), updates to this file,
+  [`api-reference.md`](./api-reference.md), [`auth-rbac-foundation.md`](./auth-rbac-foundation.md), **README**.
+
 ## Phase 3 — Restaurants, branches, tables
 
 Goal: operational setup for each restaurant. **Includes:** create/review/activate restaurant, branch, tables,
@@ -186,9 +199,10 @@ waitlist, paid promos, better reports, separate restaurant app, loyalty, new cit
 
 ---
 
-**Current code status:** **Phases 1A–1E**, **Phase 2A** (Prisma auth schema), and **Phase 2B** (auth **HTTP** API
-for OTP + JWT + session) are in the repo. The **public** **HTTP** surface includes **`GET /health`** and
-**`POST /auth/…`** / **`GET /auth/me`** as in [`api-reference.md`](./api-reference.md) — not restaurant,
-reservation, or payment resources yet. See
-[`prisma/schema.prisma`](../apps/api/prisma/schema.prisma) and
-[`auth-rbac-foundation.md`](./auth-rbac-foundation.md) for the documentation maintenance rule.
+**Current code status:** **Phases 1A–1E**, **2A/2B** (auth Prisma + HTTP), and **2B.1** (committed
+**`auth_foundation`** migration + e2e verified against local Postgres when available) are in the repo. The
+**public** **HTTP** surface is unchanged in 2B.1: **`GET /health`** and auth routes as in
+[`api-reference.md`](./api-reference.md). See
+[`prisma/migrations`](../apps/api/prisma/migrations/),
+[`local-auth-verification.md`](./local-auth-verification.md), and
+[`auth-rbac-foundation.md`](./auth-rbac-foundation.md).

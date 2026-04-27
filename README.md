@@ -64,6 +64,17 @@ Then generate the Prisma client (also runs on API `build` / `start:dev`):
 cd apps/api && npx prisma generate
 ```
 
+**PostgreSQL (auth) — local:** `docker compose up -d postgres redis` from the repository root, then set
+`DATABASE_URL` in `apps/api/.env` (see [`apps/api/.env.example`](./apps/api/.env.example)). Apply migrations:
+
+```bash
+cd apps/api
+npx prisma migrate deploy
+```
+
+**Phase 2B.1** includes the `auth_foundation` migration under `apps/api/prisma/migrations/`. For manual auth
+**curl** checks and the exact e2e command, see **[`docs/local-auth-verification.md`](./docs/local-auth-verification.md)**.
+
 > **Path note:** some tools (including pnpm) mishandle the colon (`:`) in a folder name such as
 > `DEV :./`. If workspace commands like `pnpm --filter …` error when updating `PATH`, run commands
 > from each app directory with `npx` (as in this README) or **rename the project directory** to a
@@ -120,7 +131,7 @@ pnpm -r run build
   [`docs/api-reference.md`](./docs/api-reference.md)). **Prisma (Phase 2A+)** has **User**, **OtpChallenge**, **UserSession**, **AuditLog**,
   and related enums — **no** restaurant/reservation tables yet. **No** real WhatsApp send (Phase 2C); **no** payment APIs.
 - **Documentation:** `docs/` includes `mock-data-contract.md`, [`docs/mock-e2e-scenarios.md`](./docs/mock-e2e-scenarios.md) (Phase 1E
-  checklist), **[`docs/auth-rbac-foundation.md`](./docs/auth-rbac-foundation.md)** (Phase 2A), and
+  checklist), **[`docs/auth-rbac-foundation.md`](./docs/auth-rbac-foundation.md)** (auth data model), **[`docs/local-auth-verification.md`](./docs/local-auth-verification.md)** (Postgres + curl, Phase 2B.1), and
   the OpenAPI/Swagger maintenance rule in `docs/api-reference.md`.
 
 ## Next sub-phase (not fully implemented)
