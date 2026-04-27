@@ -211,6 +211,24 @@ restaurant, call center agent, admin.
   (copy-paste start commands for API + web), this file, [`frontend-auth-integration.md`](./frontend-auth-integration.md). Developer
   port/env notes: API **3000**, web **3001**; `AUTH_DEV_EXPOSE_OTP` local only.
 
+### Phase 3A — Restaurant / branch / seating / table database foundation (done in repo)
+
+- **Prisma (only):** enums `RestaurantStatus`, `BranchStatus`, `SeatingAreaType`, `TableStatus`, `RestaurantUserRole`,
+  `RestaurantOnboardingStatus`; models **`Restaurant`**, **`Branch`**, **`SeatingArea`**, **`RestaurantTable`**,
+  **`RestaurantStaffAssignment`**; **`User.restaurantStaffAssignments`**. **No** `Reservation` or payment models.
+- **Migration:** `apps/api/prisma/migrations/20260427173123_restaurant_branch_table_foundation/` (timestamp from
+  `prisma migrate dev` may differ in other clones; name suffix `restaurant_branch_table_foundation` is stable). Apply with
+  `DATABASE_URL=… npx prisma migrate dev` (dev) or `migrate deploy` (CI/prod). **No** new public HTTP routes;
+  **no** change to existing auth route behavior.
+- **Shared:** `prisma-entity-labels.ts` (Arabic labels for **Prisma** enum **keys**); optional `TableStatus.archived` in
+  mock constants for parity. Mock UI data and types remain the primary contract until later phases.
+- **Docs:** [`restaurant-data-model.md`](./restaurant-data-model.md), updates to this file, `README`, `api-reference.md`,
+  `auth-rbac-foundation.md`, `roles-permissions.md`, `mock-data-contract.md`. **Intended seed** (one restaurant,
+  branches, areas, tables, staff link) is **documented only** — implementation in **Phase 3B** unless a separate
+  small, isolated seed task is agreed.
+- **Not 3A:** business CRUD HTTP APIs, dashboard DB integration, reservation schema, payments, or removal of mock
+  flows.
+
 ## Phase 3 — Restaurants, branches, tables
 
 Goal: operational setup for each restaurant. **Includes:** create/review/activate restaurant, branch, tables,
@@ -266,9 +284,10 @@ waitlist, paid promos, better reports, separate restaurant app, loyalty, new cit
 ---
 
 **Current code status:** **Phases 1A–1E**, **2A/2B** (auth Prisma + HTTP), **2B.1**, **2C** (OTP delivery), **2D** (client
-auth), **2E** (RBAC **guard** + **web** route shell; **no** new public API routes), and **2E.1** (web **ux**: fixed
-sidebar, table pagination, row action menus, login error copy, docs) are in the repo. The **public** **HTTP** surface (besides 2A–2D) has **no** 2E additions: **`GET /health`**
-and auth routes as in [`api-reference.md`](./api-reference.md). See
-[`prisma/migrations`](../apps/api/prisma/migrations/),
+auth), **2E** (RBAC **guard** + **web** route shell; **no** new public API routes), **2E.1** (web **ux**), and
+**3A** (Prisma **restaurant / branch / seating / table / staff-assignment** foundation — **no** new HTTP routes) are
+in the repo. The **public** **HTTP** surface remains: **`GET /health`** and auth routes as in
+[`api-reference.md`](./api-reference.md). See [`prisma/migrations`](../apps/api/prisma/migrations/),
+[`restaurant-data-model.md`](./restaurant-data-model.md),
 [`local-auth-verification.md`](./local-auth-verification.md),
 [`auth-rbac-foundation.md`](./auth-rbac-foundation.md), and [`rbac-route-access.md`](./rbac-route-access.md).

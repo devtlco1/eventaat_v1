@@ -72,7 +72,65 @@ enum AuditActorType {
   support
 }
 
-// --- Phase 2A: models (no Restaurant/Branch tables yet — use scopeId for future entity keys) ---
+// --- Phase 3A: restaurant / branch / seating / tables (business scope; no reservation models yet) ---
+
+enum RestaurantStatus {
+  draft
+  pending_review
+  active
+  needs_changes
+  bookings_disabled
+  suspended
+  archived
+}
+
+enum BranchStatus {
+  open
+  closed
+  temporarily_closed
+  bookings_disabled
+  archived
+}
+
+enum SeatingAreaType {
+  indoor
+  outdoor
+  family
+  vip
+  smoking
+  non_smoking
+  mixed
+}
+
+enum TableStatus {
+  available
+  reserved
+  occupied
+  waiting_cleaning
+  cleaning
+  blocked
+  out_of_service
+  archived
+}
+
+enum RestaurantUserRole {
+  owner
+  manager
+  host
+  viewer
+}
+
+enum RestaurantOnboardingStatus {
+  not_started
+  profile_pending
+  branches_pending
+  tables_pending
+  under_review
+  approved
+  needs_changes
+}
+
+// --- Phase 2A + Phase 3A: core auth models + business restaurant/branch/tables (see `UserRoleAssignment` vs `RestaurantStaffAssignment`) ---
 
 model User {
   id              String     @id @default(cuid())
@@ -89,7 +147,9 @@ model User {
   disabledAt      DateTime?
   suspendedAt     DateTime?
 
-  roleAssignments UserRoleAssignment[]
+  roleAssignments            UserRoleAssignment[]
+  restaurantStaffAssignments RestaurantStaffAssignment[]
+
   otpChallenges   OtpChallenge[]
   sessions        UserSession[]
   auditLogs       AuditLog[]           @relation("UserAuditLog")
@@ -189,4 +249,158 @@ model AuditLog {
   @@index([entityType, entityId])
   @@index([createdAt])
   @@map("audit_logs")
+}
+
+// --- Phase 3A: persisted restaurant domain (no Reservation model in this phase) ---
+
+/// Restaurant (catalog + operations settings). Mock UI still uses a parallel `RestaurantStatus` vocabulary in `packages/shared`.
+model Restaurant {
+  id                                String   @id @default(cuid())
+  nameAr                            String
+  nameEn                            String?
+  slug                              String   @unique
+  descriptionAr                     String?
+  descriptionEn                     String?
+  city                              String
+  area                              String?
+  addressText                       String?
+  phone                             String?
+  status                            RestaurantStatus
+  onboardingStatus                  RestaurantOnboardingStatus
+  bookingsEnabled                   Boolean  @default(false)
+  isVisible                         Boolean  @default(false)
+  cuisineTypes                      String[] @default([])
+  tags                              Json?
+  ratingAvg                         Decimal? @db.Decimal(4, 2)
+  ratingCount                       Int      @default(0)
+  cancellationPolicyAr              String?
+  defaultReservationDurationMinutes Int      @default(90)
+  defaultGracePeriodMinutes         Int      @default(15)
+  createdAt                         DateTime @default(now())
+  updatedAt                         DateTime @updatedAt
+  archivedAt                        DateTime?
+
+  branches          Branch[]
+  seatingAreas      SeatingArea[]
+  tables            RestaurantTable[]
+  staffAssignments  RestaurantStaffAssignment[]
+
+  @@index([status])
+  @@index([city, area])
+  @@index([bookingsEnabled])
+  @@index([isVisible])
+  @@map("restaurants")
+}
+
+model Branch {
+  id            String   @id @default(cuid())
+  restaurantId  String
+  nameAr        String
+  nameEn        String?
+  city          String
+  area          String
+  addressText   String
+  landmark      String?
+  phone         String?
+  status        BranchStatus
+  bookingsEnabled Boolean  @default(true)
+  defaultHoursAr String?
+  latitude      Float?
+  longitude     Float?
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+  archivedAt    DateTime?
+
+  restaurant       Restaurant  @relation(fields: [restaurantId], references: [id], onDelete: Cascade)
+  seatingAreas     SeatingArea[]
+  tables           RestaurantTable[]
+  staffAssignments RestaurantStaffAssignment[]
+
+  @@index([restaurantId])
+  @@index([status])
+  @@index([city, area])
+  @@index([bookingsEnabled])
+  @@map("branches")
+}
+
+/// Seating zone (restaurant-level and/or branch-level). Distinct from RBAC `UserRole` scope rows.
+model SeatingArea {
+  id           String   @id @default(cuid())
+  restaurantId String
+  branchId     String?
+  nameAr       String
+  nameEn       String?
+  type         SeatingAreaType
+  isActive     Boolean  @default(true)
+  sortOrder    Int      @default(0)
+  notes        String?
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+
+  restaurant Restaurant  @relation(fields: [restaurantId], references: [id], onDelete: Cascade)
+  branch     Branch?     @relation(fields: [branchId], references: [id], onDelete: SetNull)
+  tables     RestaurantTable[]
+
+  @@index([restaurantId])
+  @@index([branchId])
+  @@index([type])
+  @@index([isActive])
+  @@map("seating_areas")
+}
+
+model RestaurantTable {
+  id             String   @id @default(cuid())
+  restaurantId   String
+  branchId       String
+  seatingAreaId  String?
+  tableNumber    String
+  displayNameAr  String?
+  capacityMin    Int      @default(1)
+  capacityMax    Int
+  status         TableStatus
+  isBookable     Boolean  @default(true)
+  sortOrder      Int      @default(0)
+  notes          String?
+  createdAt      DateTime @default(now())
+  updatedAt      DateTime @updatedAt
+  archivedAt     DateTime?
+
+  restaurant  Restaurant  @relation(fields: [restaurantId], references: [id], onDelete: Cascade)
+  branch      Branch      @relation(fields: [branchId], references: [id], onDelete: Cascade)
+  seatingArea SeatingArea? @relation(fields: [seatingAreaId], references: [id], onDelete: SetNull)
+
+  @@unique([branchId, tableNumber])
+  @@index([restaurantId])
+  @@index([branchId])
+  @@index([seatingAreaId])
+  @@index([status])
+  @@index([isBookable])
+  @@index([capacityMax])
+  @@map("restaurant_tables")
+}
+
+/// Per-restaurant/branch **operations** access for a `User`. Does not replace `UserRole` / `UserRoleAssignment` (auth/RBAC).
+/// Composite unique includes `branchId`; PostgreSQL treats `NULL` as distinct in unique constraints, so several rows
+/// with `branchId = null` can slip through if not enforced in application code — see `docs/restaurant-data-model.md`.
+model RestaurantStaffAssignment {
+  id           String   @id @default(cuid())
+  userId       String
+  restaurantId String
+  branchId     String?
+  role         RestaurantUserRole
+  isActive     Boolean  @default(true)
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+
+  user       User       @relation(fields: [userId], references: [id], onDelete: Cascade)
+  restaurant Restaurant @relation(fields: [restaurantId], references: [id], onDelete: Cascade)
+  branch     Branch?    @relation(fields: [branchId], references: [id], onDelete: SetNull)
+
+  @@unique([userId, restaurantId, role, branchId])
+  @@index([userId])
+  @@index([restaurantId])
+  @@index([branchId])
+  @@index([role])
+  @@index([isActive])
+  @@map("restaurant_staff_assignments")
 }

@@ -90,3 +90,10 @@ mock data continue to work without a real API.
 *JWT/session and `GET /auth/me` are **Phase 2B**. **Path-level** web dashboard protection and the **API** `RbacGuard`
 foundation are **Phase 2E**; fine-grained per-screen permissions for `content_manager` / `finance_manager` may
 evolve in later phases — see [`rbac-route-access.md`](./rbac-route-access.md).*
+
+**Phase 3A (Prisma, no new HTTP routes):** the database adds **`RestaurantStaffAssignment`** with
+`RestaurantUserRole` (`owner`, `manager`, `host`, `viewer`) to scope a **`User`** to a **restaurant** and
+optionally a **branch** for **operational** access. This is separate from product **`UserRole`** /
+**`UserRoleAssignment`** (see [`auth-rbac-foundation.md`](./auth-rbac-foundation.md) and
+[`restaurant-data-model.md`](./restaurant-data-model.md)). Future APIs can combine JWT + RBAC with staff
+rows as needed.

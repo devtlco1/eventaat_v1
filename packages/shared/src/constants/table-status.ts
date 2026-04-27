@@ -7,6 +7,8 @@ export const TableStatus = {
   cleaning: 'cleaning',
   blocked: 'blocked',
   out_of_service: 'out_of_service',
+  /** Aligned with Prisma `TableStatus.archived` for future API parity; mock sample rows need not use it. */
+  archived: 'archived',
 } as const;
 
 export type TableStatus = (typeof TableStatus)[keyof typeof TableStatus];
@@ -19,4 +21,5 @@ export const TABLE_STATUS_LABELS_AR: Record<TableStatus, string> = {
   [TableStatus.cleaning]: 'تنظيف',
   [TableStatus.blocked]: 'محجوبة',
   [TableStatus.out_of_service]: 'خارج الخدمة',
+  [TableStatus.archived]: 'مؤرشفة',
 };

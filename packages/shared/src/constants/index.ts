@@ -7,6 +7,7 @@ export * from './reservation-status.js';
 export * from './restaurant-status.js';
 export * from './roles.js';
 export * from './prisma-auth-alignment.js';
+export * from './prisma-entity-labels.js';
 export * from './seating-type.js';
 export * from './subscription-status.js';
 export * from './table-status.js';

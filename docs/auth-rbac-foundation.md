@@ -45,10 +45,12 @@ one restaurant, manager of one branch).
 |-------|--------|
 | `role` | `UserRole` (same enum as on `User`) |
 | `scopeType` | `RoleScopeType`: `platform`, `restaurant`, `branch`, `call_center` |
-| `scopeId` | **String**, default `""`. **No** `Restaurant` / `Branch` Prisma models in 2A — this holds a
-future entity id. For **platform**-wide access, use `scopeType = platform` and `scopeId = ""`
-(empty string) so a unique index can apply. For restaurant/branch/call-center, set `scopeId` to the
-target id when those tables exist. |
+| `scopeId` | **String**, default `""`. In **2A** there were no `Restaurant` / `Branch` tables; **Phase
+3A** added persisted `Restaurant` and `Branch` models — `scopeId` may now hold the same **cuid** as
+`Restaurant.id` or `Branch.id` when the app assigns scoped roles (still **no** Prisma FK on
+`UserRoleAssignment`; the link is by convention to avoid coupling auth to business deletes). For
+**platform**-wide access, use `scopeType = platform` and `scopeId = ""` (empty string) so a unique
+index can apply. |
 | `isActive` | Soft disable without deleting history |
 
 **Unique rule:** `@@unique([userId, role, scopeType, scopeId])` — prevents duplicate **lines** for
@@ -59,7 +61,10 @@ later.
 (multiple `NULL` scope ids). The empty string convention matches common Prisma patterns; API layers
 may expose `null` in JSON and map to `""` for Prisma if desired.
 
-No foreign keys to business tables in **Phase 2A** by design.
+No **Prisma** foreign keys from `UserRoleAssignment` to business tables: **by design** so product
+`UserRole` and RBAC scopes stay stable. Operational restaurant staff (owner/manager/host **within** a
+venue) are modeled separately as **`RestaurantStaffAssignment`** (Phase 3A) — see
+[`restaurant-data-model.md`](./restaurant-data-model.md). Do not confuse the two.
 
 ---
 
@@ -125,6 +130,7 @@ The blueprint favors **persisted roles, OTP challenge, and session shapes** befo
 | **2C** (done) | OTP **adapter**: mock, WhatsApp Cloud (env + dry-run), SMS **placeholder**; `providerMessageId` / `providerStatus`; no real SMS vendor, no new routes. |
 | **2D** (done) | **Web and mobile** call **auth** APIs via `@eventaat/shared` `auth-client`; token storage; Arabic-first login/OTP; business data **still mock** in clients. |
 | **2E** (done) | **RBAC** (`RbacGuard`, `@Roles`, optional `@RoleScopeTypes`, `@CurrentUser`) in `apps/api/src/auth/rbac/` — **no** new public routes. **Web** protected shell when `NEXT_PUBLIC_AUTH_REQUIRED=true` — see [`rbac-route-access.md`](./rbac-route-access.md). |
+| **3A** (done) | **Prisma** restaurant/branch/seating/tables + **`RestaurantStaffAssignment`**. **No** new HTTP routes; no reservation model. See [`restaurant-data-model.md`](./restaurant-data-model.md). |
 
 ---
 
@@ -154,9 +160,24 @@ skipped** when the database is reachable.
 **CI / production:** use **`prisma migrate deploy`**, not `migrate dev`, in pipelines. **Non-destructive**
 policy: do not run destructive changes without a reviewed plan.
 
+**Phase 3A — `restaurant_branch_table_foundation`:** see [`restaurant-data-model.md`](./restaurant-data-model.md) for
+the migration name and `prisma migrate dev` example.
+
 ---
 
-## 9. Legacy / foundation
+## 9. Restaurant staff vs auth roles (Phase 3A)
+
+- **`User` / `UserRole` / `UserRoleAssignment`:** product-wide identity and **RBAC** (platform, restaurant, branch, call
+  center **scopes** as strings). Unchanged in meaning from Phase 2A.
+- **`RestaurantStaffAssignment`:** links a **User** to a **Restaurant** and optionally a **Branch** with
+  `RestaurantUserRole` (**owner** / **manager** / **host** / **viewer**) for **in-venue operations**
+  scoping. This is **not** a duplicate of `UserRole` — a user may be `restaurant_owner` in RBAC and also
+  have staff rows, or the product may use assignments differently in Phase 3B+ APIs. See
+  [`restaurant-data-model.md`](./restaurant-data-model.md).
+
+---
+
+## 10. Legacy / foundation
 
 `FoundationSchemaMarker` (Step 0) remains in the schema for **existing** empty databases; new installs
 get auth tables alongside it. Dropping the marker is **not** required in 2A.

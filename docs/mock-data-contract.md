@@ -1,4 +1,4 @@
-# Mock data contract (Phases 1A–1C + UI Recovery + Phase 1E + Prisma `UserRole` alignment)
+# Mock data contract (Phases 1A–1C + UI Recovery + Phase 1E + Prisma `UserRole` alignment + Phase 3A notes)
 
 Phase **1A** established a **mock-first** data layer in [`packages/shared`](../packages/shared) so
 mobile and web UIs can share the same **shapes** and **sample records** while **no** persistence,
@@ -22,6 +22,12 @@ testing. **No** new persistence, **no** API surface change.
 **Phase 2B (API):** production `User` / session / OTP state is **not** represented in `packages/shared` mocks;
 the API persists in PostgreSQL. UI mock data remains valid for screens that have not integrated the new
 auth API yet.
+
+**Phase 3A (Prisma only):** the API database now has **Restaurant**, **Branch**, **SeatingArea**,
+**RestaurantTable**, and **RestaurantStaffAssignment** models (see [`restaurant-data-model.md`](./restaurant-data-model.md)).
+UIs still use **mock** `Restaurant` / `Branch` / `RestaurantTable` from this package; mock `RestaurantStatus` and
+`TableStatus` are **not** identical to Prisma enum sets. `prisma-entity-labels.ts` provides Arabic labels for
+**Prisma** enum **keys** for future API-driven screens. **No** mock files were removed; **no** new HTTP routes.
 
 ## Location
 

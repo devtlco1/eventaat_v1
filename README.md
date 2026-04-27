@@ -72,7 +72,9 @@ cd apps/api
 npx prisma migrate deploy
 ```
 
-**Phase 2B.1** includes the `auth_foundation` migration under `apps/api/prisma/migrations/`. **Phase 2C** adds the
+**Phase 2B.1** includes the `auth_foundation` migration under `apps/api/prisma/migrations/`. **Phase 3A** adds the
+`restaurant_branch_table_foundation` migration (restaurant, branch, seating area, table, and restaurant staff
+assignment tables — **no** new HTTP routes; see [`docs/restaurant-data-model.md`](./docs/restaurant-data-model.md)). **Phase 2C** adds the
 **OTP delivery** layer (mock default, optional WhatsApp Cloud API with dry-run, SMS placeholder — **no** real
 SMS). See [`docs/otp-delivery-provider.md`](./docs/otp-delivery-provider.md). **Phase 2D** connects the
 **Expo** and **Next.js** frontends to the same auth API via `@eventaat/shared`’s **`auth-client`**; business data in
@@ -118,11 +120,12 @@ pnpm -r run build
 
 (Adjust per package; mobile may require Expo dependencies resolved after the first `pnpm install`.)
 
-## Current implementation status (Phases 1A–1E: mock prototype + Phases 2A–2E: auth, OTP delivery, and RBAC shell)
+## Current implementation status (Phases 1A–1E: mock prototype + Phases 2A–2E: auth, OTP delivery, and RBAC shell + Phase 3A: restaurant DB)
 
 - **Shared (`@eventaat/shared`):** `UserRole` (aligned with Prisma `UserRole` in **Phase 2A**; see
   `prisma-auth-alignment.ts`), all lifecycle `*Status` values (reservation, restaurant, table, complaint,
-  subscription), entity interfaces, Arabic label maps, **seating / occasion** labels, **`auth-client`**, and
+  subscription), entity interfaces, Arabic label maps, `prisma-entity-labels.ts` (Arabic labels for **Prisma**
+  restaurant-related enums, Phase **3A**), **seating / occasion** labels, **`auth-client`**, and
   **`rbac/role-areas` helpers** (Phase 2E). **Central** mock
   data under `packages/shared/src/mock/`. See [`docs/mock-data-contract.md`](./docs/mock-data-contract.md).
 - **Web:** **Almarai** (Google Font via `next/font/google`), RTL **shell** (polished sidebar + top bar
@@ -133,16 +136,18 @@ pnpm -r run build
 - **Mobile:** **Customer** app — Arabic-first, RTL, **state-based** navigation; **real auth** when
   `EXPO_PUBLIC_API_BASE_URL` is set, **or** guest/mock path. **Phase 2E:** **non-customer** roles see an Arabic
   message to use the **web** dashboard. Reservations remain **mock** in shared data.
-- **API:** **Functional** HTTP routes: **`GET /health`** and **Phase 2B auth** (`POST /auth/otp/request`, `POST /auth/otp/verify`, `GET /auth/me`, `POST /auth/logout`) — same **surface** in 2E (**no** new routes). **2E** adds **`RbacGuard`** (use on future
+- **API:** **Functional** HTTP routes: **`GET /health`** and **Phase 2B auth** (`POST /auth/otp/request`, `POST /auth/otp/verify`, `GET /auth/me`, `POST /auth/logout`) — same **surface** in 2E/3A (**no** new business routes). **2E** adds **`RbacGuard`** (use on future
   business controllers). **Swagger/OpenAPI** is at `/docs` and `/openapi.json` (see
-  [`docs/api-reference.md`](./docs/api-reference.md)). **Prisma (Phase 2A+)** has **User**, **OtpChallenge**, **UserSession**, **AuditLog**,
-  and related enums — **no** restaurant/reservation tables yet. **No** payment APIs.
+  [`docs/api-reference.md`](./docs/api-reference.md)). **Prisma:** **2A** auth models + **3A** **Restaurant**, **Branch**,
+  **SeatingArea**, **RestaurantTable**, **RestaurantStaffAssignment** (see [`docs/restaurant-data-model.md`](./docs/restaurant-data-model.md)) —
+  **no** reservation or payment tables yet. **No** payment APIs.
 - **Documentation:** `docs/` includes `mock-data-contract.md`, [`docs/mock-e2e-scenarios.md`](./docs/mock-e2e-scenarios.md) (Phase 1E
-  checklist), **[`docs/auth-rbac-foundation.md`](./docs/auth-rbac-foundation.md)** (auth + 2E guards), [`docs/rbac-route-access.md`](./docs/rbac-route-access.md), **[`docs/local-auth-verification.md`](./docs/local-auth-verification.md)** (Postgres + curl, Phase 2B.1), and
+  checklist), **[`docs/auth-rbac-foundation.md`](./docs/auth-rbac-foundation.md)** (auth + 2E guards + 3A staff model note), [`docs/rbac-route-access.md`](./docs/rbac-route-access.md), [`docs/restaurant-data-model.md`](./docs/restaurant-data-model.md) (Phase 3A),
+  **[`docs/local-auth-verification.md`](./docs/local-auth-verification.md)** (Postgres + curl, Phase 2B.1), and
   the OpenAPI/Swagger maintenance rule in `docs/api-reference.md`.
 
 ## Next sub-phase (not implemented)
 
-**3A** — **Restaurant / branch / table** database schema foundation. See
-[`docs/implementation-plan.md`](./docs/implementation-plan.md) and
+**3B** — **Seed data** and **restaurant admin internal APIs** (per blueprint/implementation plan). **Not** implemented in
+this repository step; see [`docs/implementation-plan.md`](./docs/implementation-plan.md) and
 [`eventaat_product_execution_blueprint_v1.md`](./docs/eventaat_product_execution_blueprint_v1.md).

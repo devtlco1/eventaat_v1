@@ -4,6 +4,11 @@ Base URL: configured per environment; local default is `http://localhost:3000` (
 [`../apps/api/.env.example`](../apps/api/.env.example)). With the default port, you can also use
 `http://127.0.0.1:3000`.
 
+**Phase 3A** adds **restaurant, branch, seating, and table** database schema foundation only (Prisma
+migration `restaurant_branch_table_foundation`). **No new API endpoints were added.** See
+[`restaurant-data-model.md`](./restaurant-data-model.md). The rule below still applies: any future route change
+must update **Swagger/OpenAPI** and this file.
+
 **Phase 2B.1** adds the **`auth_foundation` Prisma migration** (local/CI database apply), **local
 PostgreSQL verification**, and e2e tests that **run the auth suite** when `DATABASE_URL` is set.
 **No** new API endpoints were added. See [`local-auth-verification.md`](./local-auth-verification.md) for
