@@ -1,5 +1,12 @@
-import { CustomerApp } from './CustomerApp';
+import { StatusBar } from 'expo-status-bar';
+import { ScreenRouter } from './ScreenRouter';
+import { AppProvider } from './state/AppContext';
 
 export function App() {
-  return <CustomerApp />;
+  return (
+    <AppProvider>
+      <ScreenRouter />
+      <StatusBar style="light" />
+    </AppProvider>
+  );
 }

@@ -1,9 +1,19 @@
+import type { Reservation } from '@eventaat/shared';
+
+export type MainTab = 'home' | 'search' | 'reservations' | 'profile';
+
 export type CustomerScreen =
   | { name: 'welcome' }
+  | { name: 'login' }
+  | { name: 'register_login' }
+  | { name: 'otp'; phone: string; next: 'login' | 'register' }
+  | { name: 'register_profile'; phone: string }
   | { name: 'home' }
-  | { name: 'search' }
-  | { name: 'restaurant'; restaurantId: string }
-  | { name: 'create_reservation'; restaurantId: string }
+  | { name: 'search'; initialQuery?: string }
+  | { name: 'restaurant'; id: string }
+  | { name: 'create_reservation'; id: string }
+  | { name: 'reservation_pending'; res: Reservation }
   | { name: 'my_reservations' }
-  | { name: 'reservation_detail'; reservationId: string }
-  | { name: 'profile' };
+  | { name: 'reservation_detail'; id: string }
+  | { name: 'profile' }
+  | { name: 'support' };

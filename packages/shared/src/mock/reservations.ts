@@ -1,8 +1,12 @@
 import { Reservation } from '../types/entities';
+import { ReservationOccasion } from '../constants/reservation-occasion';
 import { ReservationStatus } from '../constants/reservation-status';
+import { SeatingType } from '../constants/seating-type';
 
 const R = 'r_visible';
 const B = 'b_sh1';
+
+const ref = (n: number) => `EVT-${100200 + n}`;
 
 /**
  * One row per key lifecycle state from the blueprint (section 27), for UI prototype smoke tests.
@@ -11,6 +15,7 @@ const B = 'b_sh1';
 export const mockReservations: Reservation[] = [
   {
     id: 'res_draft',
+    refCode: ref(0),
     customerId: 'u_c1',
     restaurantId: R,
     branchId: B,
@@ -19,9 +24,12 @@ export const mockReservations: Reservation[] = [
     partySize: 2,
     scheduledAt: '2026-04-30T20:00:00.000Z',
     createdAt: '2026-04-27T10:00:00.000Z',
+    seatingType: SeatingType.indoor,
+    occasion: ReservationOccasion.none,
   },
   {
     id: 'res_pending',
+    refCode: ref(1),
     customerId: 'u_c1',
     restaurantId: R,
     branchId: B,
@@ -30,9 +38,13 @@ export const mockReservations: Reservation[] = [
     partySize: 3,
     scheduledAt: '2026-04-28T19:00:00.000Z',
     createdAt: '2026-04-27T09:00:00.000Z',
+    seatingType: SeatingType.family,
+    occasion: ReservationOccasion.family,
+    customerNotes: 'قرب النافذة إن أمكن',
   },
   {
     id: 'res_approved',
+    refCode: ref(2),
     customerId: 'u_c1',
     restaurantId: R,
     branchId: B,
@@ -41,9 +53,11 @@ export const mockReservations: Reservation[] = [
     partySize: 4,
     scheduledAt: '2026-04-29T18:30:00.000Z',
     createdAt: '2026-04-26T12:00:00.000Z',
+    seatingType: SeatingType.outdoor,
   },
   {
     id: 'res_rejected',
+    refCode: ref(3),
     customerId: 'u_c2',
     restaurantId: R,
     branchId: B,
@@ -55,6 +69,7 @@ export const mockReservations: Reservation[] = [
   },
   {
     id: 'res_altprop',
+    refCode: ref(4),
     customerId: 'u_c1',
     restaurantId: R,
     branchId: B,
@@ -67,6 +82,7 @@ export const mockReservations: Reservation[] = [
   },
   {
     id: 'res_altok',
+    refCode: ref(5),
     customerId: 'u_c1',
     restaurantId: R,
     branchId: B,
@@ -78,6 +94,7 @@ export const mockReservations: Reservation[] = [
   },
   {
     id: 'res_pendchg',
+    refCode: ref(6),
     customerId: 'u_c1',
     restaurantId: R,
     branchId: B,
@@ -90,6 +107,7 @@ export const mockReservations: Reservation[] = [
   },
   {
     id: 'res_otw',
+    refCode: ref(7),
     customerId: 'u_c1',
     restaurantId: R,
     branchId: B,
@@ -101,6 +119,7 @@ export const mockReservations: Reservation[] = [
   },
   {
     id: 'res_arrived',
+    refCode: ref(8),
     customerId: 'u_c1',
     restaurantId: R,
     branchId: B,
@@ -112,6 +131,7 @@ export const mockReservations: Reservation[] = [
   },
   {
     id: 'res_wait',
+    refCode: ref(9),
     customerId: 'u_c2',
     restaurantId: R,
     branchId: B,
@@ -123,6 +143,7 @@ export const mockReservations: Reservation[] = [
   },
   {
     id: 'res_seated',
+    refCode: ref(10),
     customerId: 'u_c2',
     restaurantId: R,
     branchId: B,
@@ -134,6 +155,7 @@ export const mockReservations: Reservation[] = [
   },
   {
     id: 'res_done',
+    refCode: ref(11),
     customerId: 'u_c1',
     restaurantId: R,
     branchId: B,
@@ -142,9 +164,11 @@ export const mockReservations: Reservation[] = [
     partySize: 4,
     scheduledAt: '2026-04-20T19:00:00.000Z',
     createdAt: '2026-04-10T10:00:00.000Z',
+    occasion: ReservationOccasion.birthday,
   },
   {
     id: 'res_canc_c',
+    refCode: ref(12),
     customerId: 'u_c1',
     restaurantId: R,
     branchId: B,
@@ -156,6 +180,7 @@ export const mockReservations: Reservation[] = [
   },
   {
     id: 'res_canc_r',
+    refCode: ref(13),
     customerId: 'u_c2',
     restaurantId: R,
     branchId: B,
@@ -167,6 +192,7 @@ export const mockReservations: Reservation[] = [
   },
   {
     id: 'res_canc_a',
+    refCode: ref(14),
     customerId: 'u_c1',
     restaurantId: R,
     branchId: B,
@@ -178,6 +204,7 @@ export const mockReservations: Reservation[] = [
   },
   {
     id: 'res_ns',
+    refCode: ref(15),
     customerId: 'u_c2',
     restaurantId: R,
     branchId: B,
@@ -189,6 +216,7 @@ export const mockReservations: Reservation[] = [
   },
   {
     id: 'res_exp',
+    refCode: ref(16),
     customerId: 'u_c1',
     restaurantId: R,
     branchId: B,

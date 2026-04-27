@@ -9,6 +9,11 @@ Reservation **states and transitions** as defined in
 `packages/shared/src/mock/reservations.ts` include **one sample row per primary state** for UI
 prototyping (see [`mock-data-contract.md`](./mock-data-contract.md)).
 
+**Code (Phase 1B, customer mobile):** a **simplified** five-step **timeline** (request → restaurant approval
+→ arrive → sit → complete) in `apps/mobile` illustrates the journey; it is a **UI prototype** and does
+not implement transitions or business rules. Cancelled, rejected, and expired states show a short
+explanation instead of the happy path.
+
 ## Core rule
 
 A reservation is not a single “status”; it is a full journey, and the state must be clear to

@@ -1,6 +1,8 @@
 import { Restaurant } from '../types/entities';
 import { RestaurantStatus } from '../constants/restaurant-status';
 
+const reviewPair = (author: string, text: string, rating: number) => ({ author, text, rating });
+
 export const mockRestaurants: Restaurant[] = [
   {
     id: 'r_review',
@@ -8,7 +10,16 @@ export const mockRestaurants: Restaurant[] = [
     area: 'المنصور',
     city: 'بغداد',
     status: RestaurantStatus.under_review,
-    description: 'مطبخ عراقي — طلب جديد قيد مراجعة الإدارة.',
+    description: 'مطبخ عراقي أصيل — طلب جديد قيد مراجعة الإدارة.',
+    ratingMock: 4.6,
+    cuisineTypeAr: 'عراقي',
+    openingHoursAr: '١٢ ظهراً — ١١ مساءً (يومياً)',
+    cancellationPolicySummaryAr: 'يلغى الطلب المعلّق تلقائياً إن لم يُرد المطعم خلال المهلة.',
+    familyFriendly: true,
+    outdoorSeating: false,
+    vipArea: false,
+    quickTagsAr: ['عوائل', 'عروض'],
+    reviewSnippets: [reviewPair('حسين', 'أكل من الزمن الجميل', 5)],
   },
   {
     id: 'r_visible',
@@ -16,7 +27,19 @@ export const mockRestaurants: Restaurant[] = [
     area: 'الكرادة',
     city: 'بغداد',
     status: RestaurantStatus.visible,
-    description: 'مأكولات بحرية — مفعل وظاهر في التطبيق.',
+    description: 'مأكولات بحرية طازجة — مفعل وظاهر في التطبيق.',
+    ratingMock: 4.7,
+    cuisineTypeAr: 'بحرية',
+    openingHoursAr: '١ م — ١٢ ليلاً (يومياً)',
+    cancellationPolicySummaryAr: 'إلغاء مجاني حتى ٣ ساعات قبل الموعد؛ بعدها قد تُطبق سياسة المطعم.',
+    familyFriendly: true,
+    outdoorSeating: true,
+    vipArea: true,
+    quickTagsAr: ['عوائل', 'جلسات خارجية', 'مطاعم فاخرة', 'عروض'],
+    reviewSnippets: [
+      reviewPair('سارة', 'طاولة بإطلالة رائعة', 5),
+      reviewPair('علي', 'خدمة سريعة رغم الزحمة', 4),
+    ],
   },
   {
     id: 'r_disabled',
@@ -24,7 +47,16 @@ export const mockRestaurants: Restaurant[] = [
     area: 'زيونة',
     city: 'بغداد',
     status: RestaurantStatus.bookings_disabled,
-    description: 'مقهى — الحجوزات معطّلة (اشتراك/تشغيل).',
+    description: 'مقهى — الحجوزات معطّلة مؤقتاً.',
+    ratingMock: 4.3,
+    cuisineTypeAr: 'كافيهات',
+    openingHoursAr: '٤ م — ١١ م',
+    cancellationPolicySummaryAr: 'عند تفعيل الحجز لاحقاً تظهر السياسة هنا.',
+    familyFriendly: true,
+    outdoorSeating: true,
+    vipArea: false,
+    quickTagsAr: ['كافيهات', 'جلسات خارجية'],
+    reviewSnippets: [reviewPair('نور', 'قهوة ممتازة', 4)],
   },
   {
     id: 'r_sus',
@@ -32,7 +64,16 @@ export const mockRestaurants: Restaurant[] = [
     area: 'الكاظمية',
     city: 'بغداد',
     status: RestaurantStatus.suspended,
-    description: 'معلق بحسب إدارة المنصة.',
+    description: 'معلق بحسب إدارة المنصة حتى تُستكمل الالتزامات.',
+    ratingMock: 4.1,
+    cuisineTypeAr: 'مشويات',
+    openingHoursAr: 'مغلق مؤقتاً',
+    cancellationPolicySummaryAr: 'لا حجز حالياً.',
+    familyFriendly: true,
+    outdoorSeating: false,
+    vipArea: false,
+    quickTagsAr: ['عوائل'],
+    reviewSnippets: [],
   },
   {
     id: 'r_hidden',
@@ -41,6 +82,15 @@ export const mockRestaurants: Restaurant[] = [
     city: 'بغداد',
     status: RestaurantStatus.hidden,
     description: 'مخفى مؤقتاً عن الاستكشاف.',
+    ratingMock: 4.4,
+    cuisineTypeAr: 'عربي',
+    openingHoursAr: '١ م — ١١ م',
+    cancellationPolicySummaryAr: 'يُراعى إشعار المطعم عند إعادة الظهور.',
+    familyFriendly: true,
+    outdoorSeating: true,
+    vipArea: false,
+    quickTagsAr: ['مطاعم فاخرة'],
+    reviewSnippets: [reviewPair('ميس', 'مكان هادئ', 4)],
   },
   {
     id: 'r_needs',
@@ -48,7 +98,16 @@ export const mockRestaurants: Restaurant[] = [
     area: 'الكرادة',
     city: 'بغداد',
     status: RestaurantStatus.needs_changes,
-    description: 'يحتاج تعديل بيانات قبل النشر.',
+    description: 'يحتاج تعديل بيانات قبل العودة للنشر.',
+    ratingMock: 0,
+    cuisineTypeAr: 'مشكلة',
+    openingHoursAr: '—',
+    cancellationPolicySummaryAr: '—',
+    familyFriendly: false,
+    outdoorSeating: false,
+    vipArea: false,
+    quickTagsAr: [],
+    reviewSnippets: [],
   },
   {
     id: 'r_approved',
@@ -56,6 +115,32 @@ export const mockRestaurants: Restaurant[] = [
     area: 'المنصور',
     city: 'بغداد',
     status: RestaurantStatus.approved,
-    description: 'اعتماد داخلي — جاهز للتجهيز البرمجي لاحقاً.',
+    description: 'اعتماد داخلي — تجهيز للنشر لاحقاً.',
+    ratingMock: 4.5,
+    cuisineTypeAr: 'عربي',
+    openingHoursAr: '١٢ ظهراً — ١١ م',
+    cancellationPolicySummaryAr: 'يلتزم المطعم بإشعار eventaat بأي تغييرات.',
+    familyFriendly: true,
+    outdoorSeating: true,
+    vipArea: true,
+    quickTagsAr: ['عوائل', 'عروض'],
+    reviewSnippets: [reviewPair('رنا', 'ضيافة مرتبة', 5)],
   },
 ];
+
+/** Restaurants shown in customer discovery (ظاهر / معتمد داخلياً). */
+export function getDiscoverableRestaurants(): Restaurant[] {
+  return mockRestaurants.filter(
+    (r) => r.status === RestaurantStatus.visible || r.status === RestaurantStatus.approved,
+  );
+}
+
+export function getRestaurantById(id: string): Restaurant | undefined {
+  return mockRestaurants.find((r) => r.id === id);
+}
+
+export function isRestaurantBookable(r: Restaurant): boolean {
+  if (r.status === RestaurantStatus.bookings_disabled) return false;
+  if (r.status === RestaurantStatus.suspended) return false;
+  return r.status === RestaurantStatus.visible || r.status === RestaurantStatus.approved;
+}

@@ -1,8 +1,10 @@
-# Mock data contract (Phase 1A)
+# Mock data contract (Phases 1A + 1B)
 
-Phase **1A** provides a **mock-first** data layer in [`packages/shared`](../packages/shared) so
+Phase **1A** established a **mock-first** data layer in [`packages/shared`](../packages/shared) so
 mobile and web UIs can share the same **shapes** and **sample records** while **no** persistence,
-**no** new API business routes, and **no** Prisma domain models exist.
+**no** new API business routes, and **no** Prisma domain models exist. **Phase 1B** extends the same
+package with a few more **presentation** fields and label maps (e.g. `SeatingType`, `ReservationOccasion`)
+used only by the **customer mobile** prototype; still no backend.
 
 ## Location
 
@@ -18,10 +20,10 @@ mobile and web UIs can share the same **shapes** and **sample records** while **
 | Area | Type(s) | File(s) | Notes |
 |------|---------|---------|--------|
 | User | `User` | `mock/users.ts` | Includes all **role** variants used in the UI contract (see `UserRole` in `constants/roles.ts`). |
-| Restaurant | `Restaurant` | `mock/restaurants.ts` | **Restaurant** lifecycle uses `RestaurantStatus` (واجهة تشغيل + رؤية + تعليق حجوزات في عينة بيانات واحدة). |
+| Restaurant | `Restaurant` | `mock/restaurants.ts` | **Restaurant** lifecycle uses `RestaurantStatus` (واجهة تشغيل + رؤية + تعليق حجوزات في عينة بيانات واحدة). **Phase 1B:** extra optional fields (e.g. `ratingMock`, `cuisineTypeAr`, `openingHoursAr`, tags, `reviewSnippets`, `getDiscoverableRestaurants` helper) for customer UI only. |
 | Branch | `Branch` | `mock/branches.ts` | بغداد: المنصور، الكرادة، الجادرية، الكاظمية، زيونة. |
 | Table | `RestaurantTable` | `mock/tables.ts` | `TableStatus` يغطي الميزانية التشغيلية للمخطط. |
-| Reservation | `Reservation` | `mock/reservations.ts` | **حالة واحدة لكل `ReservationStatus`** الرئيسي في المخطط (للبروفة والاختبار). |
+| Reservation | `Reservation` | `mock/reservations.ts` | **حالة واحدة لكل `ReservationStatus`** الرئيسي في المخطط (للبروفة والاختبار). **Phase 1B:** `refCode` on samples; optional `seatingType`, `occasion`, `customerNotes` for mobile forms; **new** local-only rows are created in the app state (not the shared file). |
 | Complaint | `Complaint` | `mock/complaints.ts` | يرتبط بـ `ComplaintStatus` (مخطط — دورة شكوى). |
 | Subscription | `Subscription` | `mock/subscriptions.ts` | يرتبط بـ `SubscriptionStatus` (مخطط — مرحلة الاشتراكات). |
 | WhatsApp | `WhatsAppTemplate` | `mock/whatsappTemplates.ts` | جدول أسماء **قالبي** Meta حيث نُسّم في المخطط (§68–69) + أسماء داخلية ثابتة لباقي المقاطع. |

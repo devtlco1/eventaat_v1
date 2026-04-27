@@ -2,8 +2,22 @@ import { User } from '../types/entities';
 import { UserRole } from '../constants/roles';
 
 export const mockUsers: User[] = [
-  { id: 'u_c1', displayName: 'ليلى نزار', phone: '+9647XXXXXXXX0', role: UserRole.customer, createdAt: '2026-01-10' },
-  { id: 'u_c2', displayName: 'كريم عبدالله', phone: '+9647XXXXXXXX1', role: UserRole.customer, createdAt: '2026-02-01' },
+  {
+    id: 'u_c1',
+    displayName: 'ليلى نزار',
+    phone: '+9647XXXXXXXX0',
+    role: UserRole.customer,
+    createdAt: '2026-01-10',
+    city: 'بغداد',
+  },
+  {
+    id: 'u_c2',
+    displayName: 'كريم عبدالله',
+    phone: '+9647XXXXXXXX1',
+    role: UserRole.customer,
+    createdAt: '2026-02-01',
+    city: 'بغداد',
+  },
   { id: 'u_owner1', displayName: 'سامر فاضل', phone: '+9647XXXXXXXX2', role: UserRole.restaurant_owner, createdAt: '2025-11-01' },
   { id: 'u_br1', displayName: 'نورا حاتم', phone: '+9647XXXXXXXX3', role: UserRole.branch_manager, createdAt: '2025-12-15' },
   { id: 'u_host1', displayName: 'رامي يوسف', phone: '+9647XXXXXXXX4', role: UserRole.restaurant_host, createdAt: '2026-03-01' },

@@ -33,10 +33,18 @@ deep UI work.
   with mock **cards**; no login/OTP.
 - **API:** unchanged; **only** `GET /health`. No Prisma business tables, no new endpoints.
 
-### Phase 1B — (planned) Customer mobile UI prototype
+### Phase 1B — Customer mobile UI prototype (done in repo)
 
-Deeper **customer** flows and UI polish on top of the same mock contract (blueprint **§98** customer
-list: registration mock, home, search, restaurant page, create booking, my reservations, details, review screen layout).
+- **Shared:** Seating/occasion constants and labels; extended `Restaurant` / `Reservation` fields used by
+  the customer prototype; helpers like `getDiscoverableRestaurants` and `getRestaurantById` (see
+  [`mock-data-contract.md`](./mock-data-contract.md)).
+- **Mobile:** Arabic-first RTL **customer** app with **mock-only** session (guest, mock login, mock OTP,
+  mock registration) and **in-memory** pending reservations. Screens: welcome and auth, home,
+  search with local filtering, restaurant details, create booking with review, pending confirmation, my
+  reservations (grouped by status), reservation details (timeline and prototype actions), profile, support.
+  **No** API, **no** real OTP/WhatsApp, **no** Prisma business tables.
+- **API:** unchanged; **only** `GET /health` (see [`api-reference.md`](./api-reference.md)).
+- **Web / other dashboards:** unchanged placeholders (not part of 1B).
 
 ### Phase 1C / 1D — (planned) Staff dashboards in depth
 
@@ -104,7 +112,8 @@ waitlist, paid promos, better reports, separate restaurant app, loyalty, new cit
 
 ---
 
-**Current code status:** **Phase 1A** is implemented: shared mock contract, web dashboard routes/shell, and
-customer mobile screen placeholders (see root [`README.md`](../README.md) and
-[`mock-data-contract.md`](./mock-data-contract.md)). Real backend, auth, and business APIs are **out of scope**
-until the blueprint phases that introduce them.
+**Current code status:** **Phases 1A and 1B** are implemented: shared mock contract, web dashboard
+routes/shell, and a **full customer mobile UI prototype** on the same data (see root
+[`README.md`](../README.md) and [`mock-data-contract.md`](./mock-data-contract.md)). **Phase 1C** (restaurant
+/staff mock dashboards in depth) is **not** implemented. Real backend, auth, and business APIs are
+**out of scope** until the blueprint phases that introduce them.

@@ -92,22 +92,27 @@ pnpm -r run build
 
 (Adjust per package; mobile may require Expo dependencies resolved after the first `pnpm install`.)
 
-## Current implementation status (Phase 1A)
+## Current implementation status (Phase 1A + 1B)
 
 - **Shared (`@eventaat/shared`):** `UserRole`, all lifecycle `*Status` values (reservation, restaurant, table,
-  complaint, subscription), entity interfaces, Arabic label maps, and **central** mock data under
+  complaint, subscription), entity interfaces, Arabic label maps, **seating / occasion** labels for
+  the customer UI, and **central** mock data under
   `packages/shared/src/mock/`. See [`docs/mock-data-contract.md`](./docs/mock-data-contract.md).
 - **Web:** RTL **layout** (header + sidebar), routes for **restaurant** / **admin** / **call center**;
   every page is a **placeholder** that only reads from `@eventaat/shared` (no in-component mock data).
-- **Mobile:** **Customer** flow — state-based screens: Welcome, Home, Search, Restaurant, Create
-  Reservation, My Reservations, Details, Profile; mock **cards**; `I18nManager` RTL; **no** auth.
-- **API:** Unchanged: **`GET /health` only** (no new business routes). **Prisma** still has no domain
+- **Mobile:** **Customer** app — Arabic-first, RTL, **state-based** navigation (`AppProvider` +
+  `ScreenRouter`); full **prototype** flows: Welcome (mock sign-in and guest entry), mock login/OTP,
+  mock registration, Home (بغداد, discovery, categories, areas), Search with local filters, restaurant
+  details, create **pending** reservation in local state only, confirmation, grouped **My
+  reservations** with details and a mock lifecycle timeline, Profile, and Support. **No** real auth,
+  OTP, or API calls.
+- **API:** Unchanged: **`GET /health` only** (no new business routes; Phase 1B does not add endpoints). **Prisma** still has no domain
   tables. **No** real OTP, WhatsApp, or payments.
 - **Documentation:** `docs/` includes `mock-data-contract.md` and updated implementation plan / API
   / roles / reservation notes.
 
 ## Next planned phase (not implemented)
 
-**Phase 1B** — Deeper **customer** mobile **UI** on the same mock contract (blueprint §98 customer
-screens): richer layouts and flows, still no backend. See
+**Phase 1C** — Deeper **restaurant dashboard** (and related staff) mock UIs: tables, day board, and
+filters in the web app, still mock-backed. See
 [`docs/implementation-plan.md`](./docs/implementation-plan.md).
