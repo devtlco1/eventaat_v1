@@ -78,7 +78,10 @@ SMS). See [`docs/otp-delivery-provider.md`](./docs/otp-delivery-provider.md). **
 **Expo** and **Next.js** frontends to the same auth API via `@eventaat/shared`’s **`auth-client`**; business data in
 UIs remain mock. **Phase 2E** adds **RBAC** (`RbacGuard` in the API for future routes, no new public endpoints) and
 **web** dashboard path protection when `NEXT_PUBLIC_AUTH_REQUIRED=true` (see
-[`docs/rbac-route-access.md`](./docs/rbac-route-access.md), [`docs/frontend-auth-integration.md`](./docs/frontend-auth-integration.md)). For manual
+[`docs/rbac-route-access.md`](./docs/rbac-route-access.md), [`docs/frontend-auth-integration.md`](./docs/frontend-auth-integration.md)). **Phase 2E.1** improves
+the **web** shell (fixed sidebar + scroll, client-side table **pagination**, **row action** menus via portal, better
+**login** network hint in Arabic) — still **no** new API; see [`docs/api-reference.md`](./docs/api-reference.md) and
+[`docs/local-auth-verification.md`](./docs/local-auth-verification.md) for start commands. For manual
 auth **curl** checks and the e2e command, see [`docs/local-auth-verification.md`](./docs/local-auth-verification.md).
 
 > **Path note:** some tools (including pnpm) mishandle the colon (`:`) in a folder name such as

@@ -6,6 +6,8 @@ import { ar } from '@/lib/arStrings';
 import { getDateKey, RESTAURANT_DEMO_TODAY } from '@/lib/restaurantConfig';
 import { UserRole } from '@eventaat/shared';
 import { RowActionMenu } from '@/components/ui/RowActionMenu';
+import { TablePagination } from '@/components/ui/TablePagination';
+import { usePaginatedRows } from '@/hooks/usePaginatedRows';
 import styles from './restaurant.module.css';
 
 const statusLabel = ar.branchStatus;
@@ -22,6 +24,8 @@ export function BranchCardList() {
     .length;
   const totalResToday = resToday.length;
   const totalTables = tabs.length;
+
+  const brPag = usePaginatedRows(branches, { resetKey: 'rest-branches' });
 
   return (
     <>
@@ -45,7 +49,7 @@ export function BranchCardList() {
       </div>
 
       <div className={styles.sGrid}>
-        {branches.map((b) => {
+        {brPag.pageItems.map((b) => {
           const ui = branchUi[b.id] ?? { status: 'open' as const };
           const resBranchToday = resToday.filter((r) => r.branchId === b.id);
           const tcount = tabs.filter((t) => t.branchId === b.id).length;
@@ -114,6 +118,19 @@ export function BranchCardList() {
           );
         })}
       </div>
+      {branches.length > 0 && (
+        <TablePagination
+          idPrefix="rstr-br"
+          total={brPag.total}
+          from={brPag.from}
+          to={brPag.to}
+          page={brPag.page}
+          pageSize={brPag.pageSize}
+          totalPages={brPag.totalPages}
+          onPageChange={brPag.setPage}
+          onPageSizeChange={brPag.setPageSize}
+        />
+      )}
     </>
   );
 }

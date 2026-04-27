@@ -7,15 +7,18 @@ import { getWebApiBaseUrl } from '@/lib/webAuthStorage';
 import { useWebAuth } from '@/components/auth/AuthContext';
 import styles from './login.module.css';
 
+const NETWORK_MSG =
+  'تعذر الاتصال بخادم eventaat. تأكد أن خدمة API تعمل على المنفذ 3000 وأن NEXT_PUBLIC_API_BASE_URL مضبوط.';
+
 function mapErr(e: unknown, step: 'req' | 'ver'): string {
   if (e instanceof AuthApiError) {
-    if (e.code === 'AUTH_ERR_NETWORK') return 'تعذر الاتصال بالخادم';
+    if (e.code === 'AUTH_ERR_NETWORK') return NETWORK_MSG;
     if (e.code === 'AUTH_ERR_BAD_REQUEST' && step === 'req') return 'رقم الهاتف غير صحيح';
     if (e.code === 'AUTH_ERR_BAD_REQUEST' && step === 'ver') return 'الرمز غير صحيح أو منتهي';
     if (e.code === 'AUTH_ERR_DELIVERY' || (e.code === 'AUTH_ERR_SERVER' && (e.httpStatus === 502 || e.httpStatus === 503)))
       return 'تعذر إرسال الرمز';
   }
-  return 'تعذر الاتصال بالخادم';
+  return NETWORK_MSG;
 }
 
 export default function LoginPage() {

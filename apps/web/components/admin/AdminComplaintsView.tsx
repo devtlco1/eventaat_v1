@@ -17,6 +17,8 @@ import { SelectFilter } from '@/components/ui/SelectFilter';
 import { DataTableFrame, dataTableCl } from '@/components/dashboard/DataTable';
 import { ActionButton } from '@/components/ui/ActionButton';
 import { RowActionMenu } from '@/components/ui/RowActionMenu';
+import { TablePagination } from '@/components/ui/TablePagination';
+import { usePaginatedRows } from '@/hooks/usePaginatedRows';
 import { MutedPill, StatusBadge } from '@/components/dashboard/StatusBadge';
 import { EmptyState } from '@/components/ui/EmptyState';
 import { DetailDrawer, DlItem } from '@/components/dashboard/DetailDrawer';
@@ -57,6 +59,9 @@ export function AdminComplaintsView() {
       return true;
     });
   }, [all, st, cat, pr, party, q]);
+
+  const filterKey = `${q}|${st}|${cat}|${pr}|${party}`;
+  const pag = usePaginatedRows(list, { resetKey: filterKey });
 
   const row = open ? all.find((c) => c.id === open) : null;
   const logs = open ? getComplaintCommunicationLog(open) : [];
@@ -156,7 +161,7 @@ export function AdminComplaintsView() {
               </tr>
             </thead>
             <tbody>
-              {list.map((c) => (
+              {pag.pageItems.map((c) => (
                 <tr key={c.id}>
                   <td style={{ fontWeight: 800, fontSize: 12 }}>{c.id}</td>
                   <td>
@@ -202,6 +207,19 @@ export function AdminComplaintsView() {
             </tbody>
           </table>
         </DataTableFrame>
+      )}
+      {list.length > 0 && (
+        <TablePagination
+          idPrefix="admin-cmp"
+          total={pag.total}
+          from={pag.from}
+          to={pag.to}
+          page={pag.page}
+          pageSize={pag.pageSize}
+          totalPages={pag.totalPages}
+          onPageChange={pag.setPage}
+          onPageSizeChange={pag.setPageSize}
+        />
       )}
       <DetailDrawer
         open={!!row}

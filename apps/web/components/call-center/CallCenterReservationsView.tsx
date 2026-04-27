@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { useMemo, useState } from 'react';
 import {
   callCenterReservationsBySection,
   getUserById,
@@ -17,6 +17,8 @@ import { MutedPill } from '@/components/dashboard/StatusBadge';
 import { formatIqTime } from '@/lib/timeFormat';
 import { ConfirmDialog } from '@/components/ui/ConfirmDialog';
 import { RowActionMenu } from '@/components/ui/RowActionMenu';
+import { TablePagination } from '@/components/ui/TablePagination';
+import { usePaginatedRows } from '@/hooks/usePaginatedRows';
 import { DetailDrawer, DlItem } from '@/components/dashboard/DetailDrawer';
 import { Timeline } from '@/components/ui/Timeline';
 
@@ -24,9 +26,15 @@ export function CallCenterReservationsView() {
   const { pendingRestaurant, near, late, confirm } = callCenterReservationsBySection();
   const [msg, setMsg] = useState<string | null>(null);
   const [open, setOpen] = useState<string | null>(null);
-  const all = [...pendingRestaurant, ...near, ...late, ...confirm];
-  const byId = new Map(all.map((r) => [r.id, r]));
-  const unique = Array.from(byId.values());
+  const all = useMemo(
+    () => [...pendingRestaurant, ...near, ...late, ...confirm],
+    [pendingRestaurant, near, late, confirm],
+  );
+  const unique = useMemo(() => {
+    const byId = new Map(all.map((r) => [r.id, r]));
+    return Array.from(byId.values());
+  }, [all]);
+  const pag = usePaginatedRows(unique, { resetKey: 'cc-res-table' });
   const row = open ? unique.find((x) => x.id === open) : null;
   const uRow = row ? getUserById(row.customerId) : null;
   const restRow = row ? getRestaurantById(row.restaurantId) : null;
@@ -107,7 +115,7 @@ export function CallCenterReservationsView() {
               </tr>
             </thead>
             <tbody>
-              {unique.map((r) => {
+              {pag.pageItems.map((r) => {
                 const u = getUserById(r.customerId);
                 const rest = getRestaurantById(r.restaurantId);
                 return (
@@ -169,6 +177,19 @@ export function CallCenterReservationsView() {
             </tbody>
           </table>
         </DataTableFrame>
+        {unique.length > 0 && (
+          <TablePagination
+            idPrefix="cc-resv"
+            total={pag.total}
+            from={pag.from}
+            to={pag.to}
+            page={pag.page}
+            pageSize={pag.pageSize}
+            totalPages={pag.totalPages}
+            onPageChange={pag.setPage}
+            onPageSizeChange={pag.setPageSize}
+          />
+        )}
       </SectionCard>
       <DetailDrawer
         open={!!row}

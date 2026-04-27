@@ -1,6 +1,8 @@
 'use client';
 
 import { useCallback, useMemo, useState } from 'react';
+import { TablePagination } from '@/components/ui/TablePagination';
+import { usePaginatedRows } from '@/hooks/usePaginatedRows';
 import { ReservationStatus } from '@eventaat/shared';
 import { ar } from '@/lib/arStrings';
 import { timeLabel, isLateReservation, isNoShowCandidate } from '@/lib/reservationMetrics';
@@ -74,6 +76,13 @@ export function RestaurantReservationTable() {
     () => filterRows(rows, { date, status, branch, party, search }, branches, getName),
     [rows, date, status, branch, party, search, branches, getName],
   );
+
+  const sortedRows = useMemo(
+    () => filtered.slice().sort((a, b) => a.scheduledAt.localeCompare(b.scheduledAt)),
+    [filtered],
+  );
+  const filterKey = `${date}|${status}|${branch}|${party}|${search}`;
+  const pag = usePaginatedRows(sortedRows, { resetKey: filterKey });
 
   const doAction = (r: Reservation, a: ActionKey) => {
     if (a === 'details') {
@@ -155,6 +164,7 @@ export function RestaurantReservationTable() {
       {filtered.length === 0 ? (
         <p className={styles.empty}>{ar.common.empty}</p>
       ) : (
+        <>
         <div className={styles.tableWrap}>
           <table className={styles.dataTable}>
             <thead>
@@ -169,10 +179,7 @@ export function RestaurantReservationTable() {
               </tr>
             </thead>
             <tbody>
-              {filtered
-                .slice()
-                .sort((a, b) => a.scheduledAt.localeCompare(b.scheduledAt))
-                .map((r) => {
+              {pag.pageItems.map((r) => {
                   const br = branches.find((x) => x.id === r.branchId);
                   const showLate = isLateReservation(r) || isNoShowCandidate(r);
                   const acts = availableActionsForReservation(r);
@@ -209,6 +216,20 @@ export function RestaurantReservationTable() {
             </tbody>
           </table>
         </div>
+        {sortedRows.length > 0 && (
+          <TablePagination
+            idPrefix="rstr-resv"
+            total={pag.total}
+            from={pag.from}
+            to={pag.to}
+            page={pag.page}
+            pageSize={pag.pageSize}
+            totalPages={pag.totalPages}
+            onPageChange={pag.setPage}
+            onPageSizeChange={pag.setPageSize}
+          />
+        )}
+        </>
       )}
       {detail && (
         <ReservationDetailsPanel

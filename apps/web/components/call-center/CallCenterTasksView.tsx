@@ -16,6 +16,8 @@ import { getTaskCommunicationLog } from '@eventaat/shared';
 import { formatIqTime } from '@/lib/timeFormat';
 import { ConfirmDialog } from '@/components/ui/ConfirmDialog';
 import { RowActionMenu } from '@/components/ui/RowActionMenu';
+import { TablePagination } from '@/components/ui/TablePagination';
+import { usePaginatedRows } from '@/hooks/usePaginatedRows';
 
 const ALL = '__all';
 
@@ -45,6 +47,9 @@ export function CallCenterTasksView() {
       return true;
     });
   }, [all, st, pr, ty, ag]);
+
+  const filterKey = `${st}|${pr}|${ty}|${ag}`;
+  const pag = usePaginatedRows(list, { resetKey: filterKey });
 
   const row = open ? all.find((t) => t.id === open) : null;
   const log = open ? getTaskCommunicationLog(open) : [];
@@ -123,7 +128,7 @@ export function CallCenterTasksView() {
               </tr>
             </thead>
             <tbody>
-              {list.map((t) => {
+              {pag.pageItems.map((t) => {
                 const u = t.assigneeUserId
                   ? mockUsers.find((x) => x.id === t.assigneeUserId)
                   : null;
@@ -175,6 +180,19 @@ export function CallCenterTasksView() {
             </tbody>
           </table>
         </DataTableFrame>
+      )}
+      {list.length > 0 && (
+        <TablePagination
+          idPrefix="cc-tasks"
+          total={pag.total}
+          from={pag.from}
+          to={pag.to}
+          page={pag.page}
+          pageSize={pag.pageSize}
+          totalPages={pag.totalPages}
+          onPageChange={pag.setPage}
+          onPageSizeChange={pag.setPageSize}
+        />
       )}
       <DetailDrawer
         open={!!row}

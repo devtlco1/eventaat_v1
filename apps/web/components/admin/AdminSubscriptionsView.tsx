@@ -12,6 +12,8 @@ import { MetricGrid, MetricCard } from '@/components/dashboard/MetricCard';
 import { DataTableFrame, dataTableCl } from '@/components/dashboard/DataTable';
 import { ActionButton } from '@/components/ui/ActionButton';
 import { RowActionMenu } from '@/components/ui/RowActionMenu';
+import { TablePagination } from '@/components/ui/TablePagination';
+import { usePaginatedRows } from '@/hooks/usePaginatedRows';
 import { MutedPill } from '@/components/dashboard/StatusBadge';
 import { DetailDrawer, DlItem } from '@/components/dashboard/DetailDrawer';
 import { formatIqDate } from '@/lib/timeFormat';
@@ -22,6 +24,7 @@ export function AdminSubscriptionsView() {
   const k = adminSubscriptionKpis();
   const [openId, setOpenId] = useState<string | null>(null);
   const [msg, setMsg] = useState<string | null>(null);
+  const subPag = usePaginatedRows([...mockSubscriptions], { resetKey: 'admin-sub' });
   const row = openId ? mockSubscriptions.find((s) => s.id === openId) : null;
   const r = row ? getRestaurantById(row.restaurantId) : null;
 
@@ -60,7 +63,7 @@ export function AdminSubscriptionsView() {
             </tr>
           </thead>
           <tbody>
-            {mockSubscriptions.map((s) => {
+            {subPag.pageItems.map((s) => {
               const rest = getRestaurantById(s.restaurantId);
               return (
                 <tr key={s.id}>
@@ -94,6 +97,19 @@ export function AdminSubscriptionsView() {
           </tbody>
         </table>
       </DataTableFrame>
+      {subPag.total > 0 && (
+        <TablePagination
+          idPrefix="admin-sub"
+          total={subPag.total}
+          from={subPag.from}
+          to={subPag.to}
+          page={subPag.page}
+          pageSize={subPag.pageSize}
+          totalPages={subPag.totalPages}
+          onPageChange={subPag.setPage}
+          onPageSizeChange={subPag.setPageSize}
+        />
+      )}
       <p className="muted" style={{ color: '#94a3b8', fontSize: 12, marginTop: 8, fontWeight: 800 }}>
         جدول الاشتراكات للعرض فقط (لا API).
       </p>

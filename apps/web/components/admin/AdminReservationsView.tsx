@@ -24,6 +24,8 @@ import { ConfirmDialog } from '@/components/ui/ConfirmDialog';
 import { formatIqTime } from '@/lib/timeFormat';
 import { followupLabelAr } from '@/lib/followupAr';
 import { RowActionMenu } from '@/components/ui/RowActionMenu';
+import { TablePagination } from '@/components/ui/TablePagination';
+import { usePaginatedRows } from '@/hooks/usePaginatedRows';
 
 const ALL = '__all';
 
@@ -77,6 +79,9 @@ export function AdminReservationsView() {
       return true;
     });
   }, [all, st, d, resId, br, fu, q]);
+
+  const filterKey = `${q}|${st}|${d}|${resId}|${br}|${fu}`;
+  const pag = usePaginatedRows(list, { resetKey: filterKey });
 
   const row = open ? all.find((x) => x.id === open) : null;
   const rowUser = row ? getUserById(row.customerId) : null;
@@ -172,7 +177,7 @@ export function AdminReservationsView() {
               </tr>
             </thead>
             <tbody>
-              {list.map((r) => (
+              {pag.pageItems.map((r) => (
                 <tr key={r.id}>
                   <td style={{ fontWeight: 800 }}>{r.refCode}</td>
                   <td>{r.customerName}</td>
@@ -217,6 +222,19 @@ export function AdminReservationsView() {
             </tbody>
           </table>
         </DataTableFrame>
+      )}
+      {list.length > 0 && (
+        <TablePagination
+          idPrefix="admin-resv"
+          total={pag.total}
+          from={pag.from}
+          to={pag.to}
+          page={pag.page}
+          pageSize={pag.pageSize}
+          totalPages={pag.totalPages}
+          onPageChange={pag.setPage}
+          onPageSizeChange={pag.setPageSize}
+        />
       )}
       <DetailDrawer
         open={!!row}

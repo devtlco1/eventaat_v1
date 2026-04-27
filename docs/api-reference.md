@@ -22,6 +22,11 @@ only. No new API endpoints were added.** See [`auth-rbac-foundation.md`](./auth-
 [`rbac-route-access.md`](./rbac-route-access.md). **No** restaurant, reservation, or payment routes; **no**
 refresh-token route.
 
+**Phase 2E.1** adds **web dashboard usability** fixes only: **fixed** sidebar + scroll behavior, **client-side**
+**table** pagination, **row action menu** layering (portal to `body`), and **local auth** UX + docs. **Phase 2E.1
+adds web dashboard usability fixes only: fixed sidebar behavior, client-side table pagination, row action menu
+layering fixes, and local auth UX/docs. No new API endpoints were added.**
+
 **Phase 2B** implements **auth HTTP** routes: OTP request/verify, session + JWT access token, logout, and
 **GET /me**. **No** restaurant, reservation, or payment APIs. **Swagger/OpenAPI** is updated in the same step.
 Remaining surface: health + auth. OpenAPI: **`/docs`** and **`/openapi.json`**.

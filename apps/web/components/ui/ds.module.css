@@ -260,7 +260,7 @@
   line-height: 1.4;
 }
 
-/* Row action menu (tables) */
+/* Row action menu (tables) — trigger is a button; popover is portaled to body (see rowMenuPop) */
 .rowMenu {
   position: relative;
   display: inline-block;
@@ -270,7 +270,7 @@
   padding: 0;
   vertical-align: middle;
 }
-.rowMenu > summary {
+.rowMenuTrigger {
   list-style: none;
   font-size: 0.72rem;
   font-weight: 800;
@@ -288,23 +288,17 @@
   margin: 0;
   box-sizing: border-box;
   justify-content: center;
+  font: inherit;
 }
-.rowMenu > summary::-webkit-details-marker {
-  display: none;
-}
-.rowMenu > summary:hover {
+.rowMenuTrigger:hover {
   background: #e2e8f0;
   border-color: #cbd5e1;
 }
-.rowMenu[open] > summary {
+.rowMenuTrigger[aria-expanded='true'] {
   background: #fff;
   border-color: #94a3b8;
 }
-.rowMenuListEnd,
-.rowMenuListStart {
-  position: absolute;
-  z-index: 30;
-  top: calc(100% + 4px);
+.rowMenuPop {
   min-width: 10.5rem;
   background: #fff;
   border: 1px solid #e2e8f0;
@@ -313,22 +307,6 @@
   display: flex;
   flex-direction: column;
   padding: 0.2rem 0;
-}
-.rowMenuListEnd {
-  right: 0;
-  left: auto;
-}
-[dir="rtl"] .rowMenuListEnd {
-  right: 0;
-  left: auto;
-}
-.rowMenuListStart {
-  left: 0;
-  right: auto;
-}
-[dir="rtl"] .rowMenuListStart {
-  right: 0;
-  left: auto;
 }
 .rowMenuItem {
   text-align: right;

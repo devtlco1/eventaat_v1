@@ -27,6 +27,8 @@ import { StatusBadge, MutedPill } from '@/components/dashboard/StatusBadge';
 import { EmptyState } from '@/components/ui/EmptyState';
 import { ConfirmDialog } from '@/components/ui/ConfirmDialog';
 import { RowActionMenu } from '@/components/ui/RowActionMenu';
+import { TablePagination } from '@/components/ui/TablePagination';
+import { usePaginatedRows } from '@/hooks/usePaginatedRows';
 import { formatIqTime, formatIqDate } from '@/lib/timeFormat';
 import { RestaurantStatus } from '@eventaat/shared';
 
@@ -63,6 +65,9 @@ export function AdminRestaurantsView() {
       return true;
     });
   }, [allRows, q, st, arF, sub]);
+
+  const filterKey = `${q}|${st}|${arF}|${sub}`;
+  const pag = usePaginatedRows(rows, { resetKey: filterKey });
 
   const detail = openId ? getRestaurantById(openId) : undefined;
   const br = openId ? mockBranches.filter((b) => b.restaurantId === openId) : [];
@@ -137,7 +142,7 @@ export function AdminRestaurantsView() {
               </tr>
             </thead>
             <tbody>
-              {rows.map((row) => {
+              {pag.pageItems.map((row) => {
                 const srow = getSubscriptionByRestaurantId(row.id);
                 const subLabel = srow
                   ? SUBSCRIPTION_STATUS_LABELS_AR[srow.status]
@@ -176,6 +181,19 @@ export function AdminRestaurantsView() {
             </tbody>
           </table>
         </DataTableFrame>
+      )}
+      {rows.length > 0 && (
+        <TablePagination
+          idPrefix="admin-rest"
+          total={pag.total}
+          from={pag.from}
+          to={pag.to}
+          page={pag.page}
+          pageSize={pag.pageSize}
+          totalPages={pag.totalPages}
+          onPageChange={pag.setPage}
+          onPageSizeChange={pag.setPageSize}
+        />
       )}
       <DetailDrawer
         open={!!detail}

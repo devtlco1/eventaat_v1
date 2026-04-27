@@ -1,4 +1,4 @@
-# Frontend auth integration (Phases 2D–2E)
+# Frontend auth integration (Phases 2D–2E.1)
 
 This document describes how the **eventaat** **mobile (Expo)** and **web (Next.js)** apps call the **existing**
 auth API (`POST /auth/otp/request`, `POST /auth/otp/verify`, `GET /auth/me`, `POST /auth/logout`) **without any
@@ -66,9 +66,13 @@ Native** calls are not subject to browser CORS.
 
 ## Local verification
 
-Use [`local-auth-verification.md`](./local-auth-verification.md) for the API, plus:
+Use [`local-auth-verification.md`](./local-auth-verification.md) for the API (includes **one-liner** `start:dev` with
+`DATABASE_URL`, `JWT_ACCESS_SECRET`, `AUTH_DEV_EXPOSE_OTP`, `OTP_DELIVERY_PROVIDER=mock`, and **web** `pnpm run dev` on
+**3001** with `NEXT_PUBLIC_API_BASE_URL`).
 
-- API: `AUTH_DEV_EXPOSE_OTP=true`, `OTP_DELIVERY_PROVIDER=mock` for **safe** dev
+- API: `AUTH_DEV_EXPOSE_OTP=true` (**local only**; never in production), `OTP_DELIVERY_PROVIDER=mock` for **safe** dev
+- **Ports:** API **3000** (default) · **Next.js** usually **3001** — if `/login` says it cannot connect, start the API first
+  and align `NEXT_PUBLIC_API_BASE_URL` (e.g. `http://127.0.0.1:3000`).
 - Web: `NEXT_PUBLIC_API_BASE_URL`, optional `NEXT_PUBLIC_AUTH_REQUIRED`
 - Mobile: set `EXPO_PUBLIC_API_BASE_URL` to the machine IP when testing on device
 
@@ -84,6 +88,17 @@ Use [`local-auth-verification.md`](./local-auth-verification.md) for the API, pl
 
 Implemented: shared `canAccessDashboardPath`, `AuthGate` + **غير مصرح بالوصول** for wrong paths when auth is
 required, sidebar filtering, Arabic role pill in the shell. Details: [`rbac-route-access.md`](./rbac-route-access.md).
+
+## Phase 2E.1 (Dashboard usability + login copy)
+
+- **Shell:** fixed **sidebar**; only the **main** area scrolls (see `DashboardShell` + `shell.module.css`).
+- **Login:** if the request fails (network or wrong `NEXT_PUBLIC_API_BASE_URL`), the user sees a concise **Arabic**
+  message to ensure the **API** is on port **3000** and the env is set. **No** change to **auth** HTTP contract.
+- **Tables:** `TablePagination` and `usePaginatedRows` under `apps/web` — all **client-side**; see long lists in admin,
+  call center, and restaurant views.
+
+**Developer notes (not shown in the login UI in production as primary guidance):** production builds should not rely on
+hardcoded port text for operations; the message targets **local** eventaat + Next defaults.
 
 ## Recommended next phase
 

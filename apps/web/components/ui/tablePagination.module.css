@@ -1,0 +1,82 @@
+.row {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.65rem 1rem;
+  margin-top: 0.75rem;
+  padding: 0.45rem 0.55rem;
+  background: #f8fafc;
+  border: 1px solid #e2e8f0;
+  border-radius: 8px;
+}
+
+.range {
+  margin: 0;
+  font-size: 0.8rem;
+  font-weight: 800;
+  color: #64748b;
+  min-width: 0;
+}
+
+.controls {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.45rem 0.65rem;
+}
+
+.selLabel {
+  font-size: 0.72rem;
+  font-weight: 800;
+  color: #94a3b8;
+  white-space: nowrap;
+}
+
+.sel {
+  font: inherit;
+  font-size: 0.8rem;
+  font-weight: 800;
+  padding: 0.2rem 0.45rem;
+  border: 1px solid #d1d5db;
+  border-radius: 8px;
+  background: #fff;
+  color: #0f172a;
+  cursor: pointer;
+}
+
+.sel:focus {
+  outline: 2px solid color-mix(in srgb, #047857 30%, white);
+  border-color: #94a3a8;
+}
+
+.btns {
+  display: flex;
+  gap: 0.4rem;
+}
+
+.btn {
+  font: inherit;
+  font-size: 0.8rem;
+  font-weight: 800;
+  padding: 0.3rem 0.65rem;
+  border: 1px solid #d1d5db;
+  border-radius: 8px;
+  background: #fff;
+  color: #0f172a;
+  cursor: pointer;
+  transition: background 0.1s ease;
+}
+
+.btn:hover:not(:disabled) {
+  background: #f1f5f9;
+}
+
+.btn:disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
+}
+
+.btn:focus {
+  outline: 2px solid color-mix(in srgb, #047857 30%, white);
+}

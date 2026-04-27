@@ -197,6 +197,20 @@ restaurant, call center agent, admin.
   **granularity** (Phase 2E may allow all `/admin/*` for `content_manager`; `finance_manager` is limited to
   `/admin/subscriptions` in path rules — see `rbac-route-access.md`).
 
+### Phase 2E.1 — Web dashboard usability (done in repo)
+
+- **No** new API routes; **no** Prisma changes; business data still **mock-only**.
+- **Layout:** `DashboardShell` — **fixed** sidebar, **independent** scroll for main content (single main scrollbar, RTL-safe).
+- **Tables:** `TablePagination` + `usePaginatedRows` — default **10** rows; sizes **10 / 20 / 50**; Arabic range text;
+  **client-side** only; page resets when filters (serialized `resetKey`) change. Applied to listed admin, call
+  center, and restaurant table views, plus **branch** cards and **subscription** list where applicable.
+- **Row actions:** `RowActionMenu` — menu **portaled** to `document.body`, `z-index` above tables; outside click
+  and **Escape** close. See [`../apps/web/components/ui/RowActionMenu.tsx`](../apps/web/components/ui/RowActionMenu.tsx).
+- **Login:** clearer Arabic copy when the API is unreachable (network / wrong base URL); no auth API code changes.
+- **Docs:** `README`, [`api-reference.md`](./api-reference.md) (2E.1: no new endpoints), [`local-auth-verification.md`](./local-auth-verification.md)
+  (copy-paste start commands for API + web), this file, [`frontend-auth-integration.md`](./frontend-auth-integration.md). Developer
+  port/env notes: API **3000**, web **3001**; `AUTH_DEV_EXPOSE_OTP` local only.
+
 ## Phase 3 — Restaurants, branches, tables
 
 Goal: operational setup for each restaurant. **Includes:** create/review/activate restaurant, branch, tables,
@@ -252,8 +266,8 @@ waitlist, paid promos, better reports, separate restaurant app, loyalty, new cit
 ---
 
 **Current code status:** **Phases 1A–1E**, **2A/2B** (auth Prisma + HTTP), **2B.1**, **2C** (OTP delivery), **2D** (client
-auth), and **2E** (RBAC **guard** foundation + **web** route shell / Arabic unauthorized flow; **no** new public API
-routes) are in the repo. The **public** **HTTP** surface (besides 2A–2D) has **no** 2E additions: **`GET /health`**
+auth), **2E** (RBAC **guard** + **web** route shell; **no** new public API routes), and **2E.1** (web **ux**: fixed
+sidebar, table pagination, row action menus, login error copy, docs) are in the repo. The **public** **HTTP** surface (besides 2A–2D) has **no** 2E additions: **`GET /health`**
 and auth routes as in [`api-reference.md`](./api-reference.md). See
 [`prisma/migrations`](../apps/api/prisma/migrations/),
 [`local-auth-verification.md`](./local-auth-verification.md),

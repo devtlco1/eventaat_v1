@@ -1,4 +1,4 @@
-# Local manual verification — auth API and clients (Phase 2B / 2B.1 / 2C / 2D)
+# Local manual verification — auth API and clients (Phase 2B / 2B.1 / 2C / 2D / 2E.1)
 
 Use this flow to exercise the **existing** auth endpoints against a **local PostgreSQL** with the
 `auth_foundation` migration applied. **No** new API routes are added. **Phase 2D** adds **mobile and web** clients
@@ -35,7 +35,36 @@ that call these endpoints (see [`frontend-auth-integration.md`](./frontend-auth-
 - **Mobile (Expo):** the API is **not** reachable as `localhost` on a **physical** phone; use your computer’s
   **LAN address**, e.g. `EXPO_PUBLIC_API_BASE_URL=http://192.168.1.10:3000`
 
-**Start the API**
+**Start the API (recommended one-liner for local dev)**
+
+1. `docker compose up -d postgres redis` (from repo root)
+2. `cd apps/api` and set env (or use inline):
+
+   ```bash
+   DATABASE_URL="postgresql://eventaat:eventaat@localhost:5432/eventaat?schema=public" \
+   JWT_ACCESS_SECRET="local-dev-secret-change-me" \
+   AUTH_DEV_EXPOSE_OTP="true" \
+   OTP_DELIVERY_PROVIDER="mock" \
+   pnpm run start:dev
+   ```
+
+- API listens on **port 3000** (e.g. `http://127.0.0.1:3000`).
+- `AUTH_DEV_EXPOSE_OTP=true` is for **local development only**; do not enable in production.
+
+**Start the web (prototype review; optional strict auth)**
+
+```bash
+cd apps/web
+NEXT_PUBLIC_API_BASE_URL="http://127.0.0.1:3000" \
+NEXT_PUBLIC_AUTH_REQUIRED="false" \
+pnpm run dev
+```
+
+- The Next.js app is usually on **port 3001** (see `apps/web/package.json` / `next` defaults).
+- If `/login` shows a connection error, start the **API** first. Also confirm `NEXT_PUBLIC_API_BASE_URL` matches the API
+  origin (e.g. `http://127.0.0.1:3000`).
+
+**Start the API (from `.env` only)**
 
 ```bash
 cd apps/api
