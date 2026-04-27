@@ -1,0 +1,14 @@
+node_modules
+dist
+build
+.next
+.turbo
+*.log
+.env
+.env.local
+.DS_Store
+expo-env.d.ts
+apps/mobile/.expo
+apps/api/generated
+coverage
+*.tsbuildinfo

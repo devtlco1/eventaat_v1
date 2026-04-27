@@ -1,0 +1,16 @@
+{
+  "name": "eventaat",
+  "private": true,
+  "packageManager": "pnpm@9.15.0",
+  "scripts": {
+    "build": "pnpm -r run build",
+    "lint": "pnpm -r run lint",
+    "typecheck": "pnpm --filter @eventaat/shared --filter @eventaat/api --filter @eventaat/web --filter @eventaat/mobile run typecheck",
+    "dev:api": "pnpm --filter @eventaat/api start:dev",
+    "dev:web": "pnpm --filter @eventaat/web dev",
+    "dev:mobile": "pnpm --filter @eventaat/mobile start"
+  },
+  "engines": {
+    "node": ">=20"
+  }
+}

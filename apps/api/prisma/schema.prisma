@@ -1,0 +1,17 @@
+// PostgreSQL is the primary datastore. No domain/business models in Step 0; they will be
+// added in later blueprint phases. This model exists only so `prisma generate` succeeds.
+generator client {
+  provider = "prisma-client-js"
+  output   = "../generated/client"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model FoundationSchemaMarker {
+  id Int @id @default(0)
+
+  @@map("foundation_schema_marker")
+}

@@ -1,0 +1,60 @@
+* {
+  box-sizing: border-box;
+}
+
+html,
+body {
+  margin: 0;
+  padding: 0;
+  min-height: 100%;
+  font-family: system-ui, -apple-system, 'Segoe UI', Tahoma, Arial, sans-serif;
+  background: #f7f7f8;
+  color: #151515;
+  line-height: 1.6;
+}
+
+body.bodyRoot {
+  min-height: 100vh;
+}
+
+.appShell {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+
+.appTopBar {
+  background: #111827;
+  color: #f9fafb;
+  padding: 0.75rem 1.25rem;
+  font-size: 0.95rem;
+  letter-spacing: 0.02em;
+}
+
+.appContent {
+  flex: 1;
+  padding: 1.5rem 1.25rem 2rem;
+  max-width: 60rem;
+  width: 100%;
+  margin: 0 auto;
+}
+
+.card {
+  background: #fff;
+  border: 1px solid #e5e7eb;
+  border-radius: 12px;
+  padding: 1.5rem;
+  box-shadow: 0 4px 24px rgba(0, 0, 0, 0.04);
+}
+
+.muted {
+  color: #6b7280;
+  font-size: 0.9rem;
+  margin: 0.5rem 0 0;
+}
+
+h1 {
+  font-size: 1.4rem;
+  font-weight: 600;
+  margin: 0 0 0.5rem;
+}
