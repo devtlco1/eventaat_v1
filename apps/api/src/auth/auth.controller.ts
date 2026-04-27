@@ -15,6 +15,7 @@ import {
   ApiExtraModels,
   ApiForbiddenResponse,
   ApiOperation,
+  ApiBadGatewayResponse,
   ApiResponse,
   ApiTags,
   ApiTooManyRequestsResponse,
@@ -49,11 +50,22 @@ export class AuthController {
 
   @Post('otp/request')
   @HttpCode(200)
-  @ApiOperation({ summary: 'Request OTP (WhatsApp/SMS not sent in Phase 2B; dev OTP optional)' })
+  @ApiOperation({
+    summary: 'Request OTP and dispatch via configured delivery provider',
+    description:
+      'Creates an OTP challenge (hashed, never returns raw code except in dev; never stored in DB in plaintext). ' +
+      'Delivery is controlled by OTP_DELIVERY_PROVIDER: mock (default, local/dev), WhatsApp Cloud API, or an SMS placeholder. ' +
+      'Set OTP_DELIVERY_DRY_RUN=true to avoid any outbound network calls. ' +
+      'devOtp is only returned when AUTH_DEV_EXPOSE_OTP=true. ' +
+      'If the WhatsApp provider is selected and delivery fails, the API returns 502 Bad Gateway and the challenge is marked failed.',
+  })
   @ApiBody({ type: RequestOtpDto })
   @ApiResponse({ status: 200, type: RequestOtpResponseDto })
   @ApiBadRequestResponse({ description: 'Invalid phone' })
   @ApiForbiddenResponse({ description: 'Account disabled or suspended' })
+  @ApiBadGatewayResponse({
+    description: 'WhatsApp/OTP transport failed (e.g. misconfiguration, network error, or Graph API error). Response body: code OTP_DELIVERY_FAILED.',
+  })
   async requestOtp(
     @Body() body: RequestOtpDto,
     @Req() req: Request,

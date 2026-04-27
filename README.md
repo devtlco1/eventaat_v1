@@ -72,8 +72,10 @@ cd apps/api
 npx prisma migrate deploy
 ```
 
-**Phase 2B.1** includes the `auth_foundation` migration under `apps/api/prisma/migrations/`. For manual auth
-**curl** checks and the exact e2e command, see **[`docs/local-auth-verification.md`](./docs/local-auth-verification.md)**.
+**Phase 2B.1** includes the `auth_foundation` migration under `apps/api/prisma/migrations/`. **Phase 2C** adds the
+**OTP delivery** layer (mock default, optional WhatsApp Cloud API with dry-run, SMS placeholder — **no** real
+SMS). See [`docs/otp-delivery-provider.md`](./docs/otp-delivery-provider.md). For manual auth **curl** checks and
+the exact e2e command, see **[`docs/local-auth-verification.md`](./docs/local-auth-verification.md)**.
 
 > **Path note:** some tools (including pnpm) mishandle the colon (`:`) in a folder name such as
 > `DEV :./`. If workspace commands like `pnpm --filter …` error when updating `PATH`, run commands

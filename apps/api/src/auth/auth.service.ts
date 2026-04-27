@@ -28,7 +28,7 @@ import {
   verifyOtp,
 } from './auth.security';
 import { ACCESS_JWT_TYPE, type AccessTokenPayload } from './auth.tokens';
-import { OtpDispatcherService } from './otp-dispatcher.service';
+import { OtpDispatcherService } from './otp/otp-dispatcher.service';
 import type { RequestOtpDto } from './dto/request-otp.dto';
 import type { VerifyOtpDto } from './dto/verify-otp.dto';
 import { MeResponseDto } from './dto/me-response.dto';
@@ -172,13 +172,47 @@ export class AuthService {
       this.rethrowPrismaOrThrow(e, 'otp_create');
     }
 
-    await this.dispatcher.dispatch({
+    const sendResult = await this.dispatcher.send({
       phone: e164,
       phoneNormalized,
       channel: challenge.channel,
       purpose: challenge.purpose,
       challengeId: challenge.id,
+      code,
     });
+
+    const hardFailure =
+      sendResult.providerStatus === 'failed' && sendResult.provider === 'whatsapp';
+    const metadata: Prisma.InputJsonValue | typeof Prisma.JsonNull =
+      sendResult.rawResponse !== undefined
+        ? (sendResult.rawResponse as object as Prisma.InputJsonValue)
+        : Prisma.JsonNull;
+    try {
+      await this.prisma.otpChallenge.update({
+        where: { id: challenge.id },
+        data: {
+          providerMessageId: sendResult.providerMessageId ?? null,
+          providerStatus: sendResult.providerStatus,
+          metadata,
+          ...(hardFailure ? { status: OtpStatus.failed, failedAt: new Date() } : {}),
+        },
+      });
+    } catch (e) {
+      this.rethrowPrismaOrThrow(e, 'otp_provider_update');
+    }
+
+    if (hardFailure) {
+      throw new HttpException(
+        {
+          code: 'OTP_DELIVERY_FAILED',
+          message:
+            sendResult.errorMessage ??
+            'One-time passcode could not be delivered. Try again later.',
+          messageAr: 'تعذّر إرسال رمز التحقق. يرجى المحاولة لاحقاً.',
+        },
+        HttpStatus.BAD_GATEWAY,
+      );
+    }
 
     // Dev-only audit: no PII; optional dev OTP only when flag is set
     if (ip || userAgent) {

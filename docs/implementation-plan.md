@@ -130,7 +130,8 @@ restaurant, call center agent, admin.
   `JWT_ACCESS_SECRET` are set; unit tests cover phone + crypto helpers. Apply schema with
   `prisma migrate` / `prisma db push` before first real auth run (see
   [`auth-rbac-foundation.md`](./auth-rbac-foundation.md)).
-- **Not 2B:** real WhatsApp, RBAC **route** guards, mobile/web client wiring (Phase 2C+).
+- **Not 2B:** at-the-time, real WhatsApp wire-up (added in 2C); RBAC **route** guards, mobile/web client
+  wiring (Phase 2D+).
 
 ### Phase 2B.1 — Auth migration + local DB verification (done in repo)
 
@@ -144,6 +145,20 @@ restaurant, call center agent, admin.
   behavior change beyond any test fixes.
 - **Docs:** [`local-auth-verification.md`](./local-auth-verification.md), updates to this file,
   [`api-reference.md`](./api-reference.md), [`auth-rbac-foundation.md`](./auth-rbac-foundation.md), **README**.
+
+### Phase 2C — OTP delivery provider layer (done in repo)
+
+- **Code:** `apps/api/src/auth/otp/` — `OtpProviderConfig`, `MockOtpProvider`, `WhatsappOtpProvider` (Graph
+  template, timeout, response sanitization), `SmsOtpProvider` (placeholder, no real vendor), `OtpDispatcherService`.
+- **No** new public HTTP routes; `POST /auth/otp/request` **behavior** and persistence of `OtpChallenge.provider*`
+  fields. **No** Prisma schema change. **No** real SMS integration.
+- **Env:** `OTP_DELIVERY_PROVIDER`, `OTP_DELIVERY_DRY_RUN`, WhatsApp `WHATSAPP_*` variables, SMS placeholder
+  `SMS_PROVIDER` / `SMS_DRY_RUN` (see `apps/api/.env.example` and
+  [`otp-delivery-provider.md`](./otp-delivery-provider.md)). Default transport is **mock** (safe).
+- **Tests:** unit tests for selection, dry-run, missing WhatsApp config, response sanitization, and no OTP in logs;
+  e2e with mock + DB assertions. **Not** used: real Graph calls in tests.
+- **Docs:** this file, `README`, [`api-reference.md`](./api-reference.md), [`local-auth-verification.md`](./local-auth-verification.md), [`auth-rbac-foundation.md`](./auth-rbac-foundation.md), [`whatsapp-templates.md`](./whatsapp-templates.md), [`otp-delivery-provider.md`](./otp-delivery-provider.md).
+- **Not 2C:** client apps (2D+), full RBAC route guards (2E), real SMS provider.
 
 ## Phase 3 — Restaurants, branches, tables
 

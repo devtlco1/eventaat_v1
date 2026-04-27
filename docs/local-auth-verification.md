@@ -1,7 +1,8 @@
-# Local manual verification — auth API (Phase 2B / 2B.1)
+# Local manual verification — auth API (Phase 2B / 2B.1 / 2C)
 
 Use this flow to exercise the **existing** auth endpoints against a **local PostgreSQL** with the
-`auth_foundation` migration applied. **No** new routes are added in Phase 2B.1; this is verification only.
+`auth_foundation` migration applied. **No** new routes are added; Phase 2C only changes **OTP delivery**
+behavior and related env vars.
 
 **Prerequisites**
 
@@ -22,6 +23,9 @@ Use this flow to exercise the **existing** auth endpoints against a **local Post
    - `DATABASE_URL` (as above)
    - `JWT_ACCESS_SECRET` (long random value in production)
    - `AUTH_DEV_EXPOSE_OTP=true` **only** on your machine to read `devOtp` in the request response (never in production)
+   - **OTP (Phase 2C, optional):** for the usual dev flow, leave **`OTP_DELIVERY_PROVIDER=mock`** and
+     **`OTP_DELIVERY_DRY_RUN=true`** (defaults in `.env.example`); the challenge row should show
+     `providerStatus` = `skipped` and no real WhatsApp call.
 
 **Start the API**
 
@@ -73,6 +77,30 @@ After logout, the same `accessToken` should fail **`GET /auth/me`** (401) becaus
 - `GET http://127.0.0.1:3000/docs` (Swagger UI)
 - `GET http://127.0.0.1:3000/openapi.json`
 
+**Optional: WhatsApp provider with dry run (no real network)**
+
+Start the API with, for example:
+
+```bash
+export OTP_DELIVERY_PROVIDER=whatsapp
+export OTP_DELIVERY_DRY_RUN=true
+# WHATSAPP_* not required for this path — the provider skips HTTP
+```
+
+`POST /auth/otp/request` should still return **200**; in the database, `providerStatus` is **`skipped`**
+(never a fake `sent`). Turn **`OTP_DELIVERY_DRY_RUN=false`** and set valid `WHATSAPP_*` only when you have
+an approved template and a non-production test number.
+
+**Confirming `OtpChallenge` in PostgreSQL (optional):**
+
+```sql
+SELECT "id", "providerStatus", "providerMessageId", "metadata"::text
+FROM "otp_challenges" ORDER BY "createdAt" DESC LIMIT 1;
+```
+
+For mock/dry run, `metadata` should **not** contain the clear-text OTP; use `devOtp` in the **HTTP
+response** only with `AUTH_DEV_EXPOSE_OTP=true`.
+
 **Automated e2e** (requires DB + env):
 
 ```bash
@@ -80,7 +108,10 @@ cd apps/api
 DATABASE_URL="postgresql://eventaat:eventaat@localhost:5432/eventaat?schema=public" \
 JWT_ACCESS_SECRET="local-dev-secret-change-me" \
 AUTH_DEV_EXPOSE_OTP="true" \
+OTP_DELIVERY_PROVIDER="mock" \
+OTP_DELIVERY_DRY_RUN="true" \
 npx jest --config ./test/jest-e2e.json
 ```
 
-See also [`api-reference.md`](./api-reference.md) and [`auth-rbac-foundation.md`](./auth-rbac-foundation.md).
+See also [`api-reference.md`](./api-reference.md), [`auth-rbac-foundation.md`](./auth-rbac-foundation.md), and
+[`otp-delivery-provider.md`](./otp-delivery-provider.md).

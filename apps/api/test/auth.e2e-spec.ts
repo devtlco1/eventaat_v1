@@ -71,6 +71,21 @@ const testPayload = { phone: testPhone, purpose: 'login', channel: 'manual' as c
     expect(res.body.devOtp).toBeUndefined();
   });
 
+  it('POST /auth/otp/request with mock provider persists safe providerStatus and no raw OTP in DB', async () => {
+    process.env.AUTH_DEV_EXPOSE_OTP = 'true';
+    const res = await request(app.getHttpServer())
+      .post('/auth/otp/request')
+      .send({ ...testPayload, phone: '+9647900000111' })
+      .expect(200);
+    const { challengeId, devOtp } = res.body;
+    const ch = await prisma.otpChallenge.findUniqueOrThrow({ where: { id: challengeId } });
+    expect(ch.providerStatus).toBe('skipped');
+    expect(ch.providerMessageId).toBeNull();
+    const meta = ch.metadata as Record<string, unknown> | null;
+    expect(meta).toBeDefined();
+    expect(JSON.stringify(meta)).not.toContain(String(devOtp));
+  });
+
   it('POST /auth/otp/verify with wrong code increments and eventually 429', async () => {
     process.env.AUTH_DEV_EXPOSE_OTP = 'true';
     const r1 = await request(app.getHttpServer())

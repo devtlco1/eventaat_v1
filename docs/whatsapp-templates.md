@@ -40,5 +40,10 @@ your Meta account — the blueprint’s Arabic/English text lives in those secti
 | §79 | New request notification to the restaurant |
 | §80 | Call center follow-up |
 
-*Integration (send API, webhooks, template status) is out of scope until the project reaches the
-relevant implementation phases (see `implementation-plan.md`).*
+**API integration (Phase 2C, backend only):** the API can send a **template** OTP with configurable
+`WHATSAPP_OTP_TEMPLATE_NAME` and `WHATSAPP_OTP_TEMPLATE_LANGUAGE` (see
+[`../apps/api/.env.example`](../apps/api/.env.example) and [`otp-delivery-provider.md`](./otp-delivery-provider.md)). Use
+`OTP_DELIVERY_DRY_RUN=true` until ready to call the Graph API; **no** end-user app integration is in 2C.
+
+*Webhooks and full operational messaging (bookings, reminders) remain in later product phases; see
+`implementation-plan.md`.*

@@ -9,10 +9,13 @@ PostgreSQL verification**, and e2e tests that **run the auth suite** when `DATAB
 **No** new API endpoints were added. See [`local-auth-verification.md`](./local-auth-verification.md) for
 curl-style checks.
 
-**Phase 2B** implements **auth HTTP** routes: OTP request/verify (with **no** real WhatsApp send),
-session + JWT access token, logout, and **GET /me**. **No** restaurant, reservation, or payment APIs.
-**Swagger/OpenAPI** is updated in the same step. Remaining surface: health + auth. OpenAPI: **`/docs`** and
-**`/openapi.json`**.
+**Phase 2C** adds a **pluggable OTP delivery** layer: **mock** (default, safe for dev/CI), optional **WhatsApp
+Cloud API** (config + dry-run), and an **SMS placeholder** (no real vendor). **No** new public routes.
+**Swagger** and this file are updated. Details: [`otp-delivery-provider.md`](./otp-delivery-provider.md).
+
+**Phase 2B** implements **auth HTTP** routes: OTP request/verify, session + JWT access token, logout, and
+**GET /me**. **No** restaurant, reservation, or payment APIs. **Swagger/OpenAPI** is updated in the same step.
+Remaining surface: health + auth. OpenAPI: **`/docs`** and **`/openapi.json`**.
 
 **Phase 2A** added an **auth / RBAC / OTP-related database (Prisma) foundation** (and optional migration).
 Phase **2B** is the first step that exposes **auth** on HTTP.
@@ -66,7 +69,14 @@ Do **not** consider any backend change complete if API documentation is out of d
 **Auth:** not required.  
 **Summary:** Start an OTP challenge. Normalizes the phone, upserts a `User` (default `primaryRole: customer` when
 created), and creates an `OtpChallenge` with a **hashed** code only. **Raw OTP and raw refresh tokens are never
-stored** in the database. **WhatsApp/SMS are not sent** in this phase; use `channel` for future routing.
+stored** in the database or in `metadata` JSON. After the row is created, the server runs an **OTP delivery
+provider** (`OTP_DELIVERY_PROVIDER=mock|whatsapp|sms`, default `mock`) and updates `providerMessageId`,
+`providerStatus` (`queued` | `sent` | `skipped` | `failed`), and a **sanitized** `metadata` object (no OTP, no
+tokens). **`OTP_DELIVERY_DRY_RUN=true` prevents any outbound network** to WhatsApp. If **WhatsApp** is selected
+and a real send fails (misconfiguration, network, Graph error), the challenge is marked `failed` and the API
+returns **502** with code `OTP_DELIVERY_FAILED` and a safe, Arabic-friendly message — **not** a misleading
+success. The request field `channel` is stored for product semantics; the **active transport** is chosen from
+`OTP_DELIVERY_PROVIDER` (see [`otp-delivery-provider.md`](./otp-delivery-provider.md)).
 
 **Request JSON**
 
@@ -88,7 +98,8 @@ stored** in the database. **WhatsApp/SMS are not sent** in this phase; use `chan
 | `purpose` | string | |
 | `devOtp` | string | **Only** if `AUTH_DEV_EXPOSE_OTP=true` in the environment (development/test). **Never** enable in production. |
 
-**Errors:** `400` invalid input, `403` if user is `disabled` / `suspended`, `503` if the database is unreachable.
+**Errors:** `400` invalid input, `403` if user is `disabled` / `suspended`, `502` if the **WhatsApp** transport
+fails (when that provider is selected), `503` if the database is unreachable.
 
 ---
 
@@ -176,9 +187,11 @@ Host: localhost:3000
 
 ---
 
-**Environment (Phase 2B, see [`../apps/api/.env.example`](../apps/api/.env.example)):** `JWT_ACCESS_SECRET`,
+**Environment (Phases 2B–2C, see [`../apps/api/.env.example`](../apps/api/.env.example)):** `JWT_ACCESS_SECRET`,
 `JWT_ACCESS_EXPIRES_IN`, `REFRESH_TOKEN_EXPIRES_DAYS`, `OTP_EXPIRES_MINUTES`, `OTP_MAX_ATTEMPTS`,
-`AUTH_DEV_EXPOSE_OTP` (development/test only; **never** `true` in production).
+`AUTH_DEV_EXPOSE_OTP` (development/test only; **never** `true` in production), plus
+`OTP_DELIVERY_PROVIDER`, `OTP_DELIVERY_DRY_RUN`, and the WhatsApp/SMS variables documented in
+[`otp-delivery-provider.md`](./otp-delivery-provider.md) (no real credentials in examples).
 
 ---
 

@@ -1,11 +1,12 @@
-# Auth, RBAC, and audit foundation (Phases 2A & 2B)
+# Auth, RBAC, and audit foundation (Phases 2A, 2B, 2C)
 
 This document describes the **Prisma (2A)** database foundation and the **Phase 2B** **HTTP** auth API
-that uses it. **2B** adds: OTP request/verify (no real WhatsApp), JWT access token + opaque refresh token
-(session row stores **refresh token hash** only), `/auth/me`, `/auth/logout`, and audit events
-(`auth.otp_verified`, `auth.login_success`, `auth.logout`). It does **not** add product RBAC **guards** on
-business routes yet (**2E**), and does **not** integrate a real WhatsApp provider (**2C**). Full route list:
-[`api-reference.md`](./api-reference.md).
+that uses it, plus **Phase 2C** **OTP delivery** (mock, optional WhatsApp Cloud API, SMS placeholder; no
+real SMS vendor). **2B** adds: OTP request/verify, JWT access token + opaque refresh token (session row stores
+**refresh token hash** only), `/auth/me`, `/auth/logout`, and audit events (`auth.otp_verified`,
+`auth.login_success`, `auth.logout`). It does **not** add product RBAC **guards** on business routes yet
+(**2E**). **2C** does not add new routes; it wires optional WhatsApp with env + dry-run. Full route list:
+[`api-reference.md`](./api-reference.md). OTP delivery: [`otp-delivery-provider.md`](./otp-delivery-provider.md).
 
 **Source of truth (product):** [`eventaat_product_execution_blueprint_v1.md`](./eventaat_product_execution_blueprint_v1.md).
 
@@ -71,8 +72,10 @@ No foreign keys to business tables in **Phase 2A** by design.
 | `expiresAt`, `verifiedAt`, `failedAt` | Lifecycle times |
 | `attemptCount` / `maxAttempts` | Brute-force limits (default 5) |
 | `userId` | Optional link to a `User` (e.g. re-verify phone) |
-| `providerMessageId` / `providerStatus` | Reserved for **Phase 2C** WhatsApp/SMS providers |
-| `metadata` | JSON for extra non-sensitive data |
+| `providerMessageId` / `providerStatus` | Filled by the OTP **delivery** layer: `whatsapp` (Graph message id) or
+empty; status `queued` \| `sent` \| `skipped` \| `failed` |
+| `metadata` | **Sanitized** transport metadata only — **no** raw OTP, no access tokens (see
+[`otp-delivery-provider.md`](./otp-delivery-provider.md)) |
 
 **Lifecycle (runtime, Phase 2B):** see `AuthService` in `apps/api/src/auth/` — verify compares against
 `codeHash` only; **raw OTP** is never written to the database.
@@ -115,9 +118,9 @@ The blueprint favors **persisted roles, OTP challenge, and session shapes** befo
 
 | Sub-phase | Scope |
 |----------|--------|
-| **2B** (done) | Auth HTTP: `POST /auth/otp/*`, `GET /auth/me`, `POST /auth/logout`, Swagger + `api-reference.md` (no real WhatsApp). |
+| **2B** (done) | Auth HTTP: `POST /auth/otp/*`, `GET /auth/me`, `POST /auth/logout`, Swagger + `api-reference.md` (transport expanded in 2C). |
 | **2B.1** (done) | Committed Prisma migration `auth_foundation` + e2e against local Postgres; **no** new API routes. |
-| **2C** | **WhatsApp** (and optional SMS) **adapter**; provider interfaces + `providerMessageId`; still no scope creep. |
+| **2C** (done) | OTP **adapter**: mock, WhatsApp Cloud (env + dry-run), SMS **placeholder**; `providerMessageId` / `providerStatus`; no real SMS vendor, no new routes. |
 | **2D** | **Web and mobile** integration: call APIs, store tokens, Arabic-first RTL. |
 | **2E** | **RBAC guards** (Nest), route protection, and dashboard shells per role/scope. |
 

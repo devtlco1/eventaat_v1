@@ -5,7 +5,11 @@ import { PrismaModule } from '../prisma/prisma.module';
 import { AuthController } from './auth.controller';
 import { AuthService } from './auth.service';
 import { JwtSessionGuard } from './jwt-session.guard';
-import { OtpDispatcherService } from './otp-dispatcher.service';
+import { OtpProviderConfig } from './otp/otp-provider.config';
+import { MockOtpProvider } from './otp/mock-otp.provider';
+import { WhatsappOtpProvider } from './otp/whatsapp-otp.provider';
+import { SmsOtpProvider } from './otp/sms-otp.provider';
+import { OtpDispatcherService } from './otp/otp-dispatcher.service';
 
 @Module({
   imports: [
@@ -23,7 +27,15 @@ import { OtpDispatcherService } from './otp-dispatcher.service';
     }),
   ],
   controllers: [AuthController],
-  providers: [AuthService, OtpDispatcherService, JwtSessionGuard],
+  providers: [
+    AuthService,
+    OtpProviderConfig,
+    MockOtpProvider,
+    WhatsappOtpProvider,
+    SmsOtpProvider,
+    OtpDispatcherService,
+    JwtSessionGuard,
+  ],
   exports: [AuthService, JwtModule],
 })
 export class AuthModule {}
