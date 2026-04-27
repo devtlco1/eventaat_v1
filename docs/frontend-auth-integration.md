@@ -1,4 +1,4 @@
-# Frontend auth integration (Phase 2D)
+# Frontend auth integration (Phases 2D–2E)
 
 This document describes how the **eventaat** **mobile (Expo)** and **web (Next.js)** apps call the **existing**
 auth API (`POST /auth/otp/request`, `POST /auth/otp/verify`, `GET /auth/me`, `POST /auth/logout`) **without any
@@ -34,7 +34,9 @@ new backend routes**.
   labeled local-dev area.
 - **Session restore** on launch: `getMe` with stored access token; on failure, tokens are cleared and the app
   returns to the welcome flow.
-- **Reservations and restaurants** remain **mock** data in `@eventaat/shared` — only **auth** is real in Phase 2D.
+- **Reservations and restaurants** remain **mock** data in `@eventaat/shared` — only **auth** is real in 2D/2E.
+- **Non-customer roles (2E):** if `primaryRole` is an **operator** role, Home shows a note that the account is for
+  the **web** dashboard, not the mobile app.
 
 ---
 
@@ -47,8 +49,10 @@ new backend routes**.
 - **Login:** `/login` (Arabic) — request OTP, then verify; on success, tokens are stored and the user is
   redirected (e.g. to `/dashboard`).
 - **`NEXT_PUBLIC_AUTH_REQUIRED`:** default `false` — shell dashboards work without login for **prototype
-  review**; a session chip and **تسجيل خروج** still appear when logged in. Set to `true` to **redirect
-  unauthenticated** users to `/login` (shell is wrapped in `AuthGate`).
+  review**; a session chip and **تسجيل خروج** still appear when logged in; footer shows “وضع العرض التجريبي” (or
+  production-styled “وضع التشغيل” when not in prototype). Set to `true` to **redirect unauthenticated** users
+  to `/login` and to **block wrong-role** users from area paths with an **Arabic** unauthorized state (see
+  [`rbac-route-access.md`](./rbac-route-access.md)).
 
 ---
 
@@ -76,6 +80,11 @@ Use [`local-auth-verification.md`](./local-auth-verification.md) for the API, pl
 - Mock flows for discovery, booking UI, and dashboards **unchanged**; only **authentication and session
   persistence** are real where configured.
 
+## Phase 2E (RBAC shell)
+
+Implemented: shared `canAccessDashboardPath`, `AuthGate` + **غير مصرح بالوصول** for wrong paths when auth is
+required, sidebar filtering, Arabic role pill in the shell. Details: [`rbac-route-access.md`](./rbac-route-access.md).
+
 ## Recommended next phase
 
-**2E** — **RBAC** route protection and **protected dashboard shells** (per blueprint). Not implemented in 2D.
+**3A** — **Restaurant / branch / table** database schema foundation (blueprint), **not** part of 2E.

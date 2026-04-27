@@ -2,17 +2,21 @@
 
 This document structures **roles and permission themes** as described in
 [`eventaat_product_execution_blueprint_v1.md`](./eventaat_product_execution_blueprint_v1.md) (Part 5
-— الأدوار والصلاحيات). **No authorization is implemented in the app code** (Phase 1A and earlier).
+— الأدوار والصلاحيات). **Phase 1A** shipped **static** copy and mock labels only. **Phase 2E** adds
+**enforcement** in the **web** shell (when `NEXT_PUBLIC_AUTH_REQUIRED=true`) and an **API** `RbacGuard` for
+future business routes — not full blueprint-level permission matrix yet.
 
 **Code (Phase 1A+):** canonical role keys and Arabic labels for UI and mock data live in
 `packages/shared` as `UserRole` and `USER_ROLE_LABELS_AR` (see
 [`mock-data-contract.md`](./mock-data-contract.md)). That includes
-`content_manager` and `finance_manager` for future admin/finance **screens**; behavior is still
+`content_manager` and `finance_manager` for future admin/finance **screens**; business actions remain
 blueprint-constrained. **Phase 2B (API):** the backend issues JWTs and returns `User` + `roleAssignments` on
-`GET /auth/me`; product **screen** RBAC for dashboards remains **2E** (not implemented here). **Phase 2D
-(frontends):** mobile and web can **sign in** against the auth API; dashboard **shells** still do not enforce
-role-gated routes. **UI Recovery + mock dashboards** use role *labels* in mock data; unauthenticated
-prototype browsing still works when `NEXT_PUBLIC_AUTH_REQUIRED` is not set to `true`.
+`GET /auth/me`. **Phase 2E (done):** the **web** app enforces **path-level** access by `primaryRole` when
+`NEXT_PUBLIC_AUTH_REQUIRED=true` (see [`rbac-route-access.md`](./rbac-route-access.md)). The **API** ships
+`RbacGuard` for **future** business controllers (no new public routes in 2E). **Prototype** browsing with
+`NEXT_PUBLIC_AUTH_REQUIRED=false` keeps all dashboard areas visible for **review**; copy explains this is
+not real authorization. **Mobile** is customer-oriented; **non-customer** logins see an Arabic message to
+use the **web** dashboard.
 
 ## Principles
 
@@ -83,5 +87,6 @@ restaurant quality, manage cities and categories, review anomalous reservations.
 [`auth-rbac-foundation.md`](./auth-rbac-foundation.md) (including **next sub-phases**). **UI** and
 mock data continue to work without a real API.
 
-*Implementation of JWT/session, route guards, and product RBAC in running apps is still deferred to
-**Phase 2B+** (API) and **2E** (guards), aligned with the blueprint.*
+*JWT/session and `GET /auth/me` are **Phase 2B**. **Path-level** web dashboard protection and the **API** `RbacGuard`
+foundation are **Phase 2E**; fine-grained per-screen permissions for `content_manager` / `finance_manager` may
+evolve in later phases — see [`rbac-route-access.md`](./rbac-route-access.md).*

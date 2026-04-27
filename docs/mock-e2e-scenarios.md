@@ -1,9 +1,12 @@
 # Mock end-to-end scenario checklist (Phase 1E)
 
 **Purpose:** Verify the **mock prototype** across the customer mobile app and web
-dashboards. You can run **fully mock** flows (no API), or, after **Phase 2D**, point the app at a **local
+dashboards. You can run **fully mock** flows (no API), or, after **Phase 2D/2E**, point the app at a **local
 API** and keep **reservations and restaurants** as mock data while **auth** is real. All non-auth flows use
-**local / shared mock data** in `@eventaat/shared` and UI state only.
+**local / shared mock data** in `@eventaat/shared` and UI state only. **Phase 2E** adds **web** path checks when
+`NEXT_PUBLIC_AUTH_REQUIRED=true` — use **operator** test users to reach `/restaurant` / `/admin` / `/call-center`;
+**customer** accounts get the **unauthorized** state outside customer scope. See
+[`rbac-route-access.md`](./rbac-route-access.md). **Mobile:** operator roles see the **web dashboard** note.
 
 **Rules:** Code paths, IDs, and internal statuses stay **English**; **Arabic** copy is centralized in
 `apps/web/lib/arStrings.ts` and shared label maps. The English phrase “No Show” does **not** appear in

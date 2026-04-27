@@ -16,6 +16,12 @@ Cloud API** (config + dry-run), and an **SMS placeholder** (no real vendor). **N
 **Phase 2D** integrates the **existing auth endpoints** into the **mobile** and **web** clients. **No new API
 endpoints were added.** See [`frontend-auth-integration.md`](./frontend-auth-integration.md).
 
+**Phase 2E** adds **RBAC guards** and **protected route shell** behavior on the **web** (and `RbacGuard` + decorators
+in the **API** for **future** business routes). **Phase 2E adds RBAC guards and protected route shell behavior
+only. No new API endpoints were added.** See [`auth-rbac-foundation.md`](./auth-rbac-foundation.md) and
+[`rbac-route-access.md`](./rbac-route-access.md). **No** restaurant, reservation, or payment routes; **no**
+refresh-token route.
+
 **Phase 2B** implements **auth HTTP** routes: OTP request/verify, session + JWT access token, logout, and
 **GET /me**. **No** restaurant, reservation, or payment APIs. **Swagger/OpenAPI** is updated in the same step.
 Remaining surface: health + auth. OpenAPI: **`/docs`** and **`/openapi.json`**.

@@ -1,9 +1,11 @@
 'use client';
 
+import { canAccessRoute } from '@/lib/routeAccess';
 import { usePathname, useRouter } from 'next/navigation';
 import { useEffect } from 'react';
 import { isAuthRequired } from '@/lib/webAuthStorage';
 import { useWebAuth } from './AuthContext';
+import { UnauthorizedView } from './UnauthorizedView';
 import styles from './auth-gate.module.css';
 
 export function AuthGate({ children }: { children: React.ReactNode }) {
@@ -33,6 +35,11 @@ export function AuthGate({ children }: { children: React.ReactNode }) {
 
   if (!user) {
     return null;
+  }
+
+  const access = canAccessRoute(user, path || '/');
+  if (!access.allowed) {
+    return <UnauthorizedView user={user} reason={access.reason} />;
   }
 
   return <>{children}</>;

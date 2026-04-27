@@ -1,12 +1,14 @@
-# Auth, RBAC, and audit foundation (Phases 2A–2D)
+# Auth, RBAC, and audit foundation (Phases 2A–2E)
 
 This document describes the **Prisma (2A)** database foundation and the **Phase 2B** **HTTP** auth API
 that uses it, plus **Phase 2C** **OTP delivery** (mock, optional WhatsApp Cloud API, SMS placeholder; no
 real SMS vendor). **2B** adds: OTP request/verify, JWT access token + opaque refresh token (session row stores
 **refresh token hash** only), `/auth/me`, `/auth/logout`, and audit events (`auth.otp_verified`,
-`auth.login_success`, `auth.logout`). It does **not** add product RBAC **guards** on business routes yet
-(**2E**). **2C** does not add new routes; it wires optional WhatsApp with env + dry-run. Full route list:
-[`api-reference.md`](./api-reference.md). OTP delivery: [`otp-delivery-provider.md`](./otp-delivery-provider.md).
+`auth.login_success`, `auth.logout`). **2E** adds **`RbacGuard`**, `@Roles(…)` / optional `@RoleScopeTypes(…)`, and
+`@CurrentUser()` in `apps/api/src/auth/rbac/` for **future** business routes — **no** new public routes in 2E.
+Auth routes themselves remain **`JwtSessionGuard`**-only. **2C** does not add new routes; it wires optional
+WhatsApp with env + dry-run. Full route list: [`api-reference.md`](./api-reference.md). OTP delivery:
+[`otp-delivery-provider.md`](./otp-delivery-provider.md). **Web** route access rules: [`rbac-route-access.md`](./rbac-route-access.md).
 
 **Source of truth (product):** [`eventaat_product_execution_blueprint_v1.md`](./eventaat_product_execution_blueprint_v1.md).
 
@@ -122,7 +124,7 @@ The blueprint favors **persisted roles, OTP challenge, and session shapes** befo
 | **2B.1** (done) | Committed Prisma migration `auth_foundation` + e2e against local Postgres; **no** new API routes. |
 | **2C** (done) | OTP **adapter**: mock, WhatsApp Cloud (env + dry-run), SMS **placeholder**; `providerMessageId` / `providerStatus`; no real SMS vendor, no new routes. |
 | **2D** (done) | **Web and mobile** call **auth** APIs via `@eventaat/shared` `auth-client`; token storage; Arabic-first login/OTP; business data **still mock** in clients. |
-| **2E** | **RBAC guards** (Nest), route protection, and dashboard shells per role/scope. |
+| **2E** (done) | **RBAC** (`RbacGuard`, `@Roles`, optional `@RoleScopeTypes`, `@CurrentUser`) in `apps/api/src/auth/rbac/` — **no** new public routes. **Web** protected shell when `NEXT_PUBLIC_AUTH_REQUIRED=true` — see [`rbac-route-access.md`](./rbac-route-access.md). |
 
 ---
 

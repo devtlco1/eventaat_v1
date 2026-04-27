@@ -10,6 +10,7 @@
 | `/auth/logout` | POST | Revokes current session (Bearer) |
 
 - **No** real WhatsApp/SMS sending (see Phase 2C).
-- **No** product RBAC **guards** on other routes (Phase 2E).
-- Helpers: `auth.phone`, `auth.security` (scrypt + timing-safe compare), `auth.audit`, `OtpDispatcherService` (no-op for now).
-- DTOs under `dto/`; `JwtSessionGuard` for protected routes.
+- **Phase 2E:** `auth/rbac/` — `RbacGuard`, `@Roles`, optional `@RoleScopeTypes`, `@CurrentUser` for **future**
+  business routes; **auth** routes do **not** use `RbacGuard`. No new public HTTP endpoints were added in 2E.
+- Helpers: `auth.phone`, `auth.security` (scrypt + timing-safe compare), `auth.audit`, `OtpDispatcherService` (2C+).
+- DTOs under `dto/`; `JwtSessionGuard` for protected auth routes; stack `RbacGuard` only on new business controllers.

@@ -5,6 +5,7 @@ import {
   getRestaurantById,
   isRestaurantBookable,
   ReservationStatus,
+  UserRole,
 } from '@eventaat/shared';
 import { filterRestaurants, type SearchFilters } from '../utils/searchFilter';
 import { useApp } from '../state/AppContext';
@@ -67,6 +68,11 @@ export function HomeScreen() {
     return null;
   }
 
+  const showOperatorNote =
+    session.kind === 'user' &&
+    session.auth === 'api' &&
+    session.user.primaryRole !== UserRole.customer;
+
   return (
     <AppShell>
       <ScrollView contentContainerStyle={{ paddingBottom: 100 }} showsVerticalScrollIndicator={false}>
@@ -74,6 +80,22 @@ export function HomeScreen() {
           أهلاً {name} 👋
         </Text>
         <Text style={{ color: theme.color.muted, textAlign: 'right', marginTop: 4, fontSize: 14 }}>{BAGHDAD}</Text>
+        {showOperatorNote ? (
+          <View
+            style={{
+              marginTop: 12,
+              padding: 12,
+              backgroundColor: 'rgba(99, 102, 241, 0.12)',
+              borderRadius: 10,
+              borderWidth: 1,
+              borderColor: 'rgba(99, 102, 241, 0.35)',
+            }}
+          >
+            <Text style={{ color: theme.color.muted, textAlign: 'right', fontSize: 13, lineHeight: 20 }}>
+              هذا الحساب مخصص للوحة التحكم. يرجى استخدام لوحة الويب. تطبيق الزبون مخصص للتصفح ونماذج الحجز فقط.
+            </Text>
+          </View>
+        ) : null}
         <View style={{ marginTop: theme.space.lg }} />
         <TextField
           value={q}

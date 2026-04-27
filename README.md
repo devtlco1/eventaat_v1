@@ -76,7 +76,9 @@ npx prisma migrate deploy
 **OTP delivery** layer (mock default, optional WhatsApp Cloud API with dry-run, SMS placeholder — **no** real
 SMS). See [`docs/otp-delivery-provider.md`](./docs/otp-delivery-provider.md). **Phase 2D** connects the
 **Expo** and **Next.js** frontends to the same auth API via `@eventaat/shared`’s **`auth-client`**; business data in
-UIs remain mock. See [`docs/frontend-auth-integration.md`](./docs/frontend-auth-integration.md). For manual
+UIs remain mock. **Phase 2E** adds **RBAC** (`RbacGuard` in the API for future routes, no new public endpoints) and
+**web** dashboard path protection when `NEXT_PUBLIC_AUTH_REQUIRED=true` (see
+[`docs/rbac-route-access.md`](./docs/rbac-route-access.md), [`docs/frontend-auth-integration.md`](./docs/frontend-auth-integration.md)). For manual
 auth **curl** checks and the e2e command, see [`docs/local-auth-verification.md`](./docs/local-auth-verification.md).
 
 > **Path note:** some tools (including pnpm) mishandle the colon (`:`) in a folder name such as
@@ -113,33 +115,31 @@ pnpm -r run build
 
 (Adjust per package; mobile may require Expo dependencies resolved after the first `pnpm install`.)
 
-## Current implementation status (Phases 1A–1E: mock prototype + API docs foundation)
+## Current implementation status (Phases 1A–1E: mock prototype + Phases 2A–2E: auth, OTP delivery, and RBAC shell)
 
 - **Shared (`@eventaat/shared`):** `UserRole` (aligned with Prisma `UserRole` in **Phase 2A**; see
   `prisma-auth-alignment.ts`), all lifecycle `*Status` values (reservation, restaurant, table, complaint,
-  subscription), entity interfaces, Arabic label maps, **seating / occasion** labels, and **central** mock
+  subscription), entity interfaces, Arabic label maps, **seating / occasion** labels, **`auth-client`**, and
+  **`rbac/role-areas` helpers** (Phase 2E). **Central** mock
   data under `packages/shared/src/mock/`. See [`docs/mock-data-contract.md`](./docs/mock-data-contract.md).
 - **Web:** **Almarai** (Google Font via `next/font/google`), RTL **shell** (polished sidebar + top bar
-  with route titles, subtle **نموذج تجريبي** note). **Restaurant (Phase 1C + polish):** operational
-  mock at `/restaurant` and sub-routes; **UI Recovery** adds shared **MetricCard / SectionCard / PageHeader** and
-  tighter layout. **Admin, call center, and platform** (`/dashboard`, `/admin/*`, `/call-center/*`) use the
-  same design system: KPIs, toolbars, tables, drawers — all **mock-only** from `@eventaat/shared` (no API).
-  **Role switcher** (مطعم) unchanged; no real auth.
-- **Mobile:** **Customer** app — Arabic-first, RTL, **state-based** navigation (`AppProvider` +
-  `ScreenRouter`); full **prototype** flows: Welcome (mock sign-in and guest entry), mock login/OTP,
-  mock registration, Home (بغداد, discovery, categories, areas), Search with local filters, restaurant
-  details, create **pending** reservation in local state only, confirmation, grouped **My
-  reservations** with details and a mock lifecycle timeline, Profile, and Support. **No** real auth,
-  OTP, or API calls.
-- **API:** **Functional** HTTP routes: **`GET /health`** and **Phase 2B auth** (`POST /auth/otp/request`, `POST /auth/otp/verify`, `GET /auth/me`, `POST /auth/logout`). **Swagger/OpenAPI** is at `/docs` and `/openapi.json` (see
+  with route titles, **prototype** vs **strict auth** per `NEXT_PUBLIC_AUTH_REQUIRED`). **Restaurant (Phase 1C + polish):** operational
+  mock at `/restaurant` and sub-routes; **Admin, call center, and platform** mock KPIs and tables. When **auth
+  required** is on, `AuthGate` + `canAccessRoute` enforce **role-appropriate** paths; otherwise full prototype
+  navigation remains for review. Business data: **mock-only** (no new backend APIs in 2E).
+- **Mobile:** **Customer** app — Arabic-first, RTL, **state-based** navigation; **real auth** when
+  `EXPO_PUBLIC_API_BASE_URL` is set, **or** guest/mock path. **Phase 2E:** **non-customer** roles see an Arabic
+  message to use the **web** dashboard. Reservations remain **mock** in shared data.
+- **API:** **Functional** HTTP routes: **`GET /health`** and **Phase 2B auth** (`POST /auth/otp/request`, `POST /auth/otp/verify`, `GET /auth/me`, `POST /auth/logout`) — same **surface** in 2E (**no** new routes). **2E** adds **`RbacGuard`** (use on future
+  business controllers). **Swagger/OpenAPI** is at `/docs` and `/openapi.json` (see
   [`docs/api-reference.md`](./docs/api-reference.md)). **Prisma (Phase 2A+)** has **User**, **OtpChallenge**, **UserSession**, **AuditLog**,
-  and related enums — **no** restaurant/reservation tables yet. **No** real WhatsApp send (Phase 2C); **no** payment APIs.
+  and related enums — **no** restaurant/reservation tables yet. **No** payment APIs.
 - **Documentation:** `docs/` includes `mock-data-contract.md`, [`docs/mock-e2e-scenarios.md`](./docs/mock-e2e-scenarios.md) (Phase 1E
-  checklist), **[`docs/auth-rbac-foundation.md`](./docs/auth-rbac-foundation.md)** (auth data model), **[`docs/local-auth-verification.md`](./docs/local-auth-verification.md)** (Postgres + curl, Phase 2B.1), and
+  checklist), **[`docs/auth-rbac-foundation.md`](./docs/auth-rbac-foundation.md)** (auth + 2E guards), [`docs/rbac-route-access.md`](./docs/rbac-route-access.md), **[`docs/local-auth-verification.md`](./docs/local-auth-verification.md)** (Postgres + curl, Phase 2B.1), and
   the OpenAPI/Swagger maintenance rule in `docs/api-reference.md`.
 
-## Next sub-phase (not fully implemented)
+## Next sub-phase (not implemented)
 
-**Phase 2C** — **WhatsApp / SMS OTP provider** interface and delivery — **not** a real external send in 2B; see
-[`docs/auth-rbac-foundation.md`](./docs/auth-rbac-foundation.md#7-roadmap-after-2b) and
-[`docs/implementation-plan.md`](./docs/implementation-plan.md).
+**3A** — **Restaurant / branch / table** database schema foundation. See
+[`docs/implementation-plan.md`](./docs/implementation-plan.md) and
+[`eventaat_product_execution_blueprint_v1.md`](./docs/eventaat_product_execution_blueprint_v1.md).

@@ -10,6 +10,7 @@ import { MockOtpProvider } from './otp/mock-otp.provider';
 import { WhatsappOtpProvider } from './otp/whatsapp-otp.provider';
 import { SmsOtpProvider } from './otp/sms-otp.provider';
 import { OtpDispatcherService } from './otp/otp-dispatcher.service';
+import { RbacGuard } from './rbac/rbac.guard';
 
 @Module({
   imports: [
@@ -35,7 +36,8 @@ import { OtpDispatcherService } from './otp/otp-dispatcher.service';
     SmsOtpProvider,
     OtpDispatcherService,
     JwtSessionGuard,
+    RbacGuard,
   ],
-  exports: [AuthService, JwtModule],
+  exports: [AuthService, JwtModule, JwtSessionGuard, RbacGuard],
 })
 export class AuthModule {}

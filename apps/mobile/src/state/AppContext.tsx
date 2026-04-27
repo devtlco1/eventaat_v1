@@ -1,5 +1,5 @@
 import React, { createContext, useCallback, useContext, useEffect, useMemo, useState } from 'react';
-import { createAuthApi, mockReservations, type Reservation, type UserPublic } from '@eventaat/shared';
+import { createAuthApi, mockReservations, UserRole, type Reservation, type UserPublic } from '@eventaat/shared';
 import type { CustomerScreen, MainTab } from '../navigation/types';
 import { getExpoApiBaseUrl, useRealAuth } from '../config/authEnv';
 import { clearTokens, loadTokens, saveTokens, type StoredAuthTokens } from '../auth/tokenStorage';
@@ -9,7 +9,14 @@ import {
   mergeCustomerReservations,
 } from '../utils/reservations';
 
-type UserSession = { id: string; displayName: string; phone: string; city: string };
+type UserSession = {
+  id: string;
+  displayName: string;
+  phone: string;
+  city: string;
+  /** Present for real API users; mock login uses `customer` */
+  primaryRole: UserRole;
+};
 
 type SessionState =
   | { kind: 'none' }
@@ -51,6 +58,7 @@ function toDisplayUserFromPublic(u: UserPublic): UserSession {
     displayName: (u.fullName && u.fullName.trim()) || 'زبون',
     phone: u.phone,
     city: (u.city && u.city.trim()) || '—',
+    primaryRole: u.primaryRole,
   };
 }
 
@@ -170,7 +178,13 @@ export function AppProvider({ children }: { children: React.ReactNode }) {
     (u: { displayName: string; phone: string; city: string }) => {
       setSession({
         kind: 'user',
-        user: { id: MOCK_U_ID, displayName: u.displayName, phone: u.phone, city: u.city },
+        user: {
+          id: MOCK_U_ID,
+          displayName: u.displayName,
+          phone: u.phone,
+          city: u.city,
+          primaryRole: UserRole.customer,
+        },
         auth: 'mock',
       });
       setMainTab('home');

@@ -177,6 +177,26 @@ restaurant, call center agent, admin.
 - **Type alignment:** root `package.json` **pnpm `overrides`** for `@types/react` / `@types/react-dom` to keep **Next**
   `next build` typecheck stable with React 19.
 
+### Phase 2E — RBAC guard foundation + protected dashboard shells (done in repo)
+
+- **API (Nest):** `apps/api/src/auth/rbac/` — `@Roles(…)` (optional `@RoleScopeTypes(…)` for scope filtering),
+  **`RbacGuard`** (use **after** `JwtSessionGuard` for future business controllers), utilities, **`@CurrentUser()`**
+  decorator, unit tests. **No** new public HTTP routes; **auth** routes (`/auth/otp/*`, `/auth/me`, `/auth/logout`) do
+  **not** require `RbacGuard`.
+- **Shared:** `packages/shared/src/rbac/` — role **area** helpers (`canAccessDashboardPath`, `CUSTOMER_ROLES`,
+  `RESTAURANT_ROLES`, etc.); used by the web shell.
+- **Web:** `AuthGate` + `canAccessDashboardPath` when `NEXT_PUBLIC_AUTH_REQUIRED=true` — unauthenticated users →
+  `/login`; **authenticated but wrong role** → Arabic **unauthorized** screen (`غير مصرح بالوصول`). Sidebar can hide
+  nav groups the role cannot use. Prototype mode (`AUTH_REQUIRED=false`) keeps all routes browsable; footer shows
+  “وضع العرض التجريبي” when appropriate. See [`rbac-route-access.md`](./rbac-route-access.md).
+- **Mobile:** customer-first; if the signed-in user is **not** `customer` (operator account), show a friendly
+  **Arabic** message to use the **web** dashboard; **no** operator features on mobile. Guest/mock path unchanged.
+- **Docs:** `README`, this file, [`api-reference.md`](./api-reference.md) (2E: no new endpoints), `auth-rbac-foundation.md`,
+  `frontend-auth-integration.md`, `roles-permissions.md`, `mock-e2e-scenarios.md`, [`rbac-route-access.md`](./rbac-route-access.md).
+- **Not 2E:** business **API** endpoints, refresh route, per-resource `content_manager` / `finance_manager` URL
+  **granularity** (Phase 2E may allow all `/admin/*` for `content_manager`; `finance_manager` is limited to
+  `/admin/subscriptions` in path rules — see `rbac-route-access.md`).
+
 ## Phase 3 — Restaurants, branches, tables
 
 Goal: operational setup for each restaurant. **Includes:** create/review/activate restaurant, branch, tables,
@@ -231,10 +251,10 @@ waitlist, paid promos, better reports, separate restaurant app, loyalty, new cit
 
 ---
 
-**Current code status:** **Phases 1A–1E**, **2A/2B** (auth Prisma + HTTP), and **2B.1** (committed
-**`auth_foundation`** migration + e2e verified against local Postgres when available) are in the repo. The
-**public** **HTTP** surface is unchanged in 2B.1: **`GET /health`** and auth routes as in
-[`api-reference.md`](./api-reference.md). See
+**Current code status:** **Phases 1A–1E**, **2A/2B** (auth Prisma + HTTP), **2B.1**, **2C** (OTP delivery), **2D** (client
+auth), and **2E** (RBAC **guard** foundation + **web** route shell / Arabic unauthorized flow; **no** new public API
+routes) are in the repo. The **public** **HTTP** surface (besides 2A–2D) has **no** 2E additions: **`GET /health`**
+and auth routes as in [`api-reference.md`](./api-reference.md). See
 [`prisma/migrations`](../apps/api/prisma/migrations/),
-[`local-auth-verification.md`](./local-auth-verification.md), and
-[`auth-rbac-foundation.md`](./auth-rbac-foundation.md).
+[`local-auth-verification.md`](./local-auth-verification.md),
+[`auth-rbac-foundation.md`](./auth-rbac-foundation.md), and [`rbac-route-access.md`](./rbac-route-access.md).

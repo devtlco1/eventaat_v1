@@ -2,7 +2,8 @@
 
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
-import { APP_NAME } from '@eventaat/shared';
+import { APP_NAME, USER_ROLE_LABELS_AR, type UserPublic } from '@eventaat/shared';
+import { canAccessRoute } from '@/lib/routeAccess';
 import { useWebAuth } from '@/components/auth/AuthContext';
 import { isAuthRequired } from '@/lib/webAuthStorage';
 import { getShellMetaForPath } from '@/lib/shellMeta';
@@ -47,7 +48,16 @@ export function DashboardShell({ children }: { children: React.ReactNode }) {
   const { user, signOut, ready } = useWebAuth();
   const needAuth = isAuthRequired();
 
-  const groups: (typeof nav)[0]['group'][] = ['hub', 'restaurant', 'admin', 'cc'];
+  const navForUser = (u: UserPublic | null) => {
+    if (!u || !needAuth) {
+      return nav;
+    }
+    return nav.filter((item) => canAccessRoute(u, item.href).allowed);
+  };
+  const items = navForUser(user);
+
+  const groupOrder: (typeof nav)[0]['group'][] = ['hub', 'restaurant', 'admin', 'cc'];
+  const groups = groupOrder.filter((g) => items.some((i) => i.group === g));
 
   return (
     <div className={styles.layout}>
@@ -62,7 +72,7 @@ export function DashboardShell({ children }: { children: React.ReactNode }) {
               <div key={g} className={styles.group}>
                 <div className={styles.groupTitle}>{groupLabel(g)}</div>
                 <ul className={styles.list}>
-                  {nav
+                  {items
                     .filter((item) => item.group === g)
                     .map((item) => {
                       const active = isActivePath(path, item.href);
@@ -84,7 +94,11 @@ export function DashboardShell({ children }: { children: React.ReactNode }) {
           </nav>
         </div>
         <div className={styles.sideFooter}>
-          <span className={styles.protoPill}>نموذج تجريبي</span>
+          {needAuth ? (
+            <span className={styles.sessionPillShell}>وضع التشغيل</span>
+          ) : (
+            <span className={styles.protoPill}>وضع العرض التجريبي</span>
+          )}
         </div>
       </aside>
       <div className={styles.mainCol}>
@@ -92,10 +106,13 @@ export function DashboardShell({ children }: { children: React.ReactNode }) {
           <div>
             <h1 className={styles.topbarTitle}>{meta.title}</h1>
             {meta.sub && <p className={styles.topbarSub}>{meta.sub}</p>}
-            {!meta.sub && (
+            {!meta.sub && !needAuth && (
               <p className={styles.topbarSub}>
-                بيانات وهمية — بدون تخزين على الخادم
+                بيانات وهمية — لوحة فقط، بدون أعمال بيانات
               </p>
+            )}
+            {!meta.sub && needAuth && user && (
+              <p className={styles.topbarSub}>وضع دخول مفعّل — البيانات المعروضة ليس طبقاً</p>
             )}
           </div>
           {ready && (
@@ -105,6 +122,12 @@ export function DashboardShell({ children }: { children: React.ReactNode }) {
                   <span className={styles.sessionChip} title={user.phone}>
                     {user.fullName?.trim() || user.phone}
                   </span>
+                  <span className={styles.rolePill} title="primaryRole">
+                    {USER_ROLE_LABELS_AR[user.primaryRole] ?? user.primaryRole}
+                  </span>
+                  <span className={styles.sessionPill} title="الجلسة">
+                    جلسة نشطة
+                  </span>
                   <button type="button" className={styles.sessionBtn} onClick={() => void signOut()}>
                     تسجيل خروج
                   </button>
@@ -112,7 +135,7 @@ export function DashboardShell({ children }: { children: React.ReactNode }) {
               ) : (
                 <>
                   <span className={styles.sessionHint}>
-                    {needAuth ? '' : 'نموذج: غير مُدخل — '}
+                    {needAuth ? '' : 'وضع عرض: غير مُدخل — '}
                     <Link href="/login" className={styles.sessionLink}>
                       تسجيل الدخول
                     </Link>
