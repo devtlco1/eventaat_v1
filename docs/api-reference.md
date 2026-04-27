@@ -4,6 +4,10 @@ Base URL: configured per environment; local default is `http://localhost:3000` (
 [`../apps/api/.env.example`](../apps/api/.env.example)). With the default port, you can also use
 `http://127.0.0.1:3000`.
 
+**UI Recovery + Dashboard Polish** (web-only step) **adds no business API endpoints.** The only
+**functional** API endpoint remains **`GET /health`**. **Swagger/OpenAPI** remains available at
+**`/docs`** and **`/openapi.json`** on the API service.
+
 **Phase 1A:** No new API routes were added; the backend remains **mock-first** in the client
 packages. Only **`GET /health`** is implemented. **Phase 1B** adds **no** new API endpoints; only
 **`GET /health`** still exists.

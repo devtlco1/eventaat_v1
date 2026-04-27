@@ -3,6 +3,7 @@
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { APP_NAME } from '@eventaat/shared';
+import { getShellMetaForPath } from '@/lib/shellMeta';
 import styles from './shell.module.css';
 
 const nav: { href: string; label: string; group: 'hub' | 'restaurant' | 'admin' | 'cc' }[] = [
@@ -30,9 +31,17 @@ function groupLabel(g: (typeof nav)[0]['group']) {
   return 'الكول سنتر';
 }
 
+function isActivePath(path: string, href: string) {
+  if (href === '/restaurant' && path === '/restaurant') return true;
+  if (href !== '/restaurant' && href !== '/dashboard' && href !== '/admin' && href !== '/call-center') {
+    return path === href || path.startsWith(`${href}/`);
+  }
+  return path === href;
+}
+
 export function DashboardShell({ children }: { children: React.ReactNode }) {
   const path = usePathname();
-  const isRestaurant = path.startsWith('/restaurant');
+  const meta = getShellMetaForPath(path);
 
   const groups: (typeof nav)[0]['group'][] = ['hub', 'restaurant', 'admin', 'cc'];
 
@@ -41,44 +50,50 @@ export function DashboardShell({ children }: { children: React.ReactNode }) {
       <aside className={styles.sidebar} aria-label="التنقل الرئيسي">
         <div className={styles.brand}>
           <span className={styles.brandMark} />
-          {APP_NAME}
+          <span className={styles.brandText}>{APP_NAME}</span>
         </div>
-        <nav>
-          {groups.map((g) => (
-            <div key={g} className={styles.group}>
-              <div className={styles.groupTitle}>{groupLabel(g)}</div>
-              <ul className={styles.list}>
-                {nav
-                  .filter((item) => item.group === g)
-                  .map((item) => {
-                    const active = path === item.href;
-                    return (
-                      <li key={item.href}>
-                        <Link
-                          href={item.href}
-                          className={active ? styles.linkActive : styles.link}
-                          aria-current={active ? 'page' : undefined}
-                        >
-                          {item.label}
-                        </Link>
-                      </li>
-                    );
-                  })}
-              </ul>
-            </div>
-          ))}
-        </nav>
+        <div className={styles.navScroll}>
+          <nav>
+            {groups.map((g) => (
+              <div key={g} className={styles.group}>
+                <div className={styles.groupTitle}>{groupLabel(g)}</div>
+                <ul className={styles.list}>
+                  {nav
+                    .filter((item) => item.group === g)
+                    .map((item) => {
+                      const active = isActivePath(path, item.href);
+                      return (
+                        <li key={item.href}>
+                          <Link
+                            href={item.href}
+                            className={active ? styles.linkActive : styles.link}
+                            aria-current={active ? 'page' : undefined}
+                          >
+                            {item.label}
+                          </Link>
+                        </li>
+                      );
+                    })}
+                </ul>
+              </div>
+            ))}
+          </nav>
+        </div>
+        <div className={styles.sideFooter}>
+          <span className={styles.protoPill}>نموذج تجريبي</span>
+        </div>
       </aside>
       <div className={styles.mainCol}>
         <header className={styles.topbar}>
-          <h1 className={styles.topbarTitle}>
-            {isRestaurant ? 'لوحة المطعم (نموذج Phase 1C)' : 'نموذج واجهة (Phase 1A)'}
-          </h1>
-          <p className={styles.topbarSub}>
-            {isRestaurant
-              ? 'واجهة عربية للمطعم — بيانات من العينة، تعديلات محلية فقط'
-              : 'بيانات وهمية فقط — بدون باك-إند'}
-          </p>
+          <div>
+            <h1 className={styles.topbarTitle}>{meta.title}</h1>
+            {meta.sub && <p className={styles.topbarSub}>{meta.sub}</p>}
+            {!meta.sub && (
+              <p className={styles.topbarSub}>
+                بيانات وهمية — بدون تخزين على الخادم
+              </p>
+            )}
+          </div>
         </header>
         <main className={styles.content}>{children}</main>
       </div>

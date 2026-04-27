@@ -41,6 +41,8 @@ export const mockReservations: Reservation[] = [
     seatingType: SeatingType.family,
     occasion: ReservationOccasion.family,
     customerNotes: 'قرب النافذة إن أمكن',
+    needsAdminFollowupMock: true,
+    callCenterNoteAr: 'تجاوز زمن الرد التقريبي',
   },
   {
     id: 'res_approved',
@@ -54,6 +56,7 @@ export const mockReservations: Reservation[] = [
     scheduledAt: '2026-04-29T18:30:00.000Z',
     createdAt: '2026-04-26T12:00:00.000Z',
     seatingType: SeatingType.outdoor,
+    callCenterNoteAr: 'متابعة بسيطة قبل يوم الحجز',
   },
   {
     id: 'res_rejected',
@@ -104,6 +107,8 @@ export const mockReservations: Reservation[] = [
     scheduledAt: '2026-04-30T20:00:00.000Z',
     createdAt: '2026-04-27T08:00:00.000Z',
     note: 'طلب تغيير العدد إلى 5',
+    needsAdminFollowupMock: true,
+    callCenterNoteAr: 'بانتظار رد المطعم',
   },
   {
     id: 'res_otw',
@@ -116,6 +121,8 @@ export const mockReservations: Reservation[] = [
     partySize: 4,
     scheduledAt: '2026-04-27T19:30:00.000Z',
     createdAt: '2026-04-20T12:00:00.000Z',
+    needsAdminFollowupMock: true,
+    callCenterNoteAr: 'حجز قريب — تأكيد الوصول',
   },
   {
     id: 'res_arrived',
@@ -213,6 +220,7 @@ export const mockReservations: Reservation[] = [
     partySize: 2,
     scheduledAt: '2026-04-18T19:00:00.000Z',
     createdAt: '2026-04-01T10:00:00.000Z',
+    callCenterNoteAr: 'أرشفة — الحالة نهائية في العينة',
   },
   {
     id: 'res_exp',

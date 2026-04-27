@@ -8,7 +8,9 @@ This document structures **roles and permission themes** as described in
 `packages/shared` as `UserRole` and `USER_ROLE_LABELS_AR` (see
 [`mock-data-contract.md`](./mock-data-contract.md)). That includes
 `content_manager` and `finance_manager` for future admin/finance **screens**; behavior is still
-blueprint-constrained and no RBAC is enforced in the client yet.
+blueprint-constrained and no RBAC is enforced in the client yet. **UI Recovery + Dashboard Polish** adds
+**mock** admin / call center / platform web UIs with role *labels* and a demo agent chip; still **no** real
+auth or enforcement.
 
 ## Principles
 

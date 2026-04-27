@@ -1,4 +1,7 @@
+export * from './call-center-task';
+export * from './complaint-filters';
 export * from './complaint-status';
+export * from './demo-dates';
 export * from './reservation-occasion';
 export * from './reservation-status';
 export * from './restaurant-status';

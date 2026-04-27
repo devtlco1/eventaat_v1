@@ -78,7 +78,16 @@ export interface Reservation {
   seatingType?: SeatingType;
   occasion?: ReservationOccasion;
   createdAt: string;
+  /** Mock-only: admin/call-center “needs follow-up” flag for dashboards */
+  needsAdminFollowupMock?: boolean;
+  /** Mock-only: call-center table “follow-up reason” in Arabic */
+  callCenterNoteAr?: string;
 }
+
+export type ComplaintPriority = 'low' | 'normal' | 'high' | 'urgent';
+export type ComplaintCategory = 'reservation' | 'service' | 'billing' | 'other';
+/** Which side the case is waiting on, for ops filters (mock). */
+export type ComplaintParty = 'customer' | 'restaurant' | 'platform';
 
 export interface Complaint {
   id: string;
@@ -87,6 +96,14 @@ export interface Complaint {
   openedByUserId: string;
   subject: string;
   createdAt: string;
+  /** Mock: linked restaurant when known (or derived in UI from reservation) */
+  restaurantId?: string | null;
+  /** Mock: last update time for admin tables */
+  updatedAt?: string;
+  category?: ComplaintCategory;
+  priority?: ComplaintPriority;
+  party?: ComplaintParty;
+  assignedToUserId?: string | null;
 }
 
 export interface Subscription {
@@ -96,6 +113,12 @@ export interface Subscription {
   /** IQD for mock */
   monthlyAmountIqd: number;
   periodEnd: string;
+  /** Mock: end date of the 3-month free window (inclusive display) */
+  trialEndsOn?: string;
+  /** Mock: last follow-up contact (ISO date) */
+  lastFollowUpAt?: string;
+  /** Mock: next operational step shown in admin (Arabic) */
+  nextActionAr?: string;
 }
 
 /**
@@ -110,6 +133,8 @@ export interface WhatsAppTemplate {
 }
 
 export type CallCenterTaskStatus = 'pending' | 'in_progress' | 'done';
+export type CallCenterTaskPriority = 'low' | 'normal' | 'high' | 'urgent';
+export type CallCenterTaskType = 'reservation' | 'complaint' | 'subscription' | 'outreach' | 'other';
 
 export interface CallCenterTask {
   id: string;
@@ -118,4 +143,8 @@ export interface CallCenterTask {
   assigneeUserId: string | null;
   status: CallCenterTaskStatus;
   createdAt: string;
+  priority?: CallCenterTaskPriority;
+  taskType?: CallCenterTaskType;
+  /** Mock: due / anchor time for queue sorting */
+  dueAt?: string | null;
 }

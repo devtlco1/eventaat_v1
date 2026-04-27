@@ -7,12 +7,31 @@ body {
   margin: 0;
   padding: 0;
   min-height: 100%;
-  font-family: system-ui, -apple-system, 'Segoe UI', Tahoma, Arial, sans-serif;
+  font-family: var(--font-almarai), system-ui, Tahoma, Arial, sans-serif;
   background: #f1f2f4;
   color: #0f1419;
-  line-height: 1.6;
+  line-height: 1.55;
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
 }
 
 body.bodyRoot {
   min-height: 100vh;
+}
+
+:root {
+  --ea-ink: #0f1419;
+  --ea-muted: #64748b;
+  --ea-muted2: #6b7280;
+  --ea-accent: #047857; /* eventaat: restrained green */
+  --font-almarai: 'Almarai', system-ui, Tahoma, Arial, sans-serif;
+}
+
+code {
+  font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+  font-size: 0.8em;
+}
+
+a {
+  color: inherit;
 }

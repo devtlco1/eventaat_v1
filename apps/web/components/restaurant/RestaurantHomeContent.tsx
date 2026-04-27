@@ -5,8 +5,10 @@ import { ReservationStatus } from '@eventaat/shared';
 import { ar } from '@/lib/arStrings';
 import { isNoShowCandidate, isTodayReservation, isLateReservation, timeLabel } from '@/lib/reservationMetrics';
 import { useRestaurantDashboard } from '@/context/RestaurantDashboardContext';
-import { RestaurantMetricCard } from './RestaurantMetricCard';
 import { ReservationStatusBadge } from './ReservationStatusBadge';
+import { PageHeader } from '@/components/ui/PageHeader';
+import { MetricGrid, MetricCard } from '@/components/dashboard/MetricCard';
+import { SectionCard } from '@/components/dashboard/SectionCard';
 import styles from './restaurant.module.css';
 import { RESERVATION_STATUS_LABELS_AR } from '@eventaat/shared';
 import { UserRole } from '@eventaat/shared';
@@ -40,26 +42,23 @@ export function RestaurantHomeContent() {
 
   return (
     <div className={styles.page}>
-      <h1 className={styles.pageTitle}>{ar.dashboard.title}</h1>
-      <p className={styles.sub}>
-        {restaurant.name} — {restaurant.area} — {ar.shell.modelNote}
-      </p>
-      <div className={styles.pageTitle} style={{ fontSize: '1.05rem', marginTop: 8 }}>
-        {ar.dashboard.todaySection}
-      </div>
-      <div className={styles.gridMetrics}>
-        <RestaurantMetricCard label={ar.metrics.todayReservations} value={today.length} />
-        <RestaurantMetricCard label={ar.metrics.newRequests} value={newReq.length} />
-        <RestaurantMetricCard label={ar.metrics.pendingReply} value={pending.length} />
-        <RestaurantMetricCard label={ar.metrics.arrivedGuests} value={arrivedC.length} />
-        <RestaurantMetricCard label={ar.metrics.seated} value={seatedC.length} />
-        <RestaurantMetricCard label={ar.metrics.noShowRisk} value={risk.length} />
-        <RestaurantMetricCard label={ar.metrics.tablesAvailable} value={avail} />
-        <RestaurantMetricCard label={ar.metrics.tablesOutOfService} value={oos} />
-      </div>
+      <PageHeader
+        title={ar.dashboard.title}
+        subtitle={`${restaurant.name} — ${restaurant.area} — ${ar.shell.modelNote}`}
+      />
+      <p className={styles.eyebrowT}>{ar.dashboard.todaySection}</p>
+      <MetricGrid>
+        <MetricCard label={ar.metrics.todayReservations} value={today.length} />
+        <MetricCard label={ar.metrics.newRequests} value={newReq.length} />
+        <MetricCard label={ar.metrics.pendingReply} value={pending.length} />
+        <MetricCard label={ar.metrics.arrivedGuests} value={arrivedC.length} />
+        <MetricCard label={ar.metrics.seated} value={seatedC.length} />
+        <MetricCard label={ar.metrics.noShowRisk} value={risk.length} />
+        <MetricCard label={ar.metrics.tablesAvailable} value={avail} />
+        <MetricCard label={ar.metrics.tablesOutOfService} value={oos} />
+      </MetricGrid>
 
-      <div className={styles.card}>
-        <h2 className={styles.cardTitle}>{ar.dashboard.byStatus}</h2>
+      <SectionCard title={ar.dashboard.byStatus}>
         {Object.keys(byStatus).length === 0 ? (
           <p className={styles.muted}>لا حجوزات مرتبطة بتاريخ العينة لعرضها هنا. جرّب فتح «الحجوزات» لكل السجل.</p>
         ) : (
@@ -81,10 +80,9 @@ export function RestaurantHomeContent() {
             ))}
           </div>
         )}
-      </div>
+      </SectionCard>
 
-      <div className={styles.card}>
-        <h2 className={styles.cardTitle}>{ar.dashboard.pendingActions}</h2>
+      <SectionCard title={ar.dashboard.pendingActions}>
         {pending.length === 0 ? (
           <p className={styles.empty}>لا يوجد طلبات بانتظار الرد.</p>
         ) : (
@@ -99,10 +97,9 @@ export function RestaurantHomeContent() {
             </div>
           ))
         )}
-      </div>
+      </SectionCard>
 
-      <div className={styles.card}>
-        <h2 className={styles.cardTitle}>{ar.dashboard.needsAttention}</h2>
+      <SectionCard title={ar.dashboard.needsAttention}>
         {late.length === 0 ? (
           <p className={styles.empty}>لا حالات متأخرة بمعايير العيّنة.</p>
         ) : (
@@ -117,11 +114,10 @@ export function RestaurantHomeContent() {
             </div>
           ))
         )}
-      </div>
+      </SectionCard>
 
       {canQuick && (
-        <div className={styles.card}>
-          <h2 className={styles.cardTitle}>{ar.dashboard.quickActions}</h2>
+        <SectionCard title={ar.dashboard.quickActions}>
           <div className={styles.quick}>
             <Link className={`${styles.btn} ${styles.btnPrimary}`} href="/restaurant/reservations">
               {ar.dashboard.toReservations}
@@ -133,7 +129,7 @@ export function RestaurantHomeContent() {
               {ar.dashboard.toBranches}
             </Link>
           </div>
-        </div>
+        </SectionCard>
       )}
     </div>
   );

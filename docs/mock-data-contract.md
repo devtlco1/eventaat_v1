@@ -1,4 +1,4 @@
-# Mock data contract (Phases 1A–1C for consumers)
+# Mock data contract (Phases 1A–1C + UI Recovery extensions for consumers)
 
 Phase **1A** established a **mock-first** data layer in [`packages/shared`](../packages/shared) so
 mobile and web UIs can share the same **shapes** and **sample records** while **no** persistence,
@@ -7,6 +7,13 @@ package with a few more **presentation** fields and label maps (e.g. `SeatingTyp
 for the **customer mobile** prototype. **Phase 1C** does **not** duplicate mock rows: the **restaurant
 web** dashboard in `apps/web` reads the same `mockReservations` / `mockTables` / `mockBranches` as
 `@eventaat/shared` and keeps **overrides in React state** only. Still no backend.
+
+**UI Recovery + Dashboard Polish** extends the same package (no new persistence): optional fields on
+`Reservation` (`needsAdminFollowupMock`, `callCenterNoteAr`), richer `Complaint` and `CallCenterTask`
+rows, subscription display fields (`trialEndsOn`, `lastFollowUpAt`, `nextActionAr`), and new mock
+helpers (`platform-aggregates`, `communication-logs`, `admin-extras`) for **admin / call center /
+platform** web dashboards. Internal status keys stay English; Arabic labels use existing `*_LABELS_AR`
+maps and web copy files.
 
 ## Location
 
@@ -29,7 +36,10 @@ web** dashboard in `apps/web` reads the same `mockReservations` / `mockTables` /
 | Complaint | `Complaint` | `mock/complaints.ts` | يرتبط بـ `ComplaintStatus` (مخطط — دورة شكوى). |
 | Subscription | `Subscription` | `mock/subscriptions.ts` | يرتبط بـ `SubscriptionStatus` (مخطط — مرحلة الاشتراكات). |
 | WhatsApp | `WhatsAppTemplate` | `mock/whatsappTemplates.ts` | جدول أسماء **قالبي** Meta حيث نُسّم في المخطط (§68–69) + أسماء داخلية ثابتة لباقي المقاطع. |
-| Call center | `CallCenterTask` | `mock/callCenterTasks.ts` | متابعة تشغيلية (Phase 6). |
+| Call center | `CallCenterTask` | `mock/callCenterTasks.ts` | متابعة تشغيلية; **UI Recovery:** optional `priority`, `taskType`, `dueAt` for web queues. |
+| (helpers) | — | `mock/platform-aggregates.ts` | تجميعات وهمية للوحات الإدارة/الكول سنتر (لا تخزين). |
+| (helpers) | — | `mock/communication-logs.ts` | سجلات زمنية وهمية لأدراج التفاصيل. |
+| (helpers) | — | `mock/admin-extras.ts` | ملاحظات داخلية وهمية لعرض تفاصيل المطعم. |
 
 ## Status and role keys
 

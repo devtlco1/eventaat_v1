@@ -21,7 +21,7 @@ a shared backend API.
 | Path | Role |
 |------|------|
 | `apps/mobile` | Expo customer app |
-| `apps/web` | Next.js: RTL **dashboard** (`/`, `/dashboard`, … — see app routes) |
+| `apps/web` | Next.js: Arabic RTL **dashboards** (restaurant, admin, call center, platform) with **Almarai** and shared UI components; all **mock** until backend phases |
 | `apps/api` | NestJS API |
 | `packages/shared` | Domains: **constants**, **types**, **mock data** (Phase 1A; single source for UI) |
 | `packages/config` | Shared `tsconfig.base.json` and future shared tooling |
@@ -98,17 +98,19 @@ pnpm -r run build
 
 (Adjust per package; mobile may require Expo dependencies resolved after the first `pnpm install`.)
 
-## Current implementation status (Phases 1A–1C for listed areas)
+## Current implementation status (Phases 1A–1C + web UI recovery for listed areas)
 
 - **Shared (`@eventaat/shared`):** `UserRole`, all lifecycle `*Status` values (reservation, restaurant, table,
   complaint, subscription), entity interfaces, Arabic label maps, **seating / occasion** labels for
   the customer UI, and **central** mock data under
-  `packages/shared/src/mock/`. See [`docs/mock-data-contract.md`](./docs/mock-data-contract.md).
-- **Web:** RTL **layout** (header + sidebar). **Restaurant (Phase 1C):** Arabic-first **operational
-  dashboard** at `/restaurant` and sub-routes (reservations, tables, branches, settings) with **local
-  React state** (no API) on top of `@eventaat/shared` mock data; **role switcher** (صاحب مطعم / مدير فرع /
-  استقبال) for UI-only permission hints. **Admin and call center** areas remain **light placeholders**
-  (not Phase 1C/1D depth).
+  `packages/shared/src/mock/`, including **UI Recovery** extensions (e.g. `platform-aggregates`,
+  richer complaints/tasks, subscription display fields). See [`docs/mock-data-contract.md`](./docs/mock-data-contract.md).
+- **Web:** **Almarai** (Google Font via `next/font/google`), RTL **shell** (polished sidebar + top bar
+  with route titles, subtle **نموذج تجريبي** note). **Restaurant (Phase 1C + polish):** operational
+  mock at `/restaurant` and sub-routes; **UI Recovery** adds shared **MetricCard / SectionCard / PageHeader** and
+  tighter layout. **Admin, call center, and platform** (`/dashboard`, `/admin/*`, `/call-center/*`) use the
+  same design system: KPIs, toolbars, tables, drawers — all **mock-only** from `@eventaat/shared` (no API).
+  **Role switcher** (مطعم) unchanged; no real auth.
 - **Mobile:** **Customer** app — Arabic-first, RTL, **state-based** navigation (`AppProvider` +
   `ScreenRouter`); full **prototype** flows: Welcome (mock sign-in and guest entry), mock login/OTP,
   mock registration, Home (بغداد, discovery, categories, areas), Search with local filters, restaurant
@@ -123,5 +125,6 @@ pnpm -r run build
 
 ## Next planned phase (not implemented)
 
-**Phase 1D** — Deeper **admin and call center** web mock UIs; still mock-backed, no new business APIs. See
+**Phase 1E (suggested)** — **Mock end-to-end scenario** testing and polish across flows (per blueprint
+readiness), without adding business APIs until Phase 2+. See
 [`docs/implementation-plan.md`](./docs/implementation-plan.md).

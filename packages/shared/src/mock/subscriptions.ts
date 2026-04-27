@@ -8,6 +8,9 @@ export const mockSubscriptions: Subscription[] = [
     status: SubscriptionStatus.trial_active,
     monthlyAmountIqd: 100_000,
     periodEnd: '2026-05-15',
+    trialEndsOn: '2026-07-15',
+    lastFollowUpAt: '2026-04-20',
+    nextActionAr: 'تذكير بالخطة بعد انتهاء التجربة',
   },
   {
     id: 'sub_late',
@@ -15,6 +18,9 @@ export const mockSubscriptions: Subscription[] = [
     status: SubscriptionStatus.overdue,
     monthlyAmountIqd: 100_000,
     periodEnd: '2026-04-01',
+    trialEndsOn: '2026-03-01',
+    lastFollowUpAt: '2026-04-18',
+    nextActionAr: 'مكالمة تحصيل واتساب',
   },
   {
     id: 'sub_ok',
@@ -22,6 +28,9 @@ export const mockSubscriptions: Subscription[] = [
     status: SubscriptionStatus.active,
     monthlyAmountIqd: 100_000,
     periodEnd: '2026-12-01',
+    trialEndsOn: '2025-10-01',
+    lastFollowUpAt: '2026-04-10',
+    nextActionAr: 'متابعة روتينية',
   },
   {
     id: 'sub_due',
@@ -29,6 +38,9 @@ export const mockSubscriptions: Subscription[] = [
     status: SubscriptionStatus.payment_due,
     monthlyAmountIqd: 100_000,
     periodEnd: '2026-04-30',
+    trialEndsOn: '2026-02-28',
+    lastFollowUpAt: '2026-04-25',
+    nextActionAr: 'تأكيد الاستلام خلال ٤٨ ساعة',
   },
   {
     id: 'sub_sus',
@@ -36,6 +48,9 @@ export const mockSubscriptions: Subscription[] = [
     status: SubscriptionStatus.suspended,
     monthlyAmountIqd: 100_000,
     periodEnd: '2026-03-01',
+    trialEndsOn: '2025-12-01',
+    lastFollowUpAt: '2026-03-28',
+    nextActionAr: 'إعادة تفعيل بعد الالتزام',
   },
   {
     id: 'sub_cx',
@@ -43,6 +58,9 @@ export const mockSubscriptions: Subscription[] = [
     status: SubscriptionStatus.cancelled,
     monthlyAmountIqd: 100_000,
     periodEnd: '2026-01-01',
+    trialEndsOn: '2025-10-01',
+    lastFollowUpAt: '2025-12-20',
+    nextActionAr: 'أرشفة',
   },
 ];
 

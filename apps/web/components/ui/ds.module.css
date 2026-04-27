@@ -1,0 +1,261 @@
+.pageHeader {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 1rem;
+  margin-bottom: 1.1rem;
+  flex-wrap: wrap;
+}
+
+.titleBlock {
+  min-width: 0;
+}
+
+.eyebrow {
+  font-size: 0.7rem;
+  font-weight: 800;
+  letter-spacing: 0.04em;
+  color: var(--ea-muted);
+  text-transform: none;
+  margin: 0 0 0.2rem;
+}
+
+.h1 {
+  font-size: 1.2rem;
+  font-weight: 800;
+  margin: 0;
+  color: var(--ea-ink);
+  line-height: 1.3;
+}
+
+.sub {
+  font-size: 0.8rem;
+  color: var(--ea-muted2);
+  margin: 0.2rem 0 0;
+  line-height: 1.4;
+  max-width: 48rem;
+}
+
+.actions {
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+  flex-wrap: wrap;
+}
+
+.badge {
+  display: inline-flex;
+  align-items: center;
+  padding: 0.1rem 0.45rem;
+  border-radius: 999px;
+  font-size: 0.7rem;
+  font-weight: 800;
+  border: 1px solid #e2e8f0;
+  background: #f8fafc;
+  color: #475569;
+  white-space: nowrap;
+}
+
+.toolbar {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.5rem 0.75rem;
+  margin-bottom: 0.85rem;
+  padding: 0.5rem 0.65rem;
+  background: #fff;
+  border: 1px solid #e2e8f0;
+  border-radius: 10px;
+  box-shadow: 0 1px 0 rgba(15, 20, 25, 0.04);
+}
+
+.filterLabel {
+  font-size: 0.72rem;
+  font-weight: 700;
+  color: var(--ea-muted);
+}
+
+.input,
+.select {
+  font: inherit;
+  min-width: 0;
+  padding: 0.35rem 0.55rem;
+  border: 1px solid #d1d5db;
+  border-radius: 8px;
+  background: #fff;
+  font-size: 0.82rem;
+  color: #0f1419;
+}
+
+.searchWrap {
+  flex: 1 1 10rem;
+  min-width: 7rem;
+  max-width: 20rem;
+}
+
+.searchInput {
+  width: 100%;
+}
+
+.input:focus,
+.select:focus {
+  outline: 2px solid color-mix(in srgb, var(--ea-accent) 35%, white);
+  border-color: color-mix(in srgb, var(--ea-accent) 50%, #d1d5db);
+}
+
+.btn,
+.btnSm {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 8px;
+  font-weight: 800;
+  border: 1px solid transparent;
+  cursor: pointer;
+  text-decoration: none;
+  line-height: 1.2;
+  transition: background 0.12s ease, color 0.12s ease, box-shadow 0.12s ease, border 0.12s ease;
+}
+
+.btn {
+  padding: 0.4rem 0.75rem;
+  font-size: 0.82rem;
+  gap: 0.3rem;
+}
+
+.btnSm {
+  padding: 0.28rem 0.5rem;
+  font-size: 0.75rem;
+}
+
+.primary {
+  background: var(--ea-accent);
+  color: #f8fffb;
+  border-color: var(--ea-accent);
+  box-shadow: 0 1px 2px rgba(4, 120, 87, 0.25);
+}
+
+.primary:hover {
+  filter: brightness(0.95);
+}
+
+.secondary {
+  background: #fff;
+  color: #0f1419;
+  border-color: #d1d5db;
+}
+
+.secondary:hover {
+  background: #f9fafb;
+  border-color: #cbd5e1;
+}
+
+.ghost {
+  background: transparent;
+  color: #0f1419;
+  border-color: transparent;
+}
+
+.ghost:hover {
+  background: #f1f5f9;
+}
+
+.danger {
+  background: #fff;
+  color: #b91c1c;
+  border-color: #fecaca;
+}
+
+.danger:hover {
+  background: #fff1f2;
+}
+
+.muted {
+  color: #64748b;
+  font-size: 0.8rem;
+  line-height: 1.4;
+  margin: 0;
+}
+
+.empty {
+  text-align: center;
+  padding: 1.25rem 0.75rem;
+  border: 1px dashed #cbd5e1;
+  border-radius: 10px;
+  background: #f8fafc;
+}
+
+.dialogBackdrop {
+  position: fixed;
+  inset: 0;
+  z-index: 60;
+  background: rgba(15, 20, 25, 0.4);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 1rem;
+}
+
+.dialog {
+  width: 100%;
+  max-width: 24rem;
+  background: #fff;
+  border-radius: 10px;
+  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.18);
+  border: 1px solid #e2e8f0;
+  padding: 1rem 1.1rem;
+  text-align: start;
+}
+
+.dialogH {
+  font-size: 0.95rem;
+  font-weight: 800;
+  margin: 0 0 0.4rem;
+}
+
+.dialogActions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 0.4rem;
+  margin-top: 0.85rem;
+  flex-wrap: wrap;
+}
+
+.timeline {
+  list-style: none;
+  margin: 0;
+  padding: 0 0.25rem;
+  position: relative;
+  border-right: 2px solid #e2e8f0;
+  margin-right: 0.35rem;
+  padding-right: 0.85rem;
+}
+
+.timelineItem {
+  position: relative;
+  margin: 0 0 0.7rem 0;
+}
+
+.dot {
+  position: absolute;
+  right: -1.1rem;
+  top: 0.25rem;
+  width: 0.4rem;
+  height: 0.4rem;
+  border-radius: 999px;
+  background: var(--ea-accent);
+  box-shadow: 0 0 0 3px #ecfdf5;
+}
+
+.time {
+  font-size: 0.7rem;
+  color: #64748b;
+  margin: 0 0 0.1rem;
+}
+
+.tText {
+  font-size: 0.82rem;
+  margin: 0;
+  color: #0f1419;
+  line-height: 1.4;
+}

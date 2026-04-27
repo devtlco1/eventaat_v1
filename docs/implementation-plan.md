@@ -66,10 +66,25 @@ deep UI work.
   [`api-reference.md`](./api-reference.md) surface.
 - **API / DB:** still **`GET /health` only**; no Prisma business schema.
 
-### Phase 1D — (planned) Admin and call center web dashboards in depth
+### UI Recovery + Dashboard Polish (done in repo)
 
-**Admin** and **call center** sections with richer mock UIs, filters, and interactions; still **mock** until the
-backend exists. Does **not** add business APIs.
+- **Not** a new product phase; this step **upgrades the web** (`apps/web`) to a professional Arabic
+  RTL **operational mock** look: **Almarai** (via `next/font/google`), a shared set of **dashboard UI
+  components** under `components/ui/`, `components/dashboard/`, and feature folders under
+  `components/admin/`, `components/call-center/`, and existing `components/restaurant/`.
+- **Admin** (`/admin`, restaurants, reservations, complaints, subscriptions), **call center**
+  (`/call-center/*`), and **platform** (`/dashboard`) use **KPIs, toolbars, tables, drawers, and
+  local state** only; all numbers come from **`@eventaat/shared`** (including helpers in
+  `mock/platform-aggregates.ts`, extended complaints/tasks/subscriptions, and
+  `communication-logs` / `admin-extras` where needed).
+- **No** new API routes, **no** backend business logic, **no** Prisma business schema changes.
+  **Only** `GET /health` plus **`/docs`** / **`/openapi.json`** (see [`api-reference.md`](./api-reference.md)).
+
+### Phase 1D — (planned) Remaining depth / scenario testing
+
+Optional follow-up: end-to-end **mock scenario** testing and polish (see blueprint Phase 1 completion
+criteria). **Admin / call center** UIs are no longer placeholder-only after **UI Recovery + Dashboard Polish**.
+Does **not** add business APIs until a later phase.
 
 ## Phase 2 — Accounts and permissions
 
