@@ -13,7 +13,7 @@ export const mockWhatsAppTemplates: WhatsAppTemplate[] = [
   { id: 'w7', name: 'reservation_ontheway_utility', category: 'Utility', descriptionAr: 'الزبون في الطريق (§74)' },
   { id: 'w8', name: 'reservation_cancel_cust_utility', category: 'Utility', descriptionAr: 'إلغاء من الزبون (§75)' },
   { id: 'w9', name: 'reservation_cancel_rest_utility', category: 'Utility', descriptionAr: 'إلغاء من المطعم (§76)' },
-  { id: 'w10', name: 'reservation_noshow_utility', category: 'Utility', descriptionAr: 'تنبيه no-show (§77)' },
+  { id: 'w10', name: 'reservation_noshow_utility', category: 'Utility', descriptionAr: 'تنبيه عند تسجيل عدم الحضور (§77)' },
   { id: 'w11', name: 'reservation_review_utility', category: 'Utility', descriptionAr: 'طلب تقييم (§78)' },
   { id: 'w12', name: 'restaurant_new_reservation_utility', category: 'Utility', descriptionAr: 'طلب جديد للمطعم (§79)' },
   { id: 'w13', name: 'callcenter_followup_utility', category: 'Utility', descriptionAr: 'متابعة كول سنتر (§80)' },

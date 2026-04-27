@@ -14,6 +14,10 @@ prototyping (see [`mock-data-contract.md`](./mock-data-contract.md)).
 not implement transitions or business rules. Cancelled, rejected, and expired states show a short
 explanation instead of the happy path.
 
+**Code (Phase 1C, restaurant web):** similar **timeline** language in the reservation **detail** drawer
+and status filters; user-facing text uses **«لم يحضر»** for internal `no_show`, and **«احتمال عدم حضور»**
+/ **«تسجيل عدم حضور»** where the UI describes risk or the staff action (never the English “No Show”).
+
 ## Core rule
 
 A reservation is not a single “status”; it is a full journey, and the state must be clear to
@@ -38,7 +42,7 @@ customer, restaurant, call center, and administration (per blueprint).
 | **Cancelled by Customer** | Customer cancelled. |
 | **Cancelled by Restaurant** | Restaurant cancelled. |
 | **Cancelled by Admin** | eventaat admin cancelled (operational or policy). |
-| **No Show** | Customer did not attend. |
+| **No Show** (internal: `no_show`, Arabic label **«لم يحضر»**) | Customer did not attend. |
 | **Expired** | Request expired (e.g. restaurant did not respond in time). |
 
 ## Allowed transitions (summary)
@@ -47,7 +51,7 @@ customer, restaurant, call center, and administration (per blueprint).
 - **From Pending** → Approved, Rejected, Alternative Proposed, Expired, Cancelled by Customer, Cancelled by
   Admin.
 - **From Approved** → Customer On The Way, Arrived, Pending Change Approval, Cancelled by
-  Customer, Cancelled by Restaurant, Cancelled by Admin, No Show.
+  Customer, Cancelled by Restaurant, Cancelled by Admin, or internal status `no_show` (يعرض للمستخدم: «لم يحضر»).
 - **From Alternative Proposed** → Customer Confirmed Alternative, *Rejected by Customer* (as in
   blueprint transition list), Expired, Cancelled by Customer.
 - **From Arrived** → Waiting, Seated, Cancelled by Restaurant, or Completed in a quick path (per
@@ -58,11 +62,11 @@ customer, restaurant, call center, and administration (per blueprint).
 
 ## State rules (as listed in the blueprint)
 
-Examples include: no restaurant review before **Completed**; no **No Show** before the grace
+Examples include: no restaurant review before **Completed**; no **«لم يحضر»** (internal: `no_show`) before the grace
 period; restaurant cannot change a confirmed time without customer approval; customer cannot change
 a **confirmed** booking in ways that affect the table without restaurant approval; every
 cancellation and rejection has reason/logging rules; prior bookings keep the cancellation policy
-visible at creation; and operational alerts for repeated **Expired** or **No Show** patterns (per
+visible at creation; and operational alerts for repeated **Expired** or **`no_show` / «لم يحضر»** patterns (per
 blueprint).
 
 ---

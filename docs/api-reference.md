@@ -11,6 +11,10 @@ packages. Only **`GET /health`** is implemented. **Phase 1B** adds **no** new AP
 **API Docs Foundation** adds **Swagger/OpenAPI documentation only** (interactive UI and machine-readable
 spec). **No business endpoints were added.** The only **functional** API route remains **`GET /health`**.
 
+**Phase 1C** adds **restaurant web dashboard mock UI only** in `apps/web`. **No** business API endpoints
+were added. The only **functional** API endpoint remains **`GET /health`**. **Swagger/OpenAPI** remains
+available at **`/docs`** and **`/openapi.json`**.
+
 ## OpenAPI & Swagger (NestJS)
 
 | URL | Description |

@@ -44,8 +44,8 @@ restaurant data, add a new owner.
 
 ## Reception / Host (موظف الاستقبال)
 
-**May:** see today’s reservations, check customer arrival, seat, complete the reservation, mark No
-Show per policy, add operational notes, suggest an alternative time when allowed.
+**May:** see today’s reservations, check customer arrival, seat, complete the reservation, mark
+**عدم حضور (لم يحضر)** per policy, add operational notes, suggest an alternative time when allowed.
 
 **May not:** change restaurant settings, change subscription, delete reservations, add staff, change
 cancellation policy.
@@ -61,7 +61,7 @@ a restaurant, change subscription, change sensitive data without approval.
 ## Call center supervisor (Call Center Supervisor)
 
 **May:** all agent permissions, assign tasks, review agent performance, close some complaints, approve
-escalation, review disputed No Show, request temporary restaurant suspension.
+escalation, review disputed **عدم حضور (لم يحضر)** cases, request temporary restaurant suspension.
 
 ## Operations admin (Operations Admin)
 

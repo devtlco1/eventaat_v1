@@ -1,10 +1,12 @@
-# Mock data contract (Phases 1A + 1B)
+# Mock data contract (Phases 1A–1C for consumers)
 
 Phase **1A** established a **mock-first** data layer in [`packages/shared`](../packages/shared) so
 mobile and web UIs can share the same **shapes** and **sample records** while **no** persistence,
 **no** new API business routes, and **no** Prisma domain models exist. **Phase 1B** extends the same
 package with a few more **presentation** fields and label maps (e.g. `SeatingType`, `ReservationOccasion`)
-used only by the **customer mobile** prototype; still no backend.
+for the **customer mobile** prototype. **Phase 1C** does **not** duplicate mock rows: the **restaurant
+web** dashboard in `apps/web` reads the same `mockReservations` / `mockTables` / `mockBranches` as
+`@eventaat/shared` and keeps **overrides in React state** only. Still no backend.
 
 ## Location
 

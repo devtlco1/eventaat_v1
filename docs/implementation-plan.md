@@ -55,10 +55,21 @@ deep UI work.
 - **Maintenance rule:** any route add/change/remove must update **both** OpenAPI decorators and
   [`api-reference.md`](./api-reference.md) in the same work item (stated in that file).
 
-### Phase 1C / 1D — (planned) Staff dashboards in depth
+### Phase 1C — Restaurant web dashboard in depth (done in repo)
 
-Detailed **tables**, filters, and interactions for **restaurant / admin / call center** (Phase 1C/1D in
-project plan); still mock-backed until the backend exists.
+- **Web (restaurant only):** Arabic-first RTL **operational** UI for `r_visible` (shared mock) at
+  `/restaurant` (day metrics, by-status lists, late/pending), `/restaurant/reservations` (table + filters
+  + status-based actions, detail drawer, reject/alt-time dialogs), `/restaurant/tables`, `/restaurant/branches`,
+  `/restaurant/settings` — all **client-side** state, **no** API. Centralized copy in
+  `apps/web/lib/arStrings.ts`; role switcher in layout for **restaurant_owner / branch_manager / restaurant_host**.
+- **Not in 1C:** **Admin** and **call center** detailed UIs; **no** new backend, **no** new routes beyond existing
+  [`api-reference.md`](./api-reference.md) surface.
+- **API / DB:** still **`GET /health` only**; no Prisma business schema.
+
+### Phase 1D — (planned) Admin and call center web dashboards in depth
+
+**Admin** and **call center** sections with richer mock UIs, filters, and interactions; still **mock** until the
+backend exists. Does **not** add business APIs.
 
 ## Phase 2 — Accounts and permissions
 
@@ -121,8 +132,9 @@ waitlist, paid promos, better reports, separate restaurant app, loyalty, new cit
 
 ---
 
-**Current code status:** **Phases 1A and 1B** are implemented, plus the **API Docs Foundation** (Swagger UI
-at `/docs`, OpenAPI JSON at `/openapi.json`, health endpoint documented). The **functional** API surface
-is still **`GET /health` only**; see [`api-reference.md`](./api-reference.md) for the documentation
-maintenance rule. **Phase 1C** (restaurant / staff mock dashboards in depth) is **not** implemented. Real
-backend, auth, and business APIs are **out of scope** until the blueprint phases that introduce them.
+**Current code status:** **Phases 1A, 1B, and 1C (restaurant web dashboard)** are implemented, plus the
+**API Docs Foundation** (Swagger UI at `/docs`, OpenAPI JSON at `/openapi.json`, health endpoint
+documented). The **functional** API surface is still **`GET /health` only**; see
+[`api-reference.md`](./api-reference.md) for the documentation maintenance rule. **Phase 1D** (admin and
+call center web dashboards in depth) is **not** implemented. Real backend, auth, and business APIs are
+**out of scope** until the blueprint phases that introduce them.

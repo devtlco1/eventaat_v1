@@ -98,14 +98,17 @@ pnpm -r run build
 
 (Adjust per package; mobile may require Expo dependencies resolved after the first `pnpm install`.)
 
-## Current implementation status (Phase 1A + 1B)
+## Current implementation status (Phases 1A–1C for listed areas)
 
 - **Shared (`@eventaat/shared`):** `UserRole`, all lifecycle `*Status` values (reservation, restaurant, table,
   complaint, subscription), entity interfaces, Arabic label maps, **seating / occasion** labels for
   the customer UI, and **central** mock data under
   `packages/shared/src/mock/`. See [`docs/mock-data-contract.md`](./docs/mock-data-contract.md).
-- **Web:** RTL **layout** (header + sidebar), routes for **restaurant** / **admin** / **call center**;
-  every page is a **placeholder** that only reads from `@eventaat/shared` (no in-component mock data).
+- **Web:** RTL **layout** (header + sidebar). **Restaurant (Phase 1C):** Arabic-first **operational
+  dashboard** at `/restaurant` and sub-routes (reservations, tables, branches, settings) with **local
+  React state** (no API) on top of `@eventaat/shared` mock data; **role switcher** (صاحب مطعم / مدير فرع /
+  استقبال) for UI-only permission hints. **Admin and call center** areas remain **light placeholders**
+  (not Phase 1C/1D depth).
 - **Mobile:** **Customer** app — Arabic-first, RTL, **state-based** navigation (`AppProvider` +
   `ScreenRouter`); full **prototype** flows: Welcome (mock sign-in and guest entry), mock login/OTP,
   mock registration, Home (بغداد, discovery, categories, areas), Search with local filters, restaurant
@@ -120,6 +123,5 @@ pnpm -r run build
 
 ## Next planned phase (not implemented)
 
-**Phase 1C** — Deeper **restaurant dashboard** (and related staff) mock UIs: tables, day board, and
-filters in the web app, still mock-backed. See
+**Phase 1D** — Deeper **admin and call center** web mock UIs; still mock-backed, no new business APIs. See
 [`docs/implementation-plan.md`](./docs/implementation-plan.md).

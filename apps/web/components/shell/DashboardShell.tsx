@@ -32,6 +32,7 @@ function groupLabel(g: (typeof nav)[0]['group']) {
 
 export function DashboardShell({ children }: { children: React.ReactNode }) {
   const path = usePathname();
+  const isRestaurant = path.startsWith('/restaurant');
 
   const groups: (typeof nav)[0]['group'][] = ['hub', 'restaurant', 'admin', 'cc'];
 
@@ -70,8 +71,14 @@ export function DashboardShell({ children }: { children: React.ReactNode }) {
       </aside>
       <div className={styles.mainCol}>
         <header className={styles.topbar}>
-          <h1 className={styles.topbarTitle}>نموذج واجهة (Phase 1A)</h1>
-          <p className={styles.topbarSub}>بيانات وهمية فقط — بدون باك-إند</p>
+          <h1 className={styles.topbarTitle}>
+            {isRestaurant ? 'لوحة المطعم (نموذج Phase 1C)' : 'نموذج واجهة (Phase 1A)'}
+          </h1>
+          <p className={styles.topbarSub}>
+            {isRestaurant
+              ? 'واجهة عربية للمطعم — بيانات من العينة، تعديلات محلية فقط'
+              : 'بيانات وهمية فقط — بدون باك-إند'}
+          </p>
         </header>
         <main className={styles.content}>{children}</main>
       </div>

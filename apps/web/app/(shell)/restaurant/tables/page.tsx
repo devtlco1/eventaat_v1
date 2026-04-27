@@ -1,22 +1,15 @@
-import { mockTables, TABLE_STATUS_LABELS_AR } from '@eventaat/shared';
-import { PlaceholderCard } from '@/components/PlaceholderCard';
-import listStyles from '@/components/PlaceholderCard.module.css';
+'use client';
+
+import { ar } from '@/lib/arStrings';
+import { TableStatusGrid } from '@/components/restaurant/TableStatusGrid';
+import styles from '@/components/restaurant/restaurant.module.css';
 
 export default function RestaurantTablesPage() {
   return (
-    <div>
-      <PlaceholderCard title="الطاولات">
-        <p className={listStyles.muted}>
-          تغطية الحالات: متاحة، محجوزة، مشغولة، خارج الخدمة، بانتظار/تنظيف، محجوبة.
-        </p>
-        <ul className={listStyles.listPlain}>
-          {mockTables.map((t) => (
-            <li key={t.id}>
-              {t.label} — {t.capacity} أشخاص — {TABLE_STATUS_LABELS_AR[t.status]}
-            </li>
-          ))}
-        </ul>
-      </PlaceholderCard>
+    <div className={styles.page}>
+      <h1 className={styles.pageTitle}>{ar.tables.title}</h1>
+      <p className={styles.sub}>{ar.shell.modelNote}</p>
+      <TableStatusGrid />
     </div>
   );
 }
