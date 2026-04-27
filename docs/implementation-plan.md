@@ -154,9 +154,10 @@ waitlist, paid promos, better reports, separate restaurant app, loyalty, new cit
 
 ---
 
-**Current code status:** **Phases 1A, 1B, and 1C (restaurant web dashboard)** are implemented, plus the
-**API Docs Foundation** (Swagger UI at `/docs`, OpenAPI JSON at `/openapi.json`, health endpoint
-documented). The **functional** API surface is still **`GET /health` only**; see
-[`api-reference.md`](./api-reference.md) for the documentation maintenance rule. **Phase 1D** (admin and
-call center web dashboards in depth) is **not** implemented. Real backend, auth, and business APIs are
-**out of scope** until the blueprint phases that introduce them.
+**Current code status:** **Phases 1A–1E** are implemented in the repo: mock contract, customer mobile
+prototype, restaurant web dashboard, **UI Recovery** (admin, call center, platform web), **API Docs
+Foundation** (Swagger UI at `/docs`, OpenAPI JSON at `/openapi.json`), and **Phase 1E** mock E2E
+checklist + UI polish (see [`mock-e2e-scenarios.md`](./mock-e2e-scenarios.md)). The **functional** API
+surface is still **`GET /health` only**; see [`api-reference.md`](./api-reference.md) for the
+documentation maintenance rule. Real backend, auth, and business APIs are **out of scope** until the
+blueprint phases that introduce them.
