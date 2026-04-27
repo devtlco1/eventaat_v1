@@ -1,8 +1,9 @@
-# Local manual verification — auth API (Phase 2B / 2B.1 / 2C)
+# Local manual verification — auth API and clients (Phase 2B / 2B.1 / 2C / 2D)
 
 Use this flow to exercise the **existing** auth endpoints against a **local PostgreSQL** with the
-`auth_foundation` migration applied. **No** new routes are added; Phase 2C only changes **OTP delivery**
-behavior and related env vars.
+`auth_foundation` migration applied. **No** new API routes are added. **Phase 2D** adds **mobile and web** clients
+that call these endpoints (see [`frontend-auth-integration.md`](./frontend-auth-integration.md)) while
+**reservations and restaurants in the UIs** stay **mock** until later phases.
 
 **Prerequisites**
 
@@ -26,6 +27,13 @@ behavior and related env vars.
    - **OTP (Phase 2C, optional):** for the usual dev flow, leave **`OTP_DELIVERY_PROVIDER=mock`** and
      **`OTP_DELIVERY_DRY_RUN=true`** (defaults in `.env.example`); the challenge row should show
      `providerStatus` = `skipped` and no real WhatsApp call.
+
+**Ports (local default)**
+
+- **API:** `3000` (e.g. `http://127.0.0.1:3000`)
+- **Web (Next):** `3001` (set `NEXT_PUBLIC_API_BASE_URL` to the API, often `http://127.0.0.1:3000`)
+- **Mobile (Expo):** the API is **not** reachable as `localhost` on a **physical** phone; use your computer’s
+  **LAN address**, e.g. `EXPO_PUBLIC_API_BASE_URL=http://192.168.1.10:3000`
 
 **Start the API**
 

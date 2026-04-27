@@ -160,6 +160,23 @@ restaurant, call center agent, admin.
 - **Docs:** this file, `README`, [`api-reference.md`](./api-reference.md), [`local-auth-verification.md`](./local-auth-verification.md), [`auth-rbac-foundation.md`](./auth-rbac-foundation.md), [`whatsapp-templates.md`](./whatsapp-templates.md), [`otp-delivery-provider.md`](./otp-delivery-provider.md).
 - **Not 2C:** client apps (2D+), full RBAC route guards (2E), real SMS provider.
 
+### Phase 2D — Frontend auth integration (done in repo)
+
+- **Shared:** `packages/shared/src/auth-client/` — `createAuthApi`, DTO-shaped types, `AuthApiError`.
+- **Mobile:** `EXPO_PUBLIC_API_BASE_URL` + `expo-secure-store`; real OTP/login/register when the base URL is set
+  (or `EXPO_PUBLIC_MOCK_AUTH=true` / no URL to keep the mock UI path). Arabic-first strings; `devOtp` only in
+  a marked local-dev area when the API returns it. **No** new API routes.
+- **Web:** `NEXT_PUBLIC_API_BASE_URL` (default `http://127.0.0.1:3000` in code), `NEXT_PUBLIC_AUTH_REQUIRED` (default
+  `false`) + `/login` + `WebAuthProvider` + `AuthGate` + `localStorage` (prototype; production should use
+  httpOnly cookies — documented). Session chip and logout in `DashboardShell`.
+- **API:** CORS in `main.ts` via `CORS_ORIGINS` / `CORS_ALLOW_DEV_ALL` (documented in `apps/api/.env.example`). **No**
+  auth contract changes; **no** business routes.
+- **Docs:** `README`, [`api-reference.md`](./api-reference.md) (2D: no new endpoints; future rule preserved),
+  [`frontend-auth-integration.md`](./frontend-auth-integration.md), [`local-auth-verification.md`](./local-auth-verification.md), [`auth-rbac-foundation.md`](./auth-rbac-foundation.md), [`mock-e2e-scenarios.md`](./mock-e2e-scenarios.md) (note on real auth), app `.env.example` files.
+- **Not 2D:** full **RBAC** route guards (2E), business APIs, real reservation/restaurant data from the backend.
+- **Type alignment:** root `package.json` **pnpm `overrides`** for `@types/react` / `@types/react-dom` to keep **Next**
+  `next build` typecheck stable with React 19.
+
 ## Phase 3 — Restaurants, branches, tables
 
 Goal: operational setup for each restaurant. **Includes:** create/review/activate restaurant, branch, tables,

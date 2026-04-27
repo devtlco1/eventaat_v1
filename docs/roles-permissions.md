@@ -9,8 +9,10 @@ This document structures **roles and permission themes** as described in
 [`mock-data-contract.md`](./mock-data-contract.md)). That includes
 `content_manager` and `finance_manager` for future admin/finance **screens**; behavior is still
 blueprint-constrained. **Phase 2B (API):** the backend issues JWTs and returns `User` + `roleAssignments` on
-`GET /auth/me`; product **screen** RBAC for dashboards remains **2E** (not implemented here). **UI
-Recovery + mock dashboards** use role *labels* only; clients do not require the new API in Phase 2B.
+`GET /auth/me`; product **screen** RBAC for dashboards remains **2E** (not implemented here). **Phase 2D
+(frontends):** mobile and web can **sign in** against the auth API; dashboard **shells** still do not enforce
+role-gated routes. **UI Recovery + mock dashboards** use role *labels* in mock data; unauthenticated
+prototype browsing still works when `NEXT_PUBLIC_AUTH_REQUIRED` is not set to `true`.
 
 ## Principles
 

@@ -13,6 +13,9 @@ curl-style checks.
 Cloud API** (config + dry-run), and an **SMS placeholder** (no real vendor). **No** new public routes.
 **Swagger** and this file are updated. Details: [`otp-delivery-provider.md`](./otp-delivery-provider.md).
 
+**Phase 2D** integrates the **existing auth endpoints** into the **mobile** and **web** clients. **No new API
+endpoints were added.** See [`frontend-auth-integration.md`](./frontend-auth-integration.md).
+
 **Phase 2B** implements **auth HTTP** routes: OTP request/verify, session + JWT access token, logout, and
 **GET /me**. **No** restaurant, reservation, or payment APIs. **Swagger/OpenAPI** is updated in the same step.
 Remaining surface: health + auth. OpenAPI: **`/docs`** and **`/openapi.json`**.

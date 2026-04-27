@@ -56,7 +56,7 @@ export function ProfileScreen() {
       <SecondaryButton
         label="تسجيل خروج"
         onPress={() => {
-          logout();
+          void logout();
         }}
       />
     </AppShell>

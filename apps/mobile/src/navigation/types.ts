@@ -6,7 +6,14 @@ export type CustomerScreen =
   | { name: 'welcome' }
   | { name: 'login' }
   | { name: 'register_login' }
-  | { name: 'otp'; phone: string; next: 'login' | 'register' }
+  | {
+      name: 'otp';
+      phone: string;
+      next: 'login' | 'register';
+      /** Use `mock` for legacy UI-only flow */
+      challengeId: string;
+      devOtp?: string;
+    }
   | { name: 'register_profile'; phone: string }
   | { name: 'home' }
   | { name: 'search'; initialQuery?: string }

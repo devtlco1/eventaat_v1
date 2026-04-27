@@ -1,8 +1,9 @@
 # Mock end-to-end scenario checklist (Phase 1E)
 
-**Purpose:** Verify the **mock prototype** (no real backend) across the customer mobile app and web
-dashboards before **Phase 2** (auth, OTP, real APIs). All flows use **local / shared mock data** in
-`@eventaat/shared` and UI state only.
+**Purpose:** Verify the **mock prototype** across the customer mobile app and web
+dashboards. You can run **fully mock** flows (no API), or, after **Phase 2D**, point the app at a **local
+API** and keep **reservations and restaurants** as mock data while **auth** is real. All non-auth flows use
+**local / shared mock data** in `@eventaat/shared` and UI state only.
 
 **Rules:** Code paths, IDs, and internal statuses stay **English**; **Arabic** copy is centralized in
 `apps/web/lib/arStrings.ts` and shared label maps. The English phrase “No Show” does **not** appear in

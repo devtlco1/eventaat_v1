@@ -120,10 +120,66 @@
 }
 
 .topbar {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 0.75rem 1rem;
   background: #fff;
   border-bottom: 1px solid #e5e7eb;
   padding: 0.85rem 1.4rem 0.75rem;
   box-shadow: 0 1px 0 rgba(15, 20, 25, 0.04);
+}
+
+.sessionBar {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  flex-shrink: 0;
+}
+
+.sessionChip {
+  font-size: 0.78rem;
+  font-weight: 700;
+  color: #0f172a;
+  background: #ecfdf5;
+  border: 1px solid #a7f3d0;
+  padding: 0.25rem 0.6rem;
+  border-radius: 999px;
+  max-width: 12rem;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.sessionBtn {
+  font-size: 0.75rem;
+  font-weight: 800;
+  color: #64748b;
+  background: transparent;
+  border: 1px solid #e2e8f0;
+  padding: 0.2rem 0.5rem;
+  border-radius: 6px;
+  cursor: pointer;
+}
+
+.sessionBtn:hover {
+  background: #f8fafc;
+}
+
+.sessionHint {
+  font-size: 0.75rem;
+  color: #64748b;
+}
+
+.sessionLink {
+  color: #059669;
+  font-weight: 800;
+  text-decoration: none;
+}
+
+.sessionLink:hover {
+  text-decoration: underline;
 }
 
 .topbarTitle {

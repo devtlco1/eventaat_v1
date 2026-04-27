@@ -1,4 +1,4 @@
-# Auth, RBAC, and audit foundation (Phases 2A, 2B, 2C)
+# Auth, RBAC, and audit foundation (Phases 2A–2D)
 
 This document describes the **Prisma (2A)** database foundation and the **Phase 2B** **HTTP** auth API
 that uses it, plus **Phase 2C** **OTP delivery** (mock, optional WhatsApp Cloud API, SMS placeholder; no
@@ -121,7 +121,7 @@ The blueprint favors **persisted roles, OTP challenge, and session shapes** befo
 | **2B** (done) | Auth HTTP: `POST /auth/otp/*`, `GET /auth/me`, `POST /auth/logout`, Swagger + `api-reference.md` (transport expanded in 2C). |
 | **2B.1** (done) | Committed Prisma migration `auth_foundation` + e2e against local Postgres; **no** new API routes. |
 | **2C** (done) | OTP **adapter**: mock, WhatsApp Cloud (env + dry-run), SMS **placeholder**; `providerMessageId` / `providerStatus`; no real SMS vendor, no new routes. |
-| **2D** | **Web and mobile** integration: call APIs, store tokens, Arabic-first RTL. |
+| **2D** (done) | **Web and mobile** call **auth** APIs via `@eventaat/shared` `auth-client`; token storage; Arabic-first login/OTP; business data **still mock** in clients. |
 | **2E** | **RBAC guards** (Nest), route protection, and dashboard shells per role/scope. |
 
 ---

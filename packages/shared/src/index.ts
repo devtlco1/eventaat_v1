@@ -8,3 +8,4 @@ export type AppName = typeof APP_NAME;
 export * from './constants';
 export * from './types';
 export * from './mock';
+export * from './auth-client';

@@ -1,4 +1,4 @@
-import { View } from 'react-native';
+import { ActivityIndicator, Text, View } from 'react-native';
 import { BottomNav } from './components/BottomNav';
 import { isMainAppScreen, useApp } from './state/AppContext';
 import { theme } from './ui/theme';
@@ -20,7 +20,7 @@ import { MyReservationsScreen, ReservationDetailsScreen } from './screens/Reserv
 import { ProfileScreen, SupportScreen } from './screens/ProfileScreens';
 
 export function ScreenRouter() {
-  const { screen, session, mainTab, goToMainTab } = useApp();
+  const { screen, session, mainTab, goToMainTab, authRestoring, useApiAuth } = useApp();
   const showNav = session.kind !== 'none' && isMainAppScreen(screen.name);
 
   const body = (() => {
@@ -32,7 +32,14 @@ export function ScreenRouter() {
       case 'register_login':
         return <RegisterLoginScreen />;
       case 'otp':
-        return <OtpScreen next={screen.next} phone={screen.phone} />;
+        return (
+          <OtpScreen
+            next={screen.next}
+            phone={screen.phone}
+            challengeId={screen.challengeId}
+            devOtp={screen.devOtp}
+          />
+        );
       case 'register_profile':
         return <RegisterProfileScreen phone={screen.phone} />;
       case 'home':
@@ -55,6 +62,23 @@ export function ScreenRouter() {
         return <SupportScreen />;
     }
   })();
+
+  if (authRestoring && useApiAuth) {
+    return (
+      <View
+        style={{
+          flex: 1,
+          backgroundColor: theme.color.bg,
+          justifyContent: 'center',
+          alignItems: 'center',
+        }}
+      >
+        <ActivityIndicator size="large" color={theme.color.accent2} />
+        <Text style={{ color: theme.color.muted, marginTop: 16, fontSize: 15 }}>جارٍ التحقق من الجلسة…</Text>
+      </View>
+    );
+  }
+
   return (
     <View style={{ flex: 1, backgroundColor: theme.color.bg }}>
       {body}

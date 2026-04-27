@@ -3,6 +3,8 @@
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { APP_NAME } from '@eventaat/shared';
+import { useWebAuth } from '@/components/auth/AuthContext';
+import { isAuthRequired } from '@/lib/webAuthStorage';
 import { getShellMetaForPath } from '@/lib/shellMeta';
 import styles from './shell.module.css';
 
@@ -42,6 +44,8 @@ function isActivePath(path: string, href: string) {
 export function DashboardShell({ children }: { children: React.ReactNode }) {
   const path = usePathname();
   const meta = getShellMetaForPath(path);
+  const { user, signOut, ready } = useWebAuth();
+  const needAuth = isAuthRequired();
 
   const groups: (typeof nav)[0]['group'][] = ['hub', 'restaurant', 'admin', 'cc'];
 
@@ -94,6 +98,29 @@ export function DashboardShell({ children }: { children: React.ReactNode }) {
               </p>
             )}
           </div>
+          {ready && (
+            <div className={styles.sessionBar} dir="rtl">
+              {user ? (
+                <>
+                  <span className={styles.sessionChip} title={user.phone}>
+                    {user.fullName?.trim() || user.phone}
+                  </span>
+                  <button type="button" className={styles.sessionBtn} onClick={() => void signOut()}>
+                    تسجيل خروج
+                  </button>
+                </>
+              ) : (
+                <>
+                  <span className={styles.sessionHint}>
+                    {needAuth ? '' : 'نموذج: غير مُدخل — '}
+                    <Link href="/login" className={styles.sessionLink}>
+                      تسجيل الدخول
+                    </Link>
+                  </span>
+                </>
+              )}
+            </div>
+          )}
         </header>
         <main className={styles.content}>{children}</main>
       </div>
