@@ -1,4 +1,7 @@
-/** User roles (blueprint + operations split for admin; Phase 1A contract only). */
+/**
+ * User roles (blueprint + operations split for admin; Phase 1A contract; Phase 2A Prisma `UserRole` enum).
+ * String values must stay aligned with `apps/api/prisma/schema.prisma` — use `prisma-auth-alignment.ts` helpers in API layers later.
+ */
 export const UserRole = {
   customer: 'customer',
   restaurant_owner: 'restaurant_owner',

@@ -1,4 +1,4 @@
-# Mock data contract (Phases 1A–1C + UI Recovery + Phase 1E extensions for consumers)
+# Mock data contract (Phases 1A–1C + UI Recovery + Phase 1E + Prisma `UserRole` alignment)
 
 Phase **1A** established a **mock-first** data layer in [`packages/shared`](../packages/shared) so
 mobile and web UIs can share the same **shapes** and **sample records** while **no** persistence,
@@ -51,8 +51,11 @@ Machine-readable **snake_case** / **lowercase** keys in TypeScript mirror the bl
 [`reservation-lifecycle.md`](./reservation-lifecycle.md) and
 [`roles-permissions.md`](./roles-permissions.md)):
 
-- **User roles** — `UserRole` (يشمل `content_manager` و `finance_manager` كتقسيم إداري اختياري بجانب
-  `operations_admin` من المخطط؛ الربط البرمجي بصلاحيات الشاشة يأتي مع تسجيل الدخول لاحقاً).
+- **User roles** — `UserRole` in shared code (يشمل `content_manager` و `finance_manager` كتقسيم إداري اختياري
+  بجانب `operations_admin` من المخطط). **Phase 2A:** the same string values are mirrored in
+  `apps/api/prisma/schema.prisma` as the Prisma `UserRole` enum; see `prisma-auth-alignment.ts` and
+  [`auth-rbac-foundation.md`](./auth-rbac-foundation.md). Screen-level RBAC remains a future API phase
+  (mock UIs are unchanged).
 - **Reservation** — 17 حالة (§27 المخطط).
 - **Restaurant** — حالات الظهور/الإيقاف/الاعتماد (موضوع واحد `RestaurantStatus` للبروتوتايب).
 - **Table** — حسب الجدول أعلاه.

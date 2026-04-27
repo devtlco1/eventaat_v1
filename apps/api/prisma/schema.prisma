@@ -1,5 +1,4 @@
-// PostgreSQL is the primary datastore. No domain/business models in Step 0; they will be
-// added in later blueprint phases. This model exists only so `prisma generate` succeeds.
+// PostgreSQL primary datastore. Phase 0 foundation marker; Phase 2A auth / RBAC / OTP / session / audit.
 generator client {
   provider = "prisma-client-js"
   output   = "../generated/client"
@@ -10,8 +9,184 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
+// Step 0 marker — retained so existing environments keep a single-row legacy table; harmless alongside auth models.
 model FoundationSchemaMarker {
   id Int @id @default(0)
 
   @@map("foundation_schema_marker")
+}
+
+// --- Phase 2A: enums (align with @eventaat/shared `UserRole` and blueprint) ---
+
+enum UserRole {
+  customer
+  restaurant_owner
+  branch_manager
+  restaurant_host
+  call_center_agent
+  call_center_supervisor
+  operations_admin
+  content_manager
+  finance_manager
+  super_admin
+}
+
+enum UserStatus {
+  active
+  pending_verification
+  suspended
+  disabled
+}
+
+enum OtpPurpose {
+  login
+  register
+  phone_verification
+  staff_invite
+}
+
+enum OtpChannel {
+  whatsapp
+  sms
+  manual
+}
+
+enum OtpStatus {
+  pending
+  verified
+  expired
+  failed
+  cancelled
+}
+
+enum RoleScopeType {
+  platform
+  restaurant
+  branch
+  call_center
+}
+
+enum AuditActorType {
+  user
+  system
+  support
+}
+
+// --- Phase 2A: models (no Restaurant/Branch tables yet — use scopeId for future entity keys) ---
+
+model User {
+  id              String     @id @default(cuid())
+  phone           String
+  phoneNormalized String
+  fullName        String?
+  city            String?
+  status          UserStatus
+  primaryRole     UserRole
+  isPhoneVerified Boolean    @default(false)
+  createdAt       DateTime   @default(now())
+  updatedAt       DateTime   @updatedAt
+  lastLoginAt     DateTime?
+  disabledAt      DateTime?
+  suspendedAt     DateTime?
+
+  roleAssignments UserRoleAssignment[]
+  otpChallenges   OtpChallenge[]
+  sessions        UserSession[]
+  auditLogs       AuditLog[]           @relation("UserAuditLog")
+
+  @@unique([phone])
+  @@unique([phoneNormalized])
+  @@map("users")
+}
+
+/// Scoped roles: platform, restaurant, branch, or call-center pool. `scopeId` empty string = platform-wide when scope is platform; optional entity id otherwise (future FKs).
+model UserRoleAssignment {
+  id        String        @id @default(cuid())
+  userId    String
+  role      UserRole
+  scopeType RoleScopeType
+  scopeId   String        @default("")
+  isActive  Boolean       @default(true)
+  createdAt DateTime      @default(now())
+  updatedAt DateTime      @updatedAt
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  /// One active line per (user, role, scope) — `scopeId` default "" for platform; use non-empty ids for entity scopes.
+  @@unique([userId, role, scopeType, scopeId])
+  @@index([userId, role, scopeType])
+  @@index([userId, isActive])
+  @@index([scopeType, scopeId])
+  @@map("user_role_assignments")
+}
+
+/// OTP side — never store raw codes; `codeHash` only.
+model OtpChallenge {
+  id                String     @id @default(cuid())
+  userId            String?
+  phone             String
+  phoneNormalized   String
+  purpose           OtpPurpose
+  channel           OtpChannel
+  status            OtpStatus
+  codeHash          String
+  expiresAt         DateTime
+  verifiedAt        DateTime?
+  failedAt          DateTime?
+  attemptCount      Int        @default(0)
+  maxAttempts       Int        @default(5)
+  providerMessageId String?
+  providerStatus    String?
+  metadata          Json?
+  createdAt         DateTime   @default(now())
+  updatedAt         DateTime   @updatedAt
+
+  user User? @relation(fields: [userId], references: [id], onDelete: SetNull)
+
+  @@index([phoneNormalized])
+  @@index([status])
+  @@index([purpose])
+  @@index([expiresAt])
+  @@index([userId])
+  @@map("otp_challenges")
+}
+
+model UserSession {
+  id               String    @id @default(cuid())
+  userId           String
+  refreshTokenHash String?
+  userAgent        String?
+  ipAddress        String?
+  revokedAt        DateTime?
+  expiresAt        DateTime
+  createdAt        DateTime  @default(now())
+  updatedAt        DateTime  @updatedAt
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId])
+  @@index([expiresAt])
+  @@index([revokedAt])
+  @@map("user_sessions")
+}
+
+model AuditLog {
+  id          String         @id @default(cuid())
+  actorUserId String?
+  actorType   AuditActorType
+  action      String
+  entityType  String?
+  entityId    String?
+  metadata    Json?
+  ipAddress   String?
+  userAgent   String?
+  createdAt   DateTime       @default(now())
+
+  actorUser User? @relation("UserAuditLog", fields: [actorUserId], references: [id], onDelete: SetNull)
+
+  @@index([actorUserId])
+  @@index([action])
+  @@index([entityType, entityId])
+  @@index([createdAt])
+  @@map("audit_logs")
 }

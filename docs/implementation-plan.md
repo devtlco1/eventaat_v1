@@ -100,6 +100,24 @@ creation, restaurant staff login, eventaat admin login, roles, permissions, acti
 screen protection. **Testing focus:** new/old customer, OTP errors, staff without permission, disabled
 restaurant, call center agent, admin.
 
+### Phase 2A — Auth / RBAC database foundation (done in repo)
+
+- **Prisma:** `User`, `UserRoleAssignment`, `OtpChallenge`, `UserSession`, `AuditLog` + enums
+  (`UserRole` aligns with `packages/shared`, `UserStatus`, OTP enums, `RoleScopeType`, `AuditActorType`).
+  **No** `Restaurant` / `Branch` Prisma models yet; assignments use `scopeId` (empty string = platform
+  key) for future business FKs. **FoundationSchemaMarker** retained. Raw OTP **never** stored; only
+  `codeHash` on `OtpChallenge`.
+- **Migrations:** create with `npx prisma migrate dev --name auth_foundation` when `DATABASE_URL`
+  points at a live Postgres (e.g. `docker compose up -d postgres` from repo root). If no DB in CI,
+  run **`npx prisma validate`**, **`npx prisma generate`**; apply migration in each environment.
+- **API:** still **no** new HTTP routes, **no** login/OTP/JWT/guards. **Only** `GET /health` + **Swagger
+  surfaces** ([`api-reference.md`](./api-reference.md)). Lightweight `apps/api/src/auth/` holds docs +
+  type mirrors only.
+- **Shared:** `prisma-auth-alignment.ts` keeps `UserRole` string values conceptually aligned with
+  Prisma. Mock UI unchanged.
+- **Product doc:** [`auth-rbac-foundation.md`](./auth-rbac-foundation.md) describes models and follow-on
+  phases 2B–2E.
+
 ## Phase 3 — Restaurants, branches, tables
 
 Goal: operational setup for each restaurant. **Includes:** create/review/activate restaurant, branch, tables,
@@ -154,10 +172,9 @@ waitlist, paid promos, better reports, separate restaurant app, loyalty, new cit
 
 ---
 
-**Current code status:** **Phases 1A–1E** are implemented in the repo: mock contract, customer mobile
-prototype, restaurant web dashboard, **UI Recovery** (admin, call center, platform web), **API Docs
-Foundation** (Swagger UI at `/docs`, OpenAPI JSON at `/openapi.json`), and **Phase 1E** mock E2E
-checklist + UI polish (see [`mock-e2e-scenarios.md`](./mock-e2e-scenarios.md)). The **functional** API
-surface is still **`GET /health` only**; see [`api-reference.md`](./api-reference.md) for the
-documentation maintenance rule. Real backend, auth, and business APIs are **out of scope** until the
-blueprint phases that introduce them.
+**Current code status:** **Phases 1A–1E** and **Phase 2A (Prisma auth / RBAC foundation)** are
+implemented: mock UIs, **API Docs** surfaces, and **auth-related DB schema** in
+[`prisma/schema.prisma`](../apps/api/prisma/schema.prisma) (see
+[`auth-rbac-foundation.md`](./auth-rbac-foundation.md)). The **functional** **HTTP** API is still
+**`GET /health` only** — no login, OTP, or business REST routes yet. See
+[`api-reference.md`](./api-reference.md) for the documentation maintenance rule.

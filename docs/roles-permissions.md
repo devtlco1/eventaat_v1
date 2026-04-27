@@ -76,5 +76,10 @@ restaurant quality, manage cities and categories, review anomalous reservations.
 
 ---
 
-*Implementation of roles, JWT/session, RBAC, and screen guards is deferred to a later phase aligned
-with the blueprint.*
+**Phase 2A (done in API schema):** Prisma models `User`, `UserRoleAssignment`, and enums align with the
+`UserRole` string keys in `packages/shared` — no HTTP enforcement yet. See
+[`auth-rbac-foundation.md`](./auth-rbac-foundation.md) (including **next sub-phases**). **UI** and
+mock data continue to work without a real API.
+
+*Implementation of JWT/session, route guards, and product RBAC in running apps is still deferred to
+**Phase 2B+** (API) and **2E** (guards), aligned with the blueprint.*

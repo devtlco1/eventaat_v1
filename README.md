@@ -100,11 +100,10 @@ pnpm -r run build
 
 ## Current implementation status (Phases 1A–1E: mock prototype + API docs foundation)
 
-- **Shared (`@eventaat/shared`):** `UserRole`, all lifecycle `*Status` values (reservation, restaurant, table,
-  complaint, subscription), entity interfaces, Arabic label maps, **seating / occasion** labels for
-  the customer UI, and **central** mock data under
-  `packages/shared/src/mock/`, including **UI Recovery** extensions (e.g. `platform-aggregates`,
-  richer complaints/tasks, subscription display fields). See [`docs/mock-data-contract.md`](./docs/mock-data-contract.md).
+- **Shared (`@eventaat/shared`):** `UserRole` (aligned with Prisma `UserRole` in **Phase 2A**; see
+  `prisma-auth-alignment.ts`), all lifecycle `*Status` values (reservation, restaurant, table, complaint,
+  subscription), entity interfaces, Arabic label maps, **seating / occasion** labels, and **central** mock
+  data under `packages/shared/src/mock/`. See [`docs/mock-data-contract.md`](./docs/mock-data-contract.md).
 - **Web:** **Almarai** (Google Font via `next/font/google`), RTL **shell** (polished sidebar + top bar
   with route titles, subtle **نموذج تجريبي** note). **Restaurant (Phase 1C + polish):** operational
   mock at `/restaurant` and sub-routes; **UI Recovery** adds shared **MetricCard / SectionCard / PageHeader** and
@@ -117,14 +116,16 @@ pnpm -r run build
   details, create **pending** reservation in local state only, confirmation, grouped **My
   reservations** with details and a mock lifecycle timeline, Profile, and Support. **No** real auth,
   OTP, or API calls.
-- **API:** **Functional** routes remain **`GET /health` only** (no business resources). **Swagger/OpenAPI** is
-  available at `/docs` and `/openapi.json` (API docs foundation; see [`docs/api-reference.md`](./docs/api-reference.md)). **Prisma** still has no domain
-  tables. **No** real OTP, WhatsApp, or payments.
-- **Documentation:** `docs/` includes `mock-data-contract.md`, **[`docs/mock-e2e-scenarios.md`](./docs/mock-e2e-scenarios.md)**
-  (Phase 1E checklist), and updated implementation plan / API / roles / reservation notes, plus the
-  OpenAPI/Swagger maintenance rule in `docs/api-reference.md`.
+- **API:** **Functional** HTTP routes remain **`GET /health` only** (no auth or business resources yet). **Swagger/OpenAPI** is
+  available at `/docs` and `/openapi.json` (see [`docs/api-reference.md`](./docs/api-reference.md)). **Prisma (Phase 2A)** includes **auth
+  / RBAC / OTP / session / audit** models (no restaurant/reservation domain tables yet) — see
+  [`docs/auth-rbac-foundation.md`](./docs/auth-rbac-foundation.md). **No** real login, OTP, WhatsApp send, or payments in the API.
+- **Documentation:** `docs/` includes `mock-data-contract.md`, [`docs/mock-e2e-scenarios.md`](./docs/mock-e2e-scenarios.md) (Phase 1E
+  checklist), **[`docs/auth-rbac-foundation.md`](./docs/auth-rbac-foundation.md)** (Phase 2A), and
+  the OpenAPI/Swagger maintenance rule in `docs/api-reference.md`.
 
-## Next planned phase (not implemented)
+## Next sub-phase (not fully implemented)
 
-**Phase 2** — Accounts, **WhatsApp OTP**, roles, and permissions foundation (per blueprint). **Not**
-implemented in the current mock-only repo state beyond UI prototypes.
+**Phase 2B** — **Auth HTTP API** (OTP request/verify, session/JWT, Swagger) on top of the 2A schema — **not**
+in the repo as routes yet; see [`docs/auth-rbac-foundation.md`](./docs/auth-rbac-foundation.md) and
+[`docs/implementation-plan.md`](./docs/implementation-plan.md).

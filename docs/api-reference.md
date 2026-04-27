@@ -4,7 +4,11 @@ Base URL: configured per environment; local default is `http://localhost:3000` (
 [`../apps/api/.env.example`](../apps/api/.env.example)). With the default port, you can also use
 `http://127.0.0.1:3000`.
 
-**Phase 1E** adds **mock end-to-end scenario testing and UI polish only.** **No** business API
+**Phase 2A** adds an **auth / RBAC / OTP-related database (Prisma) foundation only — no** new business
+**HTTP** routes. The only **functional** API endpoint remains **`GET /health`**. **Swagger/OpenAPI** remains
+available at **`/docs`** and **`/openapi.json`**.
+
+**Phase 1E** added **mock end-to-end scenario testing and UI polish only.** **No** business API
 endpoints were added. The only **functional** API endpoint remains **`GET /health`**. **Swagger/OpenAPI**
 remains available at **`/docs`** and **`/openapi.json`**.
 

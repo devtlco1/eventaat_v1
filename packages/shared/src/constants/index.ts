@@ -6,6 +6,7 @@ export * from './reservation-occasion';
 export * from './reservation-status';
 export * from './restaurant-status';
 export * from './roles';
+export * from './prisma-auth-alignment';
 export * from './seating-type';
 export * from './subscription-status';
 export * from './table-status';
