@@ -3,8 +3,9 @@
 Base URL: configured per environment; local default is `http://localhost:3000` (see
 [`../apps/api/.env.example`](../apps/api/.env.example)).
 
-**Note:** The API currently exposes a single health check. All reservation, auth, and WhatsApp
-endpoints will be added in later blueprint phases.
+**Phase 1A:** No new API routes were added; the backend remains **mock-first** in the client
+packages. Only **`GET /health`** is implemented. All reservation, auth, and WhatsApp endpoints will be
+added in later blueprint phases.
 
 ## `GET /health`
 

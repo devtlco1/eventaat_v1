@@ -3,8 +3,8 @@ import { APP_NAME } from '@eventaat/shared';
 import './globals.css';
 
 export const metadata: Metadata = {
-  title: `${APP_NAME} — web dashboard`,
-  description: 'eventaat web dashboards (restaurant, operations) — foundation shell',
+  title: `${APP_NAME} — لوحات التحكم (Phase 1A)`,
+  description: 'واجهات وهمية: مطعم، إدارة، كول سنتر — بيانات من @eventaat/shared',
 };
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {

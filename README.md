@@ -14,16 +14,16 @@ a shared backend API.
 | Web | Next.js (App Router) |
 | API | NestJS |
 | Database | PostgreSQL (via Prisma) |
-| Caching / future OTP & queues | Redis (URL reserved; not used in Step 0) |
+| Caching / future OTP & queues | Redis (URL reserved; not used yet) |
 
 ## Monorepo layout
 
 | Path | Role |
 |------|------|
 | `apps/mobile` | Expo customer app |
-| `apps/web` | Next.js dashboards (shell placeholder) |
+| `apps/web` | Next.js: RTL **dashboard** (`/`, `/dashboard`, … — see app routes) |
 | `apps/api` | NestJS API |
-| `packages/shared` | Shared types/constants (minimal) |
+| `packages/shared` | Domains: **constants**, **types**, **mock data** (Phase 1A; single source for UI) |
 | `packages/config` | Shared `tsconfig.base.json` and future shared tooling |
 | `docs/` | Product blueprint and engineering docs |
 
@@ -74,7 +74,7 @@ cd apps/api && npx prisma generate
 | App | Command (from repository root) |
 |-----|---------------------------------|
 | **API** | `cd apps/api && pnpm run start:dev` (or `npx nest start --watch` after `npx prisma generate`) — `http://localhost:3000` (override with `API_PORT` / `PORT`). |
-| **Web** | `cd apps/web && pnpm run dev` — `http://localhost:3001`. |
+| **Web** | `cd apps/web && pnpm run dev` — `http://localhost:3001` ( `/` → `/dashboard` ). |
 | **Mobile** | `cd apps/mobile && pnpm run start` — Expo dev server (`i` / `a` for simulators, or scan QR in Expo Go). |
 
 If pnpm’s workspace `PATH` handling works in your environment, you can also use the root scripts:
@@ -92,22 +92,22 @@ pnpm -r run build
 
 (Adjust per package; mobile may require Expo dependencies resolved after the first `pnpm install`.)
 
-## Current implementation status (Step 0)
+## Current implementation status (Phase 1A)
 
-- Monorepo: **pnpm workspaces** with `apps/*` and `packages/*`.
-- **Shared TypeScript** base in `packages/config` (packages extend or mirror as needed for Next/Expo/Nest).
-- **Web:** Next.js app with a **RTL** dashboard **placeholder** (no product features).
-- **Mobile:** Expo app with a **welcome** screen only.
-- **API:** NestJS with **`GET /health`**, `ConfigModule`, and **Prisma** wired to PostgreSQL; schema contains only
-  a non–business foundation marker (no domain tables). **Redis** is documented in `.env.example` for future
-  use.
-- **No** authentication, reservations, restaurants, WhatsApp, or payments in code.
-- **Documentation** under `docs/`: implementation phases, API surface, roles, reservation states, WhatsApp
-  template index.
+- **Shared (`@eventaat/shared`):** `UserRole`, all lifecycle `*Status` values (reservation, restaurant, table,
+  complaint, subscription), entity interfaces, Arabic label maps, and **central** mock data under
+  `packages/shared/src/mock/`. See [`docs/mock-data-contract.md`](./docs/mock-data-contract.md).
+- **Web:** RTL **layout** (header + sidebar), routes for **restaurant** / **admin** / **call center**;
+  every page is a **placeholder** that only reads from `@eventaat/shared` (no in-component mock data).
+- **Mobile:** **Customer** flow — state-based screens: Welcome, Home, Search, Restaurant, Create
+  Reservation, My Reservations, Details, Profile; mock **cards**; `I18nManager` RTL; **no** auth.
+- **API:** Unchanged: **`GET /health` only** (no new business routes). **Prisma** still has no domain
+  tables. **No** real OTP, WhatsApp, or payments.
+- **Documentation:** `docs/` includes `mock-data-contract.md` and updated implementation plan / API
+  / roles / reservation notes.
 
-## Next planned phase (not implemented here)
+## Next planned phase (not implemented)
 
-**Blueprint engineering Phase 1 (prototype with mock data):** full UI flows with fake data, aligned with
-`docs/implementation-plan.md` — no real backend yet.
-
-See [`docs/implementation-plan.md`](./docs/implementation-plan.md) for the full roadmap.
+**Phase 1B** — Deeper **customer** mobile **UI** on the same mock contract (blueprint §98 customer
+screens): richer layouts and flows, still no backend. See
+[`docs/implementation-plan.md`](./docs/implementation-plan.md).

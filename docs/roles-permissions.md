@@ -2,7 +2,13 @@
 
 This document structures **roles and permission themes** as described in
 [`eventaat_product_execution_blueprint_v1.md`](./eventaat_product_execution_blueprint_v1.md) (Part 5
-— الأدوار والصلاحيات). **No authorization is implemented in the codebase in Step 0.**
+— الأدوار والصلاحيات). **No authorization is implemented in the app code** (Phase 1A and earlier).
+
+**Code (Phase 1A):** canonical role keys and Arabic labels for UI and mock data live in
+`packages/shared` as `UserRole` and `USER_ROLE_LABELS_AR` (see
+[`mock-data-contract.md`](./mock-data-contract.md)). That includes
+`content_manager` and `finance_manager` for future admin/finance **screens**; behavior is still
+blueprint-constrained and no RBAC is enforced in the client yet.
 
 ## Principles
 

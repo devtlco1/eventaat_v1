@@ -2,7 +2,12 @@
 
 Reservation **states and transitions** as defined in
 [`eventaat_product_execution_blueprint_v1.md`](./eventaat_product_execution_blueprint_v1.md) (Part 6 —
-دورة حياة الحجز). **This is a specification note only;** no reservation engine is implemented in Step 0.
+دورة حياة الحجز). **This is a specification note;** the runtime reservation engine and DB are not built yet.
+
+**Code (Phase 1A):** canonical `ReservationStatus` string keys and `RESERVATION_STATUS_LABELS_AR` live in
+`packages/shared/src/constants/reservation-status.ts`. Mock reservations in
+`packages/shared/src/mock/reservations.ts` include **one sample row per primary state** for UI
+prototyping (see [`mock-data-contract.md`](./mock-data-contract.md)).
 
 ## Core rule
 

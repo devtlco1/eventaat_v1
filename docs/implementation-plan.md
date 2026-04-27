@@ -19,6 +19,30 @@ details, accept/reject, tables, hours. **eventaat admin:** restaurants, reservat
 complaints, subscriptions. **Output:** near-complete UI, organized mock data, trialed scenario list, gaps
 before backend.
 
+The engineering work is split into sub-steps (1A, 1B, …) so the mock contract and shells land before
+deep UI work.
+
+### Phase 1A — Mock contract + navigation shells (done in repo)
+
+- **Shared package:** `UserRole`, all lifecycle `*Status` constants, Arabic label maps, entity interfaces,
+  and **central** mock files under `packages/shared/src/mock/` (see
+  [`mock-data-contract.md`](./mock-data-contract.md)).
+- **Web:** RTL dashboard **shell** with **routes/sections** for restaurant, admin, and call center;
+  pages are **list/count placeholders** pulling from `@eventaat/shared` only.
+- **Mobile (customer):** state-based **navigation** and placeholder **screens** (Welcome → Home, Search, …)
+  with mock **cards**; no login/OTP.
+- **API:** unchanged; **only** `GET /health`. No Prisma business tables, no new endpoints.
+
+### Phase 1B — (planned) Customer mobile UI prototype
+
+Deeper **customer** flows and UI polish on top of the same mock contract (blueprint **§98** customer
+list: registration mock, home, search, restaurant page, create booking, my reservations, details, review screen layout).
+
+### Phase 1C / 1D — (planned) Staff dashboards in depth
+
+Detailed **tables**, filters, and interactions for **restaurant / admin / call center** (Phase 1C/1D in
+project plan); still mock-backed until the backend exists.
+
 ## Phase 2 — Accounts and permissions
 
 Goal: sign-in and role foundation. **Includes:** customer phone sign-up, WhatsApp OTP, account
@@ -80,5 +104,7 @@ waitlist, paid promos, better reports, separate restaurant app, loyalty, new cit
 
 ---
 
-**Current code status:** Step 0 of engineering — monorepo foundation, health check, and documentation
-skeleton only (see root `README.md`).
+**Current code status:** **Phase 1A** is implemented: shared mock contract, web dashboard routes/shell, and
+customer mobile screen placeholders (see root [`README.md`](../README.md) and
+[`mock-data-contract.md`](./mock-data-contract.md)). Real backend, auth, and business APIs are **out of scope**
+until the blueprint phases that introduce them.
