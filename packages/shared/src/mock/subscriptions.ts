@@ -1,5 +1,5 @@
-import { Subscription } from '../types/entities';
-import { SubscriptionStatus } from '../constants/subscription-status';
+import { Subscription } from '../types/entities.js';
+import { SubscriptionStatus } from '../constants/subscription-status.js';
 
 export const mockSubscriptions: Subscription[] = [
   {

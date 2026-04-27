@@ -1,4 +1,4 @@
-import { WhatsAppTemplate } from '../types/entities';
+import { WhatsAppTemplate } from '../types/entities.js';
 
 /**
  * Names where the blueprint names them; others use stable internal ids (see docs/whatsapp-templates.md).

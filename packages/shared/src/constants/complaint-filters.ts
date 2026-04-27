@@ -1,4 +1,4 @@
-import type { ComplaintCategory, ComplaintParty, ComplaintPriority } from '../types/entities';
+import type { ComplaintCategory, ComplaintParty, ComplaintPriority } from '../types/entities.js';
 
 export const COMPLAINT_PRIORITY_LABELS_AR: Record<ComplaintPriority, string> = {
   low: 'منخفضة',

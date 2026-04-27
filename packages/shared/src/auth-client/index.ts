@@ -1,3 +1,3 @@
-export * from './types';
-export * from './errors';
-export { createAuthApi, type AuthApi } from './authApi';
+export * from './types.js';
+export * from './errors.js';
+export { createAuthApi, type AuthApi } from './authApi.js';

@@ -1,1 +1,1 @@
-export * from './role-areas';
+export * from './role-areas.js';

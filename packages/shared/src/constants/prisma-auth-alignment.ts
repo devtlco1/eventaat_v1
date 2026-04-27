@@ -3,7 +3,7 @@
  * `UserRole` Prisma enum in `apps/api/prisma/schema.prisma` (no renames in Phase 2A).
  * Use this list for future validation (e.g. Zod) when API reads/writes Prisma.
  */
-import { UserRole, type UserRole as UserRoleType } from './roles';
+import { UserRole, type UserRole as UserRoleType } from './roles.js';
 
 const ORDER = [
   UserRole.customer,

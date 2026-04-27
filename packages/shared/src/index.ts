@@ -5,8 +5,8 @@
 export const APP_NAME = 'eventaat' as const;
 export type AppName = typeof APP_NAME;
 
-export * from './constants';
-export * from './types';
-export * from './mock';
-export * from './auth-client';
-export * from './rbac';
+export * from './constants/index.js';
+export * from './types/index.js';
+export * from './mock/index.js';
+export * from './auth-client/index.js';
+export * from './rbac/index.js';

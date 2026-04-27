@@ -1,11 +1,11 @@
-import type { ComplaintStatus } from '../constants/complaint-status';
-import type { ReservationOccasion } from '../constants/reservation-occasion';
-import type { ReservationStatus } from '../constants/reservation-status';
-import type { RestaurantStatus } from '../constants/restaurant-status';
-import type { SeatingType } from '../constants/seating-type';
-import type { SubscriptionStatus } from '../constants/subscription-status';
-import type { TableStatus } from '../constants/table-status';
-import type { UserRole } from '../constants/roles';
+import type { ComplaintStatus } from '../constants/complaint-status.js';
+import type { ReservationOccasion } from '../constants/reservation-occasion.js';
+import type { ReservationStatus } from '../constants/reservation-status.js';
+import type { RestaurantStatus } from '../constants/restaurant-status.js';
+import type { SeatingType } from '../constants/seating-type.js';
+import type { SubscriptionStatus } from '../constants/subscription-status.js';
+import type { TableStatus } from '../constants/table-status.js';
+import type { UserRole } from '../constants/roles.js';
 
 export interface User {
   id: string;

@@ -1,5 +1,5 @@
-import { Complaint } from '../types/entities';
-import { ComplaintStatus } from '../constants/complaint-status';
+import { Complaint } from '../types/entities.js';
+import { ComplaintStatus } from '../constants/complaint-status.js';
 
 const Rv = 'r_visible';
 const Rdis = 'r_disabled';

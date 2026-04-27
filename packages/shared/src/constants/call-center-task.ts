@@ -1,4 +1,4 @@
-import type { CallCenterTaskPriority, CallCenterTaskType } from '../types/entities';
+import type { CallCenterTaskPriority, CallCenterTaskType } from '../types/entities.js';
 
 export const CALL_CENTER_TASK_PRIORITY_LABELS_AR: Record<CallCenterTaskPriority, string> = {
   low: 'منخفضة',

@@ -3,6 +3,7 @@
   "private": true,
   "packageManager": "pnpm@9.15.0",
   "scripts": {
+    "postinstall": "pnpm --filter @eventaat/shared run build",
     "build": "pnpm -r run build",
     "lint": "pnpm -r run lint",
     "typecheck": "pnpm --filter @eventaat/shared --filter @eventaat/api --filter @eventaat/web --filter @eventaat/mobile run typecheck",

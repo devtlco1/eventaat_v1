@@ -1,4 +1,4 @@
-import { Branch } from '../types/entities';
+import { Branch } from '../types/entities.js';
 
 export const mockBranches: Branch[] = [
   { id: 'b_rv1', restaurantId: 'r_review', name: 'بستان الرافدين — المنصور', area: 'المنصور', address: 'المنصور، شارع 14', defaultHoursAr: '١٢ ظ — ١١ م' },

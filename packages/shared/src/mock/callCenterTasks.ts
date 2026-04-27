@@ -1,4 +1,4 @@
-import { CallCenterTask } from '../types/entities';
+import { CallCenterTask } from '../types/entities.js';
 
 export const mockCallCenterTasks: CallCenterTask[] = [
   {

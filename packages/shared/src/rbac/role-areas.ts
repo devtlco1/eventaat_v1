@@ -1,8 +1,8 @@
 /**
  * Web dashboard path groups (internal English keys). Aligned with shell nav groups in `apps/web`.
  */
-import { UserRole } from '../constants/roles';
-import type { UserPublic } from '../auth-client/types';
+import { UserRole } from '../constants/roles.js';
+import type { UserPublic } from '../auth-client/types.js';
 
 export const DASHBOARD_AREA = {
   hub: 'hub',

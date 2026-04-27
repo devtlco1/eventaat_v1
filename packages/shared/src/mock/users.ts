@@ -1,5 +1,5 @@
-import { User } from '../types/entities';
-import { UserRole } from '../constants/roles';
+import { User } from '../types/entities.js';
+import { UserRole } from '../constants/roles.js';
 
 export const mockUsers: User[] = [
   {

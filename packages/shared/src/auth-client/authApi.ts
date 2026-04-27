@@ -1,5 +1,5 @@
-import { AuthApiError, AUTH_ERR_NETWORK } from './errors';
-import type { LogoutInput, MeResult, RequestOtpInput, RequestOtpResult, VerifyOtpInput, VerifyOtpResult } from './types';
+import { AuthApiError, AUTH_ERR_NETWORK } from './errors.js';
+import type { LogoutInput, MeResult, RequestOtpInput, RequestOtpResult, VerifyOtpInput, VerifyOtpResult } from './types.js';
 
 type ApiErrorJson = { message?: string; messageAr?: string; code?: string; statusCode?: number };
 

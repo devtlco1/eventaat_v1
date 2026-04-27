@@ -1,5 +1,5 @@
-import { Restaurant } from '../types/entities';
-import { RestaurantStatus } from '../constants/restaurant-status';
+import { Restaurant } from '../types/entities.js';
+import { RestaurantStatus } from '../constants/restaurant-status.js';
 
 const reviewPair = (author: string, text: string, rating: number) => ({ author, text, rating });
 

@@ -1,18 +1,18 @@
-import { RestaurantStatus } from '../constants/restaurant-status';
-import { ReservationStatus } from '../constants/reservation-status';
-import { ComplaintStatus } from '../constants/complaint-status';
-import { SubscriptionStatus } from '../constants/subscription-status';
-import { MOCK_DEMO_TODAY } from '../constants/demo-dates';
-import type { Restaurant, Subscription, Reservation } from '../types/entities';
-import { mockReservations } from './reservations';
-import { mockRestaurants } from './restaurants';
-import { mockComplaints } from './complaints';
-import { mockSubscriptions } from './subscriptions';
-import { mockCallCenterTasks } from './callCenterTasks';
-import { mockBranches } from './branches';
-import { getSubscriptionByRestaurantId } from './subscriptions';
-import { getUserById } from './users';
-import { getReservationById } from './reservations';
+import { RestaurantStatus } from '../constants/restaurant-status.js';
+import { ReservationStatus } from '../constants/reservation-status.js';
+import { ComplaintStatus } from '../constants/complaint-status.js';
+import { SubscriptionStatus } from '../constants/subscription-status.js';
+import { MOCK_DEMO_TODAY } from '../constants/demo-dates.js';
+import type { Restaurant, Subscription, Reservation } from '../types/entities.js';
+import { mockReservations } from './reservations.js';
+import { mockRestaurants } from './restaurants.js';
+import { mockComplaints } from './complaints.js';
+import { mockSubscriptions } from './subscriptions.js';
+import { mockCallCenterTasks } from './callCenterTasks.js';
+import { mockBranches } from './branches.js';
+import { getSubscriptionByRestaurantId } from './subscriptions.js';
+import { getUserById } from './users.js';
+import { getReservationById } from './reservations.js';
 
 function getDateKey(iso: string) {
   return iso.slice(0, 10);

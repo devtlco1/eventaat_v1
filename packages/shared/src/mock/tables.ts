@@ -1,5 +1,5 @@
-import { RestaurantTable } from '../types/entities';
-import { TableStatus } from '../constants/table-status';
+import { RestaurantTable } from '../types/entities.js';
+import { TableStatus } from '../constants/table-status.js';
 
 export const mockTables: RestaurantTable[] = [
   { id: 't1', branchId: 'b_sh1', label: 'طاولة نافذة 1', capacity: 4, status: TableStatus.available },

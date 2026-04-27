@@ -1,7 +1,7 @@
 /**
  * DTO and response shapes aligned with `apps/api` auth endpoints (no backend coupling in runtime).
  */
-import type { UserRole } from '../constants/roles';
+import type { UserRole } from '../constants/roles.js';
 
 export type OtpChannel = 'whatsapp' | 'sms' | 'manual';
 export type OtpPurpose = 'login' | 'register' | 'phone_verification' | 'staff_invite';

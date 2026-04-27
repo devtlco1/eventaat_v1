@@ -1,7 +1,7 @@
-import { Reservation } from '../types/entities';
-import { ReservationOccasion } from '../constants/reservation-occasion';
-import { ReservationStatus } from '../constants/reservation-status';
-import { SeatingType } from '../constants/seating-type';
+import { Reservation } from '../types/entities.js';
+import { ReservationOccasion } from '../constants/reservation-occasion.js';
+import { ReservationStatus } from '../constants/reservation-status.js';
+import { SeatingType } from '../constants/seating-type.js';
 
 const R = 'r_visible';
 const B = 'b_sh1';

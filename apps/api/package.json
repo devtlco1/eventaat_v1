@@ -4,10 +4,11 @@
   "private": true,
   "license": "UNLICENSED",
   "scripts": {
-    "build": "prisma generate && nest build",
+    "build:shared": "pnpm --filter @eventaat/shared run build",
+    "build": "pnpm run build:shared && prisma generate && nest build",
     "format": "prettier --write \"src/**/*.ts\" \"test/**/*.ts\"",
     "start": "nest start",
-    "start:dev": "prisma generate && nest start --watch",
+    "start:dev": "pnpm run build:shared && prisma generate && nest start --watch",
     "start:debug": "nest start --debug --watch",
     "start:prod": "node dist/main",
     "typecheck": "tsc -p tsconfig.json --noEmit",
