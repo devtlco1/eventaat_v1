@@ -116,16 +116,15 @@ pnpm -r run build
   details, create **pending** reservation in local state only, confirmation, grouped **My
   reservations** with details and a mock lifecycle timeline, Profile, and Support. **No** real auth,
   OTP, or API calls.
-- **API:** **Functional** HTTP routes remain **`GET /health` only** (no auth or business resources yet). **Swagger/OpenAPI** is
-  available at `/docs` and `/openapi.json` (see [`docs/api-reference.md`](./docs/api-reference.md)). **Prisma (Phase 2A)** includes **auth
-  / RBAC / OTP / session / audit** models (no restaurant/reservation domain tables yet) — see
-  [`docs/auth-rbac-foundation.md`](./docs/auth-rbac-foundation.md). **No** real login, OTP, WhatsApp send, or payments in the API.
+- **API:** **Functional** HTTP routes: **`GET /health`** and **Phase 2B auth** (`POST /auth/otp/request`, `POST /auth/otp/verify`, `GET /auth/me`, `POST /auth/logout`). **Swagger/OpenAPI** is at `/docs` and `/openapi.json` (see
+  [`docs/api-reference.md`](./docs/api-reference.md)). **Prisma (Phase 2A+)** has **User**, **OtpChallenge**, **UserSession**, **AuditLog**,
+  and related enums — **no** restaurant/reservation tables yet. **No** real WhatsApp send (Phase 2C); **no** payment APIs.
 - **Documentation:** `docs/` includes `mock-data-contract.md`, [`docs/mock-e2e-scenarios.md`](./docs/mock-e2e-scenarios.md) (Phase 1E
   checklist), **[`docs/auth-rbac-foundation.md`](./docs/auth-rbac-foundation.md)** (Phase 2A), and
   the OpenAPI/Swagger maintenance rule in `docs/api-reference.md`.
 
 ## Next sub-phase (not fully implemented)
 
-**Phase 2B** — **Auth HTTP API** (OTP request/verify, session/JWT, Swagger) on top of the 2A schema — **not**
-in the repo as routes yet; see [`docs/auth-rbac-foundation.md`](./docs/auth-rbac-foundation.md) and
+**Phase 2C** — **WhatsApp / SMS OTP provider** interface and delivery — **not** a real external send in 2B; see
+[`docs/auth-rbac-foundation.md`](./docs/auth-rbac-foundation.md#7-roadmap-after-2b) and
 [`docs/implementation-plan.md`](./docs/implementation-plan.md).

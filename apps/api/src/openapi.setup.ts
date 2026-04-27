@@ -15,6 +15,10 @@ export function setupOpenApiDocs(app: INestApplication): void {
     .setTitle(OPENAPI_TITLE)
     .setDescription(OPENAPI_DESCRIPTION)
     .setVersion(OPENAPI_VERSION)
+    .addBearerAuth(
+      { type: 'http', scheme: 'bearer', bearerFormat: 'JWT', in: 'header' },
+      'access-token',
+    )
     .build();
 
   const document = SwaggerModule.createDocument(app, config);

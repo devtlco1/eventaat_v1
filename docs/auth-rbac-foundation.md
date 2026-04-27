@@ -1,9 +1,11 @@
-# Auth, RBAC, and audit foundation (Phase 2A)
+# Auth, RBAC, and audit foundation (Phases 2A & 2B)
 
-This document describes the **Phase 2A** database and domain **foundation** for authentication,
-WhatsApp/SMS/manual OTP, user roles, scoped role assignments, future sessions, and auditability. It
-implements **no** HTTP API, **no** token issuance, **no** providers, and **no** route guards (those are
-**Phase 2B+**).
+This document describes the **Prisma (2A)** database foundation and the **Phase 2B** **HTTP** auth API
+that uses it. **2B** adds: OTP request/verify (no real WhatsApp), JWT access token + opaque refresh token
+(session row stores **refresh token hash** only), `/auth/me`, `/auth/logout`, and audit events
+(`auth.otp_verified`, `auth.login_success`, `auth.logout`). It does **not** add product RBAC **guards** on
+business routes yet (**2E**), and does **not** integrate a real WhatsApp provider (**2C**). Full route list:
+[`api-reference.md`](./api-reference.md).
 
 **Source of truth (product):** [`eventaat_product_execution_blueprint_v1.md`](./eventaat_product_execution_blueprint_v1.md).
 
@@ -72,18 +74,19 @@ No foreign keys to business tables in **Phase 2A** by design.
 | `providerMessageId` / `providerStatus` | Reserved for **Phase 2C** WhatsApp/SMS providers |
 | `metadata` | JSON for extra non-sensitive data |
 
-**Lifecycle (conceptual):** create row → `pending` → (success) `verified` or (timeout/attempts) `expired` / `failed` or `cancelled`. **Phase 2A** does not implement verify/send code paths.
+**Lifecycle (runtime, Phase 2B):** see `AuthService` in `apps/api/src/auth/` — verify compares against
+`codeHash` only; **raw OTP** is never written to the database.
 
 ---
 
 ## 4. UserSession
 
-Prepares for **Phase 2B+** access and refresh patterns:
+- `refreshTokenHash` — scrypt-based hash; **raw refresh token** is returned once to the client, never
+  stored in plain form.
+- `userAgent`, `ipAddress`, `expiresAt`, `revokedAt` — session hygiene; logout sets `revokedAt`.
 
-- `refreshTokenHash` — no raw refresh tokens in DB
-- `userAgent`, `ipAddress`, `expiresAt`, `revokedAt` — session hygiene and security reviews
-
-No JWT or cookie logic in 2A.
+Access is represented by a **short-lived JWT** (payload includes `userId` + `sessionId`); the guard
+checks the session is not revoked and not past `expiresAt`.
 
 ---
 
@@ -101,22 +104,21 @@ Indexes support filtering by user, action, entity, and time range.
 
 ---
 
-## 6. Why Phase 2A has no real login or OTP
+## 6. Why Phase 2A shipped schema first
 
-The blueprint requires a **clear separation**: first **persisted roles and challenge/session shapes**,
-then **APIs, transport security, and providers** in a controlled order. Rushing auth routes before the
-schema would entangle product rules with throwaway DTOs.
+The blueprint favors **persisted roles, OTP challenge, and session shapes** before **transport** and
+**providers** so product rules and migrations stay stable.
 
 ---
 
-## 7. Next sub-phases (not implemented in 2A)
+## 7. Roadmap after 2B
 
 | Sub-phase | Scope |
 |----------|--------|
-| **2B** | Auth **HTTP** endpoints (request OTP, verify, register, login, refresh, logout), DTOs, **Swagger** updates, `docs/api-reference.md` in the same work item. |
-| **2C** | **WhatsApp** (and optional SMS) **adapter**; write `OtpChallenge` and provider message ids; still no product scope outside blueprint. |
-| **2D** | **Web and mobile** integration: call APIs, store tokens, Arabic-first RTL **unchanged** in principle. |
-| **2E** | **RBAC guards** (NestJS), route protection, and dashboard shells per role/scope. |
+| **2B** (done) | Auth HTTP: `POST /auth/otp/*`, `GET /auth/me`, `POST /auth/logout`, Swagger + `api-reference.md` (no real WhatsApp). |
+| **2C** | **WhatsApp** (and optional SMS) **adapter**; provider interfaces + `providerMessageId`; still no scope creep. |
+| **2D** | **Web and mobile** integration: call APIs, store tokens, Arabic-first RTL. |
+| **2E** | **RBAC guards** (Nest), route protection, and dashboard shells per role/scope. |
 
 ---
 

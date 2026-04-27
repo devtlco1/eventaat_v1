@@ -55,6 +55,8 @@ describe('API (e2e)', () => {
           info: { title: 'eventaat API', version: '0.1.0' },
         });
         expect(res.body.paths).toHaveProperty('/health');
+        expect(res.body.paths).toHaveProperty('/auth/otp/request');
+        expect(res.body.paths).toHaveProperty('/auth/me');
       });
   });
 });

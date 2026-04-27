@@ -4,9 +4,13 @@ Base URL: configured per environment; local default is `http://localhost:3000` (
 [`../apps/api/.env.example`](../apps/api/.env.example)). With the default port, you can also use
 `http://127.0.0.1:3000`.
 
-**Phase 2A** adds an **auth / RBAC / OTP-related database (Prisma) foundation only — no** new business
-**HTTP** routes. The only **functional** API endpoint remains **`GET /health`**. **Swagger/OpenAPI** remains
-available at **`/docs`** and **`/openapi.json`**.
+**Phase 2B** implements **auth HTTP** routes: OTP request/verify (with **no** real WhatsApp send),
+session + JWT access token, logout, and **GET /me**. **No** restaurant, reservation, or payment APIs.
+**Swagger/OpenAPI** is updated in the same step. Remaining surface: health + auth. OpenAPI: **`/docs`** and
+**`/openapi.json`**.
+
+**Phase 2A** added an **auth / RBAC / OTP-related database (Prisma) foundation** (and optional migration).
+Phase **2B** is the first step that exposes **auth** on HTTP.
 
 **Phase 1E** added **mock end-to-end scenario testing and UI polish only.** **No** business API
 endpoints were added. The only **functional** API endpoint remains **`GET /health`**. **Swagger/OpenAPI**
@@ -51,6 +55,90 @@ Do **not** consider any backend change complete if API documentation is out of d
    accurate.
 2. **This file** — [`docs/api-reference.md`](./api-reference.md) with the same endpoint changes.
 
+## `POST /auth/otp/request`
+
+**Tag:** `auth`  
+**Auth:** not required.  
+**Summary:** Start an OTP challenge. Normalizes the phone, upserts a `User` (default `primaryRole: customer` when
+created), and creates an `OtpChallenge` with a **hashed** code only. **Raw OTP and raw refresh tokens are never
+stored** in the database. **WhatsApp/SMS are not sent** in this phase; use `channel` for future routing.
+
+**Request JSON**
+
+| Field | Type | Required | Notes |
+|--------|------|----------|--------|
+| `phone` | string | yes | Iraq-friendly formats; normalized server-side. |
+| `purpose` | string | yes | `login`, `register`, `phone_verification`, `staff_invite` |
+| `channel` | string | yes | `whatsapp`, `sms`, `manual` (no real provider) |
+| `fullName` | string | no | |
+| `city` | string | no | |
+
+**Response 200**
+
+| Field | Type | Description |
+|--------|------|-------------|
+| `challengeId` | string | Use with `/auth/otp/verify`. |
+| `expiresAt` | string (ISO) | |
+| `channel` | string | |
+| `purpose` | string | |
+| `devOtp` | string | **Only** if `AUTH_DEV_EXPOSE_OTP=true` in the environment (development/test). **Never** enable in production. |
+
+**Errors:** `400` invalid input, `403` if user is `disabled` / `suspended`, `503` if the database is unreachable.
+
+---
+
+## `POST /auth/otp/verify`
+
+**Tag:** `auth`  
+**Auth:** not required.  
+**Summary:** Verifies the OTP, marks the challenge, activates the user (when appropriate), issues **access**
+(JWT) and **refresh** (opaque) tokens, creates a `UserSession` with **refresh token hash** only, and appends
+audit events (`auth.otp_verified`, `auth.login_success`).
+
+**Request JSON**
+
+| Field | Type | Required | Notes |
+|--------|------|----------|--------|
+| `challengeId` | string | yes | |
+| `code` | string | yes | 4–8 digits |
+| `phone` | string | no | If sent, must match the challenge. |
+
+**Response 200**
+
+| Field | Type | Description |
+|--------|------|-------------|
+| `user` | object | Public fields + `roleAssignments` (no business data). |
+| `accessToken` | string | JWT (Bearer) for `Authorization` header. |
+| `refreshToken` | string | Opaque; **only a hash** is stored server-side. |
+| `sessionId` | string | |
+| `expiresAt` | string (ISO) | Access token expiry time. |
+
+**Errors:** `400` (invalid/used challenge, wrong code, expired), `403` (blocked user), `429` (too many failed
+attempts for the challenge), `503` (database).
+
+---
+
+## `GET /auth/me`
+
+**Tag:** `auth`  
+**Auth:** `Authorization: Bearer <accessToken>`.  
+**Summary:** Returns the current user and scoped role assignments (from DB).
+
+**Response 200:** public user + `roleAssignments` array.  
+**Errors:** `401` if token/session invalid or revoked.
+
+---
+
+## `POST /auth/logout`
+
+**Tag:** `auth`  
+**Auth:** `Authorization: Bearer <accessToken>`.  
+**Body (optional):** `{ "sessionId"?: string }` — if present, must match the session embedded in the token.  
+**Summary:** Revokes the session (`revokedAt` set), audit `auth.logout`.  
+**Response 200:** `{ "success": true }`. **Errors:** `401`, `404` (session not found for user).
+
+---
+
 ## `GET /health`
 
 **Tag:** `health`  
@@ -83,5 +171,11 @@ Host: localhost:3000
 
 ---
 
-Future blueprint phases will add customer auth, reservations, restaurant operations, WhatsApp, and
-payments; each must follow the **Swagger + `api-reference.md`** rule above when routes ship.
+**Environment (Phase 2B, see [`../apps/api/.env.example`](../apps/api/.env.example)):** `JWT_ACCESS_SECRET`,
+`JWT_ACCESS_EXPIRES_IN`, `REFRESH_TOKEN_EXPIRES_DAYS`, `OTP_EXPIRES_MINUTES`, `OTP_MAX_ATTEMPTS`,
+`AUTH_DEV_EXPOSE_OTP` (development/test only; **never** `true` in production).
+
+---
+
+Future blueprint phases will add more business resources (e.g. reservations, restaurant operations, WhatsApp
+delivery, payments). Each must follow the **Swagger + `api-reference.md`** rule when routes change.

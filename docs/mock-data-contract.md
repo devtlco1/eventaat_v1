@@ -19,6 +19,10 @@ maps and web copy files.
 subscriptions, communication log keys) in the same `mock/*.ts` files to avoid empty UIs in scenario
 testing. **No** new persistence, **no** API surface change.
 
+**Phase 2B (API):** production `User` / session / OTP state is **not** represented in `packages/shared` mocks;
+the API persists in PostgreSQL. UI mock data remains valid for screens that have not integrated the new
+auth API yet.
+
 ## Location
 
 - **Constants** (enums, Arabic labels): `packages/shared/src/constants/`

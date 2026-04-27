@@ -118,6 +118,20 @@ restaurant, call center agent, admin.
 - **Product doc:** [`auth-rbac-foundation.md`](./auth-rbac-foundation.md) describes models and follow-on
   phases 2B–2E.
 
+### Phase 2B — Auth HTTP API: OTP, JWT, session (done in repo)
+
+- **HTTP:** `POST /auth/otp/request`, `POST /auth/otp/verify`, `GET /auth/me`, `POST /auth/logout` in
+  `apps/api`. **No** real WhatsApp send; no restaurant/reservation/payment routes. **Swagger** and
+  [`api-reference.md`](./api-reference.md) updated in the same step. Environment variables: see
+  `apps/api/.env.example` (`JWT_ACCESS_SECRET`, `JWT_ACCESS_EXPIRES_IN`, `REFRESH_TOKEN_EXPIRES_DAYS`,
+  `OTP_EXPIRES_MINUTES`, `OTP_MAX_ATTEMPTS`, `AUTH_DEV_EXPOSE_OTP` for dev-only `devOtp` in the request
+  response when enabled).
+- **Prisma (unchanged business models):** uses 2A tables only. E2E auth tests run when `DATABASE_URL` and
+  `JWT_ACCESS_SECRET` are set; unit tests cover phone + crypto helpers. Apply schema with
+  `prisma migrate` / `prisma db push` before first real auth run (see
+  [`auth-rbac-foundation.md`](./auth-rbac-foundation.md)).
+- **Not 2B:** real WhatsApp, RBAC **route** guards, mobile/web client wiring (Phase 2C+).
+
 ## Phase 3 — Restaurants, branches, tables
 
 Goal: operational setup for each restaurant. **Includes:** create/review/activate restaurant, branch, tables,
@@ -172,9 +186,9 @@ waitlist, paid promos, better reports, separate restaurant app, loyalty, new cit
 
 ---
 
-**Current code status:** **Phases 1A–1E** and **Phase 2A (Prisma auth / RBAC foundation)** are
-implemented: mock UIs, **API Docs** surfaces, and **auth-related DB schema** in
-[`prisma/schema.prisma`](../apps/api/prisma/schema.prisma) (see
-[`auth-rbac-foundation.md`](./auth-rbac-foundation.md)). The **functional** **HTTP** API is still
-**`GET /health` only** — no login, OTP, or business REST routes yet. See
-[`api-reference.md`](./api-reference.md) for the documentation maintenance rule.
+**Current code status:** **Phases 1A–1E**, **Phase 2A** (Prisma auth schema), and **Phase 2B** (auth **HTTP** API
+for OTP + JWT + session) are in the repo. The **public** **HTTP** surface includes **`GET /health`** and
+**`POST /auth/…`** / **`GET /auth/me`** as in [`api-reference.md`](./api-reference.md) — not restaurant,
+reservation, or payment resources yet. See
+[`prisma/schema.prisma`](../apps/api/prisma/schema.prisma) and
+[`auth-rbac-foundation.md`](./auth-rbac-foundation.md) for the documentation maintenance rule.
